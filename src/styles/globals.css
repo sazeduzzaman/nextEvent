@@ -51,3 +51,18 @@ body {
   margin-left: 0.5rem;
   vertical-align: middle;
 }
+
+/* loading.css */
+/* loading.css */
+.loading-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999; /* Make sure it's above everything */
+}

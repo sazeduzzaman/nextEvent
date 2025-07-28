@@ -23,9 +23,9 @@ const MenuItems = () => {
         </li>
         <li>
           <Link
-            href="/explore"
+            href="/events"
             className={`link-underline bg-transparent ${
-              isActive("/explore") ? "menu-active" : ""
+              isActive("/events") ? "menu-active" : ""
             }`}
           >
             Explore Event

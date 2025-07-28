@@ -35,16 +35,16 @@ const Footer = () => {
             {/* <span className="w-8 h-0.5 bg-current"></span> */}
           </div>
 
-          <Link href={"/"} className="footer-link mb-2 flex items-center">
+          <Link href="/contact" className="footer-link mb-2 flex items-center">
             <IoChevronForward className="me-3" /> Contact Us
           </Link>
-          <Link href={"/"} className="footer-link mb-2 flex items-center">
+          <Link href="/about" className="footer-link mb-2 flex items-center">
             <IoChevronForward className="me-3" /> About Us
           </Link>
-          <Link href={"/"} className="footer-link mb-2 flex items-center">
+          <Link href="/blogs" className="footer-link mb-2 flex items-center">
             <IoChevronForward className="me-3" /> Blog
           </Link>
-          <Link href={"/"} className="footer-link mb-2 flex items-center">
+          <Link href="/" className="footer-link mb-2 flex items-center">
             <IoChevronForward className="me-3" /> Career
           </Link>
         </nav>
@@ -52,16 +52,16 @@ const Footer = () => {
           <h6 className="site-txt text-1xl line-text font-bold mb-5">
             FEATURES
           </h6>
-          <Link href={"/"} className="footer-link mb-2 flex items-center">
+          <Link href="/" className="footer-link mb-2 flex items-center">
             <IoChevronForward className="me-3" /> Event Hosting
           </Link>
-          <Link href={"/"} className="footer-link mb-2 flex items-center">
+          <Link href="/" className="footer-link mb-2 flex items-center">
             <IoChevronForward className="me-3" /> Newsletter
           </Link>
-          <Link href={"/"} className="footer-link mb-2 flex items-center">
+          <Link href="/" className="footer-link mb-2 flex items-center">
             <IoChevronForward className="me-3" /> Email Marketing
           </Link>
-          <Link href={"/"} className="footer-link mb-2 flex items-center">
+          <Link href="/" className="footer-link mb-2 flex items-center">
             <IoChevronForward className="me-3" /> QR Code Ticketing
           </Link>
         </nav>
@@ -69,16 +69,16 @@ const Footer = () => {
           <h6 className="site-txt text-1xl line-text font-bold mb-5">
             SUPPORT
           </h6>
-          <Link href={"/"} className="footer-link mb-2 flex items-center">
+          <Link href="/faqs" className="footer-link mb-2 flex items-center">
             <IoChevronForward className="me-3" /> Help Center / FAQs
           </Link>
-          <Link href={"/"} className="footer-link mb-2 flex items-center">
+          <Link href="/" className="footer-link mb-2 flex items-center">
             <IoChevronForward className="me-3" /> For Event
           </Link>
           <Link href="/terms" className="footer-link mb-2 flex items-center">
             <IoChevronForward className="me-3" /> Terms & Conditions
           </Link>
-          <Link href={"/"} className="footer-link mb-2 flex items-center">
+          <Link href="/privacy" className="footer-link mb-2 flex items-center">
             <IoChevronForward className="me-3" /> Privacy Policy
           </Link>
         </nav>
@@ -91,15 +91,24 @@ const Footer = () => {
 
         {/* Right side: links */}
         <div className="flex space-x-6">
-          <a href="/privacy" className="text-white hover:text-gray-300 text-sm">
+          <Link
+            href="/privacy"
+            className="text-white hover:text-gray-300 text-sm"
+          >
             Privacy Policy
-          </a>
-          <a href="/terms" className="text-white hover:text-gray-300 text-sm">
+          </Link>
+          <Link
+            href="/terms"
+            className="text-white hover:text-gray-300 text-sm"
+          >
             Terms of Service
-          </a>
-          <a href="/contact" className="text-white hover:text-gray-300 text-sm">
+          </Link>
+          <Link
+            href="/contact"
+            className="text-white hover:text-gray-300 text-sm"
+          >
             Contact
-          </a>
+          </Link>
         </div>
       </div>
     </div>

@@ -37,3 +37,11 @@
   position: relative;
   z-index: 999;
 }
+
+.menu :where(li) > :not(:is(ul, .menu-title, details, .btn)):active {
+  background-color: transparent;
+}
+
+.header-dark{
+  background-color: black;
+}

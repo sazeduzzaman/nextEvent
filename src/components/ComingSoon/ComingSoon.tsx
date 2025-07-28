@@ -24,24 +24,12 @@ const ComingSoon = () => {
             <input
               type="email"
               placeholder="Enter your email"
-              className="p-2 w-72 text-black rounded-md"
+              className="p-2 w-72 bg-gray-400 rounded-md"
             />
             <button className="bg-yellow-400 text-black py-2 px-4 rounded-md hover:bg-yellow-500 transition">
               Notify Me
             </button>
           </form>
-
-          <div className="flex justify-center space-x-4 mt-6">
-            {["facebook", "twitter", "linkedin"].map((platform) => (
-              <a key={platform} href="#" title={platform}>
-                <img
-                  src={`/icons/${platform}.svg`}
-                  alt={platform}
-                  className="w-8 h-8 hover:scale-110 transition duration-300"
-                />
-              </a>
-            ))}
-          </div>
         </div>
       </div>
     </div>

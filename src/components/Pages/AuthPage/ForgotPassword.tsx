@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { FaEnvelope } from "react-icons/fa";
-import CommonBanner from "../CommonBanner/CommonBanner";
+import CommonBanner from "../../CommonBanner/CommonBanner";
 
 const ForgotPassword = () => {
   return (

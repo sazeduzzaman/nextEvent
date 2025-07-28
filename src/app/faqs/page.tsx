@@ -1,5 +1,6 @@
 import ComingSoon from "@/components/ComingSoon/ComingSoon";
 import CommonBanner from "@/components/CommonBanner/CommonBanner";
+import FaqsPage from "@/components/Pages/FaqsPage/FaqsPage";
 import React from "react";
 
 const page = () => {
@@ -13,6 +14,7 @@ const page = () => {
           { label: "Details" },
         ]}
       />
+      <FaqsPage />
     </div>
   );
 };

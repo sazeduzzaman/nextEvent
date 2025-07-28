@@ -1,5 +1,5 @@
 import React from "react";
-import CommonBanner from "../CommonBanner/CommonBanner";
+import CommonBanner from "../../CommonBanner/CommonBanner";
 import LoginForm from "./LoginForm";
 
 const Login = () => {

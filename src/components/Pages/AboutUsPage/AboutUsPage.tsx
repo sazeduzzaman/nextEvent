@@ -1,14 +1,14 @@
+import CommonBanner from "@/components/CommonBanner/CommonBanner";
 import React from "react";
-import CommonBanner from "../CommonBanner/CommonBanner";
 
-const ContactPage = () => {
+const AboutUsPage = () => {
   return (
     <div>
       <CommonBanner
-        title="Contact"
+        title="About"
         breadcrumb={[
           { label: "Home", href: "/" },
-          { label: "Contact", href: "/contact" },
+          { label: "About", href: "/about" },
           { label: "Details" },
         ]}
       />
@@ -16,4 +16,4 @@ const ContactPage = () => {
   );
 };
 
-export default ContactPage;
+export default AboutUsPage;

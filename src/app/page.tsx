@@ -1,4 +1,5 @@
-import BannerSection from '@/components/HomePage/BannerSection/BannerSection';
+
+import BannerSection from '@/components/Pages/HomePage/BannerSection/BannerSection';
 import React from 'react';
 
 const page = () => {

@@ -1,5 +1,5 @@
 import CommonBanner from "@/components/CommonBanner/CommonBanner";
-import ExploreEventPage from "@/components/ExploreEventPage/ExploreEventPage";
+import ExploreEventPage from "@/components/Pages/ExploreEventPage/ExploreEventPage";
 import React from "react";
 
 const page = () => {

@@ -33,7 +33,9 @@ const Header = () => {
           <MenuItems />
           <div className="navbar-end">
             <div className="mb-none">
-              <SiteButtonOne text="Create Event" />
+              <Link href="/events">
+                <SiteButtonOne text="Create Event" />
+              </Link>
             </div>
             <MobileMenu />
             <UserMenu />

@@ -17,7 +17,7 @@ const CommonBanner = ({ title, breadcrumb }: CommonBannerProps) => {
     <div className="common-banner">
       <div className="overlay" />
       <div className="banner-content">
-        <h1 className="banner-title">{title}</h1>
+        <h1 className="common-banner-title">{title}</h1>
         <div className="breadcrumb">
           {breadcrumb.map((item, index) => (
             <span key={index}>

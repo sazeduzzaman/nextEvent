@@ -1,22 +1,21 @@
 import React from "react";
 import CommonBanner from "../CommonBanner/CommonBanner";
-import LoginForm from "./LoginForm";
+import RegisterForm from "./RegisterForm";
 
-const Login = () => {
+const Register = () => {
   return (
     <div>
       <CommonBanner
-        title="Login"
+        title="Register"
         breadcrumb={[
           { label: "Home", href: "/" },
-          { label: "Login", href: "/auth/login" },
+          { label: "Register", href: "/auth/register" },
           // { label: "Details" },
         ]}
       />
-      {/* Login Form */}
-        <LoginForm/>
+      <RegisterForm />
     </div>
   );
 };
 
-export default Login;
+export default Register;

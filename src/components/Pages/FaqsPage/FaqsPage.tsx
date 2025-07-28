@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 
 const faqs = [
   {
@@ -27,7 +27,6 @@ const faqs = [
 
 const FaqsPage = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const toggle = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -41,8 +40,6 @@ const FaqsPage = () => {
       <div className="space-y-4">
         {faqs.map((faq, index) => {
           const isOpen = openIndex === index;
-          const ref = contentRefs.current[index];
-          const height = ref?.scrollHeight ?? 0;
 
           return (
             <div
@@ -50,9 +47,9 @@ const FaqsPage = () => {
               className="border border-gray-300 rounded-2xl shadow-sm overflow-hidden transition-all duration-300"
             >
               <button
-                className={`w-full text-left px-6 py-5 flex items-center justify-between transition-all duration-300 ${
+                className={`w-full text-left px-6 py-5 flex items-center justify-between ${
                   isOpen ? "bg-gray-100" : "bg-white hover:bg-gray-50"
-                }`}
+                } transition-colors duration-300`}
                 onClick={() => toggle(index)}
               >
                 <span className="text-lg font-medium text-gray-800">
@@ -67,14 +64,13 @@ const FaqsPage = () => {
                 </span>
               </button>
               <div
-                ref={(el) => (contentRefs.current[index] = el)}
-                className="px-6 overflow-hidden transition-all duration-300"
-                style={{
-                  maxHeight: isOpen ? `${height}px` : "0px",
-                  opacity: isOpen ? 1 : 0,
-                }}
+                className={`px-6 transition-all duration-300 ease-in-out overflow-hidden ${
+                  isOpen
+                    ? "max-h-40 opacity-100 py-4"
+                    : "max-h-0 opacity-0 py-0"
+                }`}
               >
-                <div className="py-4 text-gray-600">{faq.answer}</div>
+                <p className="text-gray-600">{faq.answer}</p>
               </div>
             </div>
           );

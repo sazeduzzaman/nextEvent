@@ -1,0 +1,53 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+:root {
+  --font-space-grotesk: "Space Grotesk", sans-serif;
+  --primary-color: #f7c62d;
+  --secondary-color: black;
+  --primary-dark-color: #000000a1;
+  --white-color: #fff;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color) var(--white-color);
+  scroll-behavior: smooth;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-space-grotesk);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+/* Global Classes */
+.site-bg {
+  background-color: var(--primary-color);
+}
+.site-txt {
+  color: var(--primary-color);
+}
+
+@media only screen and (max-width: 600px) {
+  .mb-none {
+    display: none;
+  }
+}
+
+.line-text::after {
+  content: "";
+  display: inline-block;
+  width: 2rem;
+  height: 2px;
+  background-color: currentColor;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}

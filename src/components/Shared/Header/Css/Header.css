@@ -1,0 +1,39 @@
+.top-bar {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+.link-underline {
+  position: relative;
+  display: inline-block;
+  font-size: 18px;
+  color: white;
+}
+
+.link-underline::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 3px;
+  left: 0;
+  bottom: 0;
+  background-color: var(--primary-color); /* amber-400 */
+  transition: width 0.3s ease-in-out;
+}
+
+.link-underline:hover::after {
+  width: 100%;
+}
+
+.menu-active {
+  font-size: 18px;
+  color: var(--primary-color);
+  background-color: transparent;
+  border-bottom: 0px solid var(--primary-color);
+  box-shadow: none;
+  font-weight: bold;
+  border-radius: 0;
+}
+
+.header-main {
+  position: relative;
+  z-index: 999;
+}

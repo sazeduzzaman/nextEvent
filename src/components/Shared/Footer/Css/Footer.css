@@ -1,0 +1,37 @@
+.footer-link {
+  position: relative;
+  color: white;
+  transition: color 0.3s ease;
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  color: var(--primary-color);
+}
+
+.footer-link span {
+  position: relative;
+  display: inline-block;
+}
+
+.footer-link span::after {
+  content: "";
+  position: absolute;
+  bottom: -2px; /* space below text, adjust as needed */
+  left: 0;
+  height: 2px;
+  width: 100%; /* full width always */
+  background-color: var(--primary-color);
+  transform: scaleX(0); /* start hidden */
+  transform-origin: left;
+  transition: transform 0.3s ease;
+  pointer-events: none; /* prevent interfering with hover */
+}
+
+.footer-link:hover {
+  transform: scaleX(1.1); /* grow to full width */
+}
+
+.footer-copy {
+  border-top: 1px solid var(--primary-color);
+}

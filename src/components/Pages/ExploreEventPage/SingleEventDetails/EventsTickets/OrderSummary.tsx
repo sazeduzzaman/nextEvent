@@ -1,4 +1,3 @@
-import { Settings } from "node:http2";
 import React from "react";
 
 type TicketCategory = {

@@ -1,4 +1,3 @@
-import ComingSoon from "@/components/ComingSoon/ComingSoon";
 import CommonBanner from "@/components/CommonBanner/CommonBanner";
 import React from "react";
 

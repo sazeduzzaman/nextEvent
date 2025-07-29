@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import TicketsCategory from "./TicketsCategory";
 import EventHeader from "../EventDetailsInformation/EventHeader";
@@ -62,7 +63,7 @@ const ParentComponent = ({ slug }: TicketSelectionProps) => {
     <>
       <EventHeader slug={slug} />
       <TicketsCategory
-      slug={slug}
+        slug={slug}
         ticketCategories={ticketCategories}
         selectedTickets={selectedTickets}
         handleSeatToggle={handleSeatToggle}

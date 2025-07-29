@@ -1,3 +1,4 @@
+
 import Register from '@/components/Pages/AuthPage/Register';
 import React from 'react';
 

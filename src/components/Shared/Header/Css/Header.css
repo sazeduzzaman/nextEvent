@@ -33,15 +33,38 @@
   border-radius: 0;
 }
 
-.header-main {
-  position: relative;
-  z-index: 999;
-}
-
 .menu :where(li) > :not(:is(ul, .menu-title, details, .btn)):active {
   background-color: transparent;
 }
 
-.header-dark{
+.header-dark {
   background-color: black;
+}
+/* Sticky Header Css */
+.header-main {
+  background-color: #000;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  will-change: transform, opacity;
+}
+
+/* Hidden on scroll down */
+.header-hide {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Visible on scroll up */
+.header-show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Optional dark theme handling */
+.header-dark {
+  background-color: #000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }

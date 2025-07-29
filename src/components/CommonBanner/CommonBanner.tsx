@@ -14,7 +14,7 @@ type CommonBannerProps = {
 
 const CommonBanner = ({ title, breadcrumb }: CommonBannerProps) => {
   return (
-    <div className="common-banner">
+    <div className="common-banner -mt-10">
       <div className="overlay" />
       <div className="banner-content">
         <h1 className="common-banner-title">{title}</h1>

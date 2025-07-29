@@ -4,14 +4,14 @@
 :root {
   --font-space-grotesk: "Space Grotesk", sans-serif;
   --primary-color: #f7c62d;
-  --secondary-color: black;
   --primary-dark-color: #000000a1;
+  --secondary-color: #101113;
   --white-color: #fff;
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--primary-color) var(--white-color);
+  scrollbar-color: var(--primary-color) var(--secondary-color);
   scroll-behavior: smooth;
 }
 
@@ -35,6 +35,9 @@ body {
 .site-txt {
   color: var(--primary-color);
 }
+.site-second-bg {
+  background-color: var(--secondary-color);
+}
 
 @media only screen and (max-width: 600px) {
   .mb-none {
@@ -53,7 +56,6 @@ body {
 }
 
 /* loading.css */
-/* loading.css */
 .loading-wrapper {
   position: fixed;
   top: 0;
@@ -65,4 +67,58 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 9999; /* Make sure it's above everything */
+}
+
+.flare {
+  position: fixed;
+  border: 2px solid var(--primary-color);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 999999 !important;
+  backdrop-filter: blur(2px);
+  mix-blend-mode: normal;
+  box-shadow: 0 0 10px var(--primary-color);
+  transition: width 0.2s ease, height 0.2s ease, opacity 0.2s ease,
+    backdrop-filter 0.3s ease, box-shadow 0.3s ease;
+  cursor: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+}
+
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+  box-shadow: 0 0 4px var(--primary-color);
+  transition: background-color 0.2s ease;
+}
+
+.flare.pointer {
+  width: 45px !important;
+  height: 45px !important;
+  backdrop-filter: blur(6px) !important;
+  box-shadow: 0 0 20px var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+.flare.pointer .cursor-dot {
+  background-color: var(--primary-color) !important;
+  box-shadow: 0 0 6px var(--primary-color) !important;
+  width: 8px;
+  height: 8px;
+  transition: width 0.3s ease, height 0.3s ease, box-shadow 0.3s ease;
+}
+
+@media screen and (max-width: 768px) {
+  .flare {
+    width: 0 !important;
+    height: 0 !important;
+    opacity: 0 !important;
+  }
 }

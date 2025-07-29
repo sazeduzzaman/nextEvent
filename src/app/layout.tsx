@@ -3,6 +3,7 @@ import { Space_Grotesk } from "next/font/google";
 import "../styles/globals.css";
 import Header from "@/components/Shared/Header/Header";
 import Footer from "@/components/Shared/Footer/Footer";
+import CustomCursor from "@/util/CustomCursor/CustomCursor";
 
 const SpaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk", // ✅ match your CSS
@@ -22,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${SpaceGrotesk.variable} antialiased`}>
+        <CustomCursor/>
         <Header />
         {children}
         <Footer />

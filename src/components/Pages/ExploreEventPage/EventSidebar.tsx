@@ -1,18 +1,20 @@
 "use client";
 
-import SiteButtonOne from "@/components/Buttons/SiteButtonOne/SiteButtonOne";
 import React, { useState } from "react";
+import { FiSearch, FiCalendar, FiDollarSign } from "react-icons/fi";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const EventSidebar = () => {
   const [filters, setFilters] = useState<{
     city: string;
     eventTypes: string[];
-    date: string;
+    date: Date | null;
     price: number;
   }>({
     city: "",
     eventTypes: [],
-    date: "",
+    date: null,
     price: 50,
   });
 
@@ -29,7 +31,7 @@ const EventSidebar = () => {
     setFilters({
       city: "",
       eventTypes: [],
-      date: "",
+      date: null,
       price: 50,
     });
   };
@@ -38,58 +40,84 @@ const EventSidebar = () => {
 
   return (
     <div>
-      <h2 className="text-3xl font-bold mb-6 site-txt">Filter Events</h2>
-      <div className="w-full p-6 border border-yellow-400 rounded-xl shadow-md space-y-6 text-sm">
+      <h2 className="text-3xl font-bold mb-6 text-yellow-400">Filter Events</h2>
+      <div className="w-full p-6 border border-yellow-400 rounded-2xl shadow-lg space-y-6 site-second-bg">
         {/* Search City */}
         <div>
-          <label className="block mb-1 font-medium text-white text-lg">
+          <label className="block mb-2 font-semibold text-white text-base">
             Search City
           </label>
-          <input
-            type="text"
-            value={filters.city}
-            onChange={(e) => setFilters({ ...filters, city: e.target.value })}
-            placeholder="Enter city"
-            className="w-full px-3 py-2 border border-yellow-400 rounded-md text-gray-400 focus:outline-none focus:ring focus:ring-indigo-200"
-          />
+          <div className="relative">
+            <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-yellow-400" />
+            <input
+              type="text"
+              value={filters.city}
+              onChange={(e) => setFilters({ ...filters, city: e.target.value })}
+              placeholder="Enter city"
+              className="w-full pl-10 pr-3 py-2 rounded-xl bg-neutral-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
+            />
+          </div>
         </div>
 
         {/* Event Types */}
         <div>
-          <label className="block mb-2 font-medium text-white text-lg">
+          <label className="block mb-2 font-semibold text-white text-base">
             Event Type
           </label>
-          <div className="space-y-2">
-            {eventTypes.map((type) => (
-              <label key={type} className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={filters.eventTypes.includes(type)}
-                  onChange={() => handleCheckboxChange(type)}
-                  className="form-checkbox text-indigo-600"
-                />
-                <span className="text-white">{type}</span>
-              </label>
-            ))}
+          <div className="flex flex-wrap gap-3">
+            {eventTypes.map((type) => {
+              const isChecked = filters.eventTypes.includes(type);
+              return (
+                <label
+                  key={type}
+                  className={`relative flex items-center gap-2 px-4 py-2 rounded-full cursor-pointer border transition
+            ${
+              isChecked
+                ? "bg-yellow-400 text-black border-yellow-400"
+                : "site-second-bg text-white border-gray-700 hover:bg-gray-700"
+            }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={() => handleCheckboxChange(type)}
+                    className="sr-only"
+                  />
+                  <span
+                    className={`w-4 h-4 inline-block rounded-full border-2 flex-shrink-0 transition
+              ${isChecked ? "border-black bg-black" : "border-white"}`}
+                  />
+                  <span className="text-sm">{type}</span>
+                </label>
+              );
+            })}
           </div>
         </div>
+
         {/* Date Picker */}
         <div>
-          <label className="block mb-1 font-medium text-white text-lg">
+          <label className="block mb-2 font-semibold text-white text-base">
             Event Date
           </label>
-          <input
-            type="date"
-            value={filters.date}
-            onChange={(e) => setFilters({ ...filters, date: e.target.value })}
-            className="w-full px-3 py-2 border border-yellow-400 rounded-md text-gray-400 focus:outline-none focus:ring focus:ring-indigo-200"
-          />
+          <div className="relative w-full">
+            <FiCalendar className="absolute left-3 top-1/2 -translate-y-1/2 text-yellow-400 text-lg pointer-events-none z-10" />
+            <DatePicker
+              selected={filters.date}
+              onChange={(date) => setFilters({ ...filters, date })}
+              placeholderText="Pick a date"
+              wrapperClassName="w-full" // <-- make wrapper full width
+              className="w-full pl-10 pr-3 py-2 rounded-xl bg-neutral-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
+            />
+          </div>
         </div>
+
         {/* Price Range */}
         <div>
-          <label className="block mb-1 font-medium text-white text-lg">
-            Price Range:{" "}
-            <span className="font-semibold site-txt">${filters.price}</span>
+          <label className="block mb-2 font-semibold text-white text-base">
+            Price Range
+            <span className="ml-2 inline-flex items-center gap-1 text-yellow-300">
+              <FiDollarSign />${filters.price}
+            </span>
           </label>
           <input
             type="range"
@@ -100,13 +128,17 @@ const EventSidebar = () => {
             onChange={(e) =>
               setFilters({ ...filters, price: parseInt(e.target.value) })
             }
-            className="w-full text-white"
+            className="w-full accent-yellow-400"
           />
         </div>
+
         {/* Clear Button */}
-        <div className="pt-4">
-          <button className="btn h-10 bg-yellow-400 hover:bg-black border-0 text-white w-full rounded-3xl">
-            Clear Filter
+        <div>
+          <button
+            onClick={clearFilters}
+            className="w-full py-2 rounded-full font-semibold bg-yellow-400 text-black hover:bg-yellow-500 transition-all"
+          >
+            Clear Filters
           </button>
         </div>
       </div>

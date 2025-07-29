@@ -9,7 +9,7 @@ type Props = {
 const EventDetails = ({ slug }: Props) => {
   console.log(slug);
   return (
-    <div>
+    <div className="-mt-10">
       <EventHeader />
       <EventsDetailsInfo/>
     </div>

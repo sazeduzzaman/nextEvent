@@ -6,11 +6,11 @@ import "./Css/Events.css";
 
 const ExploreEventPage = () => {
   return (
-    <div className="bg-black">
+    <div className="bg-black -mt-10">
       <FeatureEvents />
       <div className="container mx-auto pt-15">
         <div className="grid grid-cols-12 gap-10">
-          <div className="col-span-3">
+          <div className="col-span-3 sticky-sidebar h-screen">
             <EventSidebar />
           </div>
           <div className="col-span-9">

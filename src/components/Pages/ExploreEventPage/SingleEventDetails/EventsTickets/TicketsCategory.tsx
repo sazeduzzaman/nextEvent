@@ -41,7 +41,6 @@ const TicketsCategory = ({
             handleSeatToggle={handleSeatToggle}
             activeTab={activeTab}
             setActiveTab={setActiveTab}
-            slug={slug}
           />
         </div>
 

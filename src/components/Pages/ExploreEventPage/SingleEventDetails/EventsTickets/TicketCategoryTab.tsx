@@ -30,7 +30,6 @@ const TicketCategoryTab = ({
 }: TicketCategoryTabProps) => {
   return (
     <div>
-      {/* Tabs */}
       <div
         role="tablist"
         className="tabs tabs-boxed mb-8 bg-gray-900 rounded-lg shadow-inner"
@@ -41,7 +40,7 @@ const TicketCategoryTab = ({
             role="tab"
             className={`tab flex-1 pb-3 text-lg font-semibold transition-all duration-300
             ${
-                activeTab === id
+              activeTab === id
                 ? "tab-active bg-yellow-400 text-white shadow-lg"
                 : "!text-white hover:!text-yellow-400 hover:bg-gray-800"
             }

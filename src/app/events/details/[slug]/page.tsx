@@ -1,4 +1,4 @@
-import EventDetails from '@/components/Pages/ExploreEventPage/EventDetails/EventDetails';
+import EventDetails from '@/components/Pages/ExploreEventPage/SingleEventDetails/EventDetails';
 import React from 'react';
 
 export default async function page({ params }: any) {

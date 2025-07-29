@@ -1,10 +1,14 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import Link from "next/link";
+import { jarallax } from "jarallax";
+import "jarallax/dist/jarallax.css";
 import "./Css/CommonBanner.css";
 
 type BreadcrumbItem = {
   label: string;
-  href?: string; // Optional for current page
+  href?: string;
 };
 
 type CommonBannerProps = {
@@ -13,9 +17,17 @@ type CommonBannerProps = {
 };
 
 const CommonBanner = ({ title, breadcrumb }: CommonBannerProps) => {
+  useEffect(() => {
+    jarallax(document.querySelectorAll(".jarallax"), {
+      speed: 0.5,
+      imgSrc: "", // don't load image via JS
+    });
+  }, []);
+
   return (
-    <div className="common-banner -mt-10">
+    <div className="common-banner jarallax" data-jarallax data-speed="0.5">
       <div className="overlay" />
+      <div className="de-gradient-edge-bottom" />
       <div className="banner-content">
         <h1 className="common-banner-title">{title}</h1>
         <div className="breadcrumb">

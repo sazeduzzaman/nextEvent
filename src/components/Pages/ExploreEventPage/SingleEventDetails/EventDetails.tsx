@@ -1,6 +1,6 @@
 import React from "react";
-import EventHeader from "./EventHeader";
-import EventsDetailsInfo from "./EventsDetailsInfo";
+import EventsDetailsInfo from "./EventDetailsInformation/EventsDetailsInfo";
+import EventHeader from "./EventDetailsInformation/EventHeader";
 
 type Props = {
   slug: string;
@@ -9,8 +9,8 @@ type Props = {
 const EventDetails = ({ slug }: Props) => {
   console.log(slug);
   return (
-    <div className="-mt-10">
-      <EventHeader />
+    <div>
+      <EventHeader slug={slug}/>
       <EventsDetailsInfo/>
     </div>
   );

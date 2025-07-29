@@ -5,7 +5,7 @@ import { FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
 const TopBar = () => {
   return (
     <div className="top-bar mb-none">
-      <div className="flex justify-between items-center pt-2">
+      <div className="flex justify-between items-center py-2">
         <div>
           <small className="site-txt">Working Hours: </small>
           <small className="text-gray-300">Monday - Friday 08:00-16:00</small>

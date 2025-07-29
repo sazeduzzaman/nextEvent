@@ -3,7 +3,10 @@ import SiteButtonOne from "@/components/Buttons/SiteButtonOne/SiteButtonOne";
 import Image from "next/image";
 import EventTimeCount from "./EventTimeCount";
 
-const EventHeader = () => {
+type EventHeaderProps = {
+  slug: string;
+};
+const EventHeader = ({ slug }: EventHeaderProps) => {
   return (
     <div
       className="relative py-20 bg-cover bg-center bg-no-repeat backdrop-blur-sm"
@@ -28,7 +31,10 @@ const EventHeader = () => {
                 <p className="ps-2">Israt Karim</p>
               </div>
               <h2 className="text-2xl md:text-6xl font-bold mb-2 site-txt">
-                Eventa Iftar Party 2025
+                {slug
+                  .split("-")
+                  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                  .join(" ")}
               </h2>
               <div className="text-2xl site-txt mt-10 mb-4">
                 <p className="pb-4">📅Sunday, August 2, 2025</p>
@@ -39,7 +45,7 @@ const EventHeader = () => {
               </div>
             </div>
             <div>
-              <EventTimeCount time="August 2, 2025 18:00:00" />
+              <EventTimeCount time="August 2, 2025 18:00:00" slug={slug} />
             </div>
           </div>
           <div className="col-span-6">

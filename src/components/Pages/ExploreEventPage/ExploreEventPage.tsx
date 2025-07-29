@@ -6,7 +6,7 @@ import "./Css/Events.css";
 
 const ExploreEventPage = () => {
   return (
-    <div className="bg-black -mt-10">
+    <div className="bg-black">
       <FeatureEvents />
       <div className="container mx-auto pt-15">
         <div className="grid grid-cols-12 gap-10">

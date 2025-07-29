@@ -2,7 +2,7 @@ import React from "react";
 
 const TermsPage = () => {
   return (
-    <div className="container mx-auto px-4 py-16 text-gray-800">
+    <div className="container mx-auto px-4 py-16 text-white">
       <h1 className="text-3xl font-bold mb-8 text-center">
         Terms & Conditions
       </h1>

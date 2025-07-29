@@ -7,6 +7,7 @@
   --primary-dark-color: #000000a1;
   --secondary-color: #101113;
   --white-color: #fff;
+  --black-color: #000;
 }
 
 * {
@@ -26,6 +27,8 @@ body {
   background-color: var(--background-color);
   color: var(--text-color);
   line-height: 1.6;
+  background-color: var(--black-color);
+  color: var(--white-color);
 }
 
 /* Global Classes */

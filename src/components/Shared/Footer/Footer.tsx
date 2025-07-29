@@ -91,24 +91,18 @@ const Footer = () => {
 
         {/* Right side: links */}
         <div className="flex space-x-6">
-          <Link
-            href="/privacy"
-            className="text-white hover:text-gray-300 text-sm"
-          >
-            Privacy Policy
-          </Link>
-          <Link
-            href="/terms"
-            className="text-white hover:text-gray-300 text-sm"
-          >
-            Terms of Service
-          </Link>
-          <Link
-            href="/contact"
-            className="text-white hover:text-gray-300 text-sm"
-          >
-            Contact
-          </Link>
+          <p className="text-white text-sm flex items-center">
+            Developed With Love By
+            <Link href="/">
+              <Image
+                width={50}
+                height={50}
+                alt="Created by"
+                src={"/images/flixzaglobal.webp"}
+                className="ms-2"
+              />
+            </Link>
+          </p>
         </div>
       </div>
     </div>

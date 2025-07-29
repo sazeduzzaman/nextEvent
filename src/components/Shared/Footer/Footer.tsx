@@ -7,7 +7,7 @@ import { IoChevronForward } from "react-icons/io5";
 
 const Footer = () => {
   return (
-    <div className="bg-black py-15 pb-0">
+    <div className="bg-black py-15 pb-0 footer-main">
       <footer className="footer sm:footer-horizontal p-10 container mx-auto px-0">
         <aside>
           <Link href="/">

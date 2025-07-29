@@ -1,3 +1,11 @@
+.footer-main {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.842), rgba(0, 0, 0, 0.795)),
+    url("/images/footer-bg.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 .footer-link {
   position: relative;
   color: white;

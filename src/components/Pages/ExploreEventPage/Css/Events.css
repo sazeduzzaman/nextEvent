@@ -1,0 +1,36 @@
+.feature-image {
+  position: relative;
+  background-image: url("/images/commonbanner.jpg"); /* ✅ Replace with your image path */
+  background-size: cover;
+  background-position: center;
+  height: 550px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  width: 100%;
+}
+
+.feature-image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Dark overlay */
+  z-index: 1;
+}
+.swiper-pagination {
+  position: relative !important;
+  z-index: 9999 !important;
+}
+
+.swiper-pagination-bullet {
+  width: 35px !important;
+  height: 9px !important;
+  border-radius: 8px !important;
+  background: #f7c52d60 !important;
+  opacity: 0.4;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: var(--primary-color) !important;
+}

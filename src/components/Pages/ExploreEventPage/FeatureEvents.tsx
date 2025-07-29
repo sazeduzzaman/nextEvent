@@ -15,9 +15,9 @@ const events = [
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia enim ipsum nemo tempora id! Placeat nostrum exercitationem animi modi optio!",
     thumbnail: "event1.jpeg",
-    date: "April 1, 2025",
-    time: "Sunday, March 16, 2025",
-    location: "Banani, Dhaka",
+    date: "Sunday, August 2, 2025",
+    time: "11:30 AM - 01:00 PM",
+    location: "House 39/a-2, Road 4/A, Dhanmondi, Dhaka",
   },
   {
     id: 2,
@@ -25,9 +25,9 @@ const events = [
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia enim ipsum nemo tempora id! Placeat nostrum exercitationem animi modi optio!",
     thumbnail: "event3.jpeg",
-    date: "May 10, 2025",
-    time: "Sunday, March 16, 2025",
-    location: "Gulshan, Dhaka",
+    date: "Sunday, August 2, 2025",
+    time: "11:30 AM - 01:00 PM",
+    location: "House 39/a-2, Road 4/A, Dhanmondi, Dhaka",
   },
   {
     id: 3,
@@ -35,9 +35,9 @@ const events = [
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia enim ipsum nemo tempora id! Placeat nostrum exercitationem animi modi optio!",
     thumbnail: "event3.jpeg",
-    date: "June 15, 2025",
-    time: "Sunday, March 16, 2025",
-    location: "Dhanmondi, Dhaka",
+    date: "Sunday, August 2, 2025",
+    time: "11:30 AM - 01:00 PM",
+    location: "House 39/a-2, Road 4/A, Dhanmondi, Dhaka",
   },
 ];
 

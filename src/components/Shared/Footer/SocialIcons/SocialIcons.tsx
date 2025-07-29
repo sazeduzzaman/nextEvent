@@ -5,7 +5,6 @@ import {
   FaTwitter,
   FaInstagram,
   FaLinkedinIn,
-  FaGithub,
 } from "react-icons/fa";
 
 const SocialIcons = () => {
@@ -42,14 +41,6 @@ const SocialIcons = () => {
         className="text-gray-300 hover:text-white hover:bg-blue-700 p-2 rounded-full transition-colors duration-300"
       >
         <FaLinkedinIn size={20} />
-      </Link>
-      <Link
-        href="https://github.com"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-gray-300 hover:text-white hover:bg-gray-800 p-2 rounded-full transition-colors duration-300"
-      >
-        <FaGithub size={20} />
       </Link>
     </div>
   );

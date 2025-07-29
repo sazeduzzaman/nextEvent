@@ -1,3 +1,4 @@
+import EventDetails from '@/components/Pages/ExploreEventPage/EventDetails/EventDetails';
 import React from 'react';
 
 export default async function page({ params }: any) {
@@ -5,7 +6,8 @@ export default async function page({ params }: any) {
 
     return (
         <div>
-            {slug}
+            
+            <EventDetails slug={slug}/>
         </div>
     );
 };

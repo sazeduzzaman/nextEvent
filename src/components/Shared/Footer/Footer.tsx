@@ -86,7 +86,7 @@ const Footer = () => {
       <div className="container mx-auto footer-copy py-5 mt-10 flex justify-between items-center">
         {/* Left side: copyright */}
         <div className="text-white text-sm">
-          © {new Date().getFullYear()} Your Company. All rights reserved.
+          © {new Date().getFullYear()} GoEvent. All rights reserved.
         </div>
 
         {/* Right side: links */}

@@ -36,11 +36,11 @@ const BannerSection = () => {
 
       <div className="de-gradient-edge-bottom" />
       <div className="container content-wrapper mx-auto">
-        <h1 className="text-white banner-title">
+        <h1 className="text-white font-bold banner-title">
           Where Celebration <br />
-          Meets <span className="site-color">Expertise</span>
+          Meets <span className="site-txt">Expertise</span>
         </h1>
-        <p className="lead w-1/2 text-white mt-10 text-2xl">
+        <p className="lead w-1/2 text-white mt-10 text-2xl text-justify">
           Your Perfect Partner for Events that Entertain, Inspire, and Connect -
           At Eventa, we make events more accessible, inclusive, and meaningful.
           Host your first event or get tickets to events happening near you!

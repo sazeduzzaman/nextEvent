@@ -1,0 +1,51 @@
+.about-first {
+  overflow: hidden;
+  border-top-left-radius: 80px;
+  border-bottom-right-radius: 80px;
+}
+.about-second {
+  overflow: hidden;
+  border-top-left-radius: 80px;
+  border-bottom-right-radius: 80px;
+}
+.about-third {
+  overflow: hidden;
+  border-top-left-radius: 80px;
+  border-bottom-right-radius: 80px;
+}
+
+.ab-round-shape {
+  position: relative;
+  left: -80px;
+  top: -50px;
+  animation: rotateInfinitely 10s linear infinite;
+}
+
+.shape-box {
+  z-index: 10;
+}
+
+@keyframes rotateInfinitely {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.ab-round-shape-one {
+  position: relative;
+  left: 0px;
+  top: -30px;
+  animation: floatX 4s ease-in-out infinite;
+}
+
+@keyframes floatX {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(40px); /* adjust distance as needed */
+  }
+}

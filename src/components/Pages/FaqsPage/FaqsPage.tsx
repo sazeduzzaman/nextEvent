@@ -44,7 +44,7 @@ const FaqsPage = () => {
           return (
             <div
               key={index}
-              className="border border-gray-300 rounded-2xl shadow-sm overflow-hidden transition-all duration-300"
+              className="border border-gray-300 rounded-lg shadow-sm overflow-hidden transition-all duration-300"
             >
               <button
                 className={`w-full text-left px-6 py-5 flex items-center justify-between ${

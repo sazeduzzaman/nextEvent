@@ -19,7 +19,7 @@ const seatPrefixes: Record<string, string> = {
   vip: "A",
   regular: "B",
   economy: "C",
-  noseat: "N",
+  noseat: "No💺",
 };
 
 const TicketCategoryTab = ({
@@ -62,7 +62,7 @@ const TicketCategoryTab = ({
         role="tabpanel"
         aria-labelledby={`tab-${activeTab}`}
         id={`tabpanel-${activeTab}`}
-        className="site-second-bg p-8 rounded-xl shadow-lg space-y-6"
+        className="site-second-bg p-8 rounded-lg shadow-lg space-y-6"
       >
         {ticketCategories
           .filter((category) => category.id === activeTab)

@@ -141,7 +141,7 @@ const AllEvents = () => {
                   alt={event.title}
                   width={400}
                   height={250}
-                  className="w-full h-80 object-cover p-3 rounded-3xl transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-80 object-cover p-3 rounded-lg transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
               <div className="p-4">

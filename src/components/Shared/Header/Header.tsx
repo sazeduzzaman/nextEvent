@@ -61,7 +61,7 @@ const Header = () => {
           <div className="navbar-end">
             <div className="mb-none">
               <Link href="/events">
-                <SiteButtonOne text="Create Event" />
+                <SiteButtonOne text="Explore Event" />
               </Link>
             </div>
             <MobileMenu />

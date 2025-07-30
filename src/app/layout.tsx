@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { Space_Grotesk } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "../styles/globals.css";
 import Header from "@/components/Shared/Header/Header";
 import Footer from "@/components/Shared/Footer/Footer";
 import CustomCursor from "@/util/CustomCursor/CustomCursor";
+import { Toaster } from "react-hot-toast";
 
-const SpaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk", // ✅ match your CSS
+const PlusJakarta = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta", 
   subsets: ["latin"],
 });
 
@@ -22,8 +23,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${SpaceGrotesk.variable} antialiased`}>
+      <body className={`${PlusJakarta.variable} antialiased`}>
         <CustomCursor/>
+        <Toaster position="top-right" />
         <Header />
         {children}
         <Footer />

@@ -18,14 +18,14 @@ const EventHeader = ({ slug }: EventHeaderProps) => {
       <div className="relative z-10 container mx-auto text-white ">
         <div className="grid grid-cols-12 items-center">
           <div className="col-span-6">
-            <div className="w-full max-w-3xl mx-auto rounded-xl p-6 px-0">
+            <div className="w-full max-w-3xl mx-auto rounded-lg p-6 px-0">
               <div className="flex items-center mb-5">
                 <Image
                   width={30}
                   height={30}
                   src="/images/download.svg"
                   alt="Eventa Iftar Party 2025"
-                  className="object-cover rounded-xl"
+                  className="object-cover rounded-lg"
                 />
                 <p className="ps-2">Israt Karim</p>
               </div>
@@ -54,7 +54,7 @@ const EventHeader = ({ slug }: EventHeaderProps) => {
                 height={350}
                 src="/images/event1.jpeg"
                 alt="Eventa Iftar Party 2025"
-                className="object-cover rounded-xl"
+                className="object-cover rounded-lg"
               />
             </div>
           </div>

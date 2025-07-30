@@ -57,14 +57,14 @@ const FeatureEvents = () => {
         >
           {events.map((event) => (
             <SwiperSlide key={event.id}>
-              <div className="flex flex-col md:flex-row items-center text-gray-800 w-full max-w-3xl mx-auto  bg-opacity-90 rounded-xl p-4">
+              <div className="flex flex-col md:flex-row items-center text-gray-800 w-full max-w-3xl mx-auto  bg-opacity-90 rounded-lg p-4">
                 <figure className="w-full md:w-1/3">
                   <Image
                     width={350}
                     height={350}
                     src={`/images/${event.thumbnail}`}
                     alt={event.title}
-                    className="object-cover rounded-xl"
+                    className="object-cover rounded-lg"
                   />
                 </figure>
                 <div className="p-6 w-full md:w-2/3">

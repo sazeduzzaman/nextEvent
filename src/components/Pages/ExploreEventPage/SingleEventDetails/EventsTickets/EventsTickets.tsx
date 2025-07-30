@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import TicketsCategory from "./TicketsCategory";
 import EventHeader from "../EventDetailsInformation/EventHeader";
+import toast from "react-hot-toast";
 
 const ticketCategories = [
   { id: "vip", name: "VIP", price: 100, available: 18 },
@@ -51,28 +52,29 @@ const ParentComponent = ({ slug }: TicketSelectionProps) => {
   );
 
   const proceedToPurchase = () => {
-    if (totalTickets === 0) {
-      alert("Please select at least one ticket");
+    if (Number(totalTickets) === 0) {
+      toast.error("Please select at least one ticket");
       return;
     }
-
-    alert("Proceeding to purchase...");
-    // TODO: Implement navigation or payment logic
+    toast.success("Proceeding to purchase...");
+    // all extra logic
   };
 
   return (
-    <>
+    <div>
       <EventHeader slug={slug} />
-      <TicketsCategory
-        slug={slug}
-        ticketCategories={ticketCategories}
-        selectedTickets={selectedTickets}
-        handleSeatToggle={handleSeatToggle}
-        totalTickets={totalTickets}
-        totalPrice={totalPrice}
-        proceedToPurchase={proceedToPurchase}
-      />
-    </>
+      <div className="pb-20 pt-10">
+        <TicketsCategory
+          slug={slug}
+          ticketCategories={ticketCategories}
+          selectedTickets={selectedTickets}
+          handleSeatToggle={handleSeatToggle}
+          totalTickets={totalTickets}
+          totalPrice={totalPrice}
+          proceedToPurchase={proceedToPurchase}
+        />
+      </div>
+    </div>
   );
 };
 

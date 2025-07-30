@@ -23,7 +23,7 @@ html {
 }
 
 body {
-  font-family: var(--font-space-grotesk);
+  font-family: var(--font-plus-jakarta);
   background-color: var(--background-color);
   color: var(--text-color);
   line-height: 1.6;

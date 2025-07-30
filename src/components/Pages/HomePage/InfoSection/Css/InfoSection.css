@@ -1,0 +1,42 @@
+@property --border-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes rotateBorder {
+  0% {
+    --border-angle: 0deg;
+  }
+  100% {
+    --border-angle: 360deg;
+  }
+}
+
+.animated-border-card {
+  position: relative;
+  border-radius: 1rem;
+  padding: 2px;
+  background: linear-gradient(#1f2937, #1f2937) padding-box,
+    conic-gradient(
+        from var(--border-angle),
+        transparent 0%,
+        #ca8a04 50%,
+        #facc15 100%
+      )
+      border-box;
+  border: 1px solid transparent;
+  animation: rotateBorder 8s linear infinite;
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  width: 100%;
+}
+
+.card-content {
+  border-radius: 1rem;
+  background-color: var(--secondary-color);
+  padding: 50px;
+}
+.info-up-section {
+  margin-top: -140px;
+}

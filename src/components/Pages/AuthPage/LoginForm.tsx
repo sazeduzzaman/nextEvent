@@ -5,7 +5,7 @@ import { FaFacebookF, FaGoogle, FaUser, FaLock } from "react-icons/fa";
 const LoginForm = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-400 to-yellow-500 flex items-center justify-center p-4">
-      <div className="bg-white w-full max-w-md p-8 rounded-xl shadow-2xl relative">
+      <div className="bg-white w-full max-w-md p-8 rounded-lg shadow-2xl relative">
         {/* Logo icon or circle */}
         <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-800 p-4 rounded-full shadow-md">
           <FaUser className="text-white text-3xl" />

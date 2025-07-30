@@ -41,7 +41,7 @@ const EventSidebar = () => {
   return (
     <div>
       <h2 className="text-3xl font-bold mb-6 text-yellow-400">Filter Events</h2>
-      <div className="w-full p-6 border border-yellow-400 rounded-2xl shadow-lg space-y-6 site-second-bg">
+      <div className="w-full p-6 border border-yellow-400 rounded-lg shadow-lg space-y-6 site-second-bg">
         {/* Search City */}
         <div>
           <label className="block mb-2 font-semibold text-white text-base">
@@ -54,7 +54,7 @@ const EventSidebar = () => {
               value={filters.city}
               onChange={(e) => setFilters({ ...filters, city: e.target.value })}
               placeholder="Enter city"
-              className="w-full pl-10 pr-3 py-2 rounded-xl bg-neutral-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
+              className="w-full pl-10 pr-3 py-2 rounded-lg bg-neutral-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
             />
           </div>
         </div>
@@ -106,7 +106,7 @@ const EventSidebar = () => {
               onChange={(date) => setFilters({ ...filters, date })}
               placeholderText="Pick a date"
               wrapperClassName="w-full" // <-- make wrapper full width
-              className="w-full pl-10 pr-3 py-2 rounded-xl bg-neutral-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
+              className="w-full pl-10 pr-3 py-2 rounded-lg bg-neutral-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
             />
           </div>
         </div>

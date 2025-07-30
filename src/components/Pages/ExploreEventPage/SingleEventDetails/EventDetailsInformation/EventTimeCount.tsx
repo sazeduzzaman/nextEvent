@@ -75,7 +75,7 @@ const EventTimeCount = ({ time = "April 2, 2025 18:00:00", slug }: Props) => {
         {[...Array(4)].map((_, i) => (
           <div
             key={i}
-            className="flex flex-col items-center bg-gray-900 px-4 py-3 rounded-xl shadow-lg border border-yellow-400"
+            className="flex flex-col items-center bg-neutral-800 px-4 py-3 rounded-lg shadow-lg border border-yellow-400"
           >
             <span className="text-4xl font-bold text-yellow-400 tracking-wider">
               --
@@ -102,7 +102,7 @@ const EventTimeCount = ({ time = "April 2, 2025 18:00:00", slug }: Props) => {
         ].map((item, index) => (
           <div
             key={index}
-            className="flex flex-col items-center bg-gray-900 px-4 py-3 rounded-xl shadow-lg border border-yellow-400"
+            className="flex flex-col items-center bg-neutral-800 px-4 py-3 rounded-lg shadow-lg border border-yellow-400"
           >
             <span className="text-4xl font-bold text-yellow-400 tracking-wider">
               {item.value}
@@ -118,7 +118,7 @@ const EventTimeCount = ({ time = "April 2, 2025 18:00:00", slug }: Props) => {
       {!hideButton && (
         <>
           {timeLeft.isExpired ? (
-            <button className="bg-red-600 rounded-3xl text-white px-6 py-2 mt-4 font-semibold shadow-md hover:bg-red-700 transition">
+            <button className="bg-red-600 rounded-lg text-white px-6 py-2 mt-4 font-semibold shadow-md hover:bg-red-700 transition">
               Event Expired
             </button>
           ) : (

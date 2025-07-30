@@ -117,6 +117,9 @@ body {
   height: 8px;
   transition: width 0.3s ease, height 0.3s ease, box-shadow 0.3s ease;
 }
+.section-gradient{
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+}
 
 @media screen and (max-width: 768px) {
   .flare {

@@ -22,6 +22,7 @@ const DashboardSidebar = () => {
   const isActive = (href: string) => pathname === href;
 
   const menuLinks = [
+    { href: "/user", label: "Dashboard" },
     { href: "/user/tickets", label: "Purchase Tickets" },
     { href: "/user/profile", label: "Update Profile" },
   ];

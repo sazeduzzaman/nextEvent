@@ -1,10 +1,10 @@
-import Login from "@/components/Pages/AuthPage/Login/Login";
+import UserProfile from "@/components/Pages/UserDashboard/UserProfile/UserProfile";
 import React from "react";
 
 const page = () => {
   return (
     <div>
-      <Login />
+      <UserProfile />
     </div>
   );
 };

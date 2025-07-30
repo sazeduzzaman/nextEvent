@@ -27,24 +27,29 @@ const OrderSummary = ({
   return (
     <div className="bg-gray-900 rounded-xl shadow-lg p-6 max-w-md mx-auto">
       <h3 className="text-2xl font-bold mb-4 text-white">Order Summary</h3>
-
+      <h1 className="text-1xl">User Info</h1>
       <p className="mb-1">
-        <span className="font-medium text-gray-400">User Name:</span>{" "}
+        <span className="font-medium text-gray-400">Name:</span>{" "}
         <span className="text-yellow-400 font-semibold">Sazeduzzaman Saju</span>
       </p>
       <p className="mb-1">
-        <span className="font-medium text-gray-400">User Email:</span>{" "}
+        <span className="font-medium text-gray-400">Email:</span>{" "}
         <span className="text-yellow-400 font-semibold">
           szamansaju@gmail.com
         </span>
       </p>
       <p className="mb-1">
-        <span className="font-medium text-gray-400">User Phone:</span>{" "}
+        <span className="font-medium text-gray-400">Phone:</span>{" "}
         <span className="text-yellow-400 font-semibold">01576614451</span>
       </p>
       <p className="mb-1">
-        <span className="font-medium text-gray-400">User Phone:</span>{" "}
-        <span className="text-yellow-400 font-semibold">{slug}</span>
+        <span className="font-medium text-gray-400">Event:</span>{" "}
+        <span className="text-yellow-400 font-semibold">
+          {slug
+            .split("-")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ")}
+        </span>
       </p>
       {totalTickets === 0 ? (
         <p className="text-gray-400">No seats selected yet.</p>

@@ -8,6 +8,7 @@ const ticketCategories = [
   { id: "vip", name: "VIP", price: 100, available: 18 },
   { id: "regular", name: "Regular", price: 50, available: 28 },
   { id: "economy", name: "Economy", price: 25, available: 5 },
+  { id: "noseat", name: "No Seat", price: 10, available: 10 },
 ];
 
 type TicketSelectionProps = {

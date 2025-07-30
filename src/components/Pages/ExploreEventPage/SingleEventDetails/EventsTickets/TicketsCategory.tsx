@@ -34,7 +34,6 @@ const TicketsCategory = ({
 
   return (
     <div className="container mx-auto p-6 text-white rounded-lg shadow-lg mt-10">
-      <h2 className="text-3xl font-bold mb-6">Select Your Tickets</h2>
       <div className="grid grid-cols-12 gap-10">
         <div className="col-span-9">
           <TicketCategoryTab

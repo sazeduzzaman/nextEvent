@@ -33,8 +33,8 @@ const FaqsPage = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-16">
-      <h2 className="text-4xl font-bold text-center mb-12 text-gray-800">
+    <div className="max-w-4xl mx-auto px-4 py-20">
+      <h2 className="text-4xl font-bold text-center mb-12 site-txt">
         Frequently Asked Questions
       </h2>
       <div className="space-y-4">
@@ -44,11 +44,11 @@ const FaqsPage = () => {
           return (
             <div
               key={index}
-              className="border border-gray-300 rounded-lg shadow-sm overflow-hidden transition-all duration-300"
+              className="border border-yellow-600 rounded-lg shadow-sm overflow-hidden transition-all duration-300"
             >
               <button
                 className={`w-full text-left px-6 py-5 flex items-center justify-between ${
-                  isOpen ? "bg-gray-100" : "bg-white hover:bg-gray-50"
+                  isOpen ? "site-bg" : "site-bg hover:bg-bg-yellow-600"
                 } transition-colors duration-300`}
                 onClick={() => toggle(index)}
               >
@@ -70,7 +70,7 @@ const FaqsPage = () => {
                     : "max-h-0 opacity-0 py-0"
                 }`}
               >
-                <p className="text-gray-600">{faq.answer}</p>
+                <p className="text-white">{faq.answer}</p>
               </div>
             </div>
           );

@@ -3,7 +3,7 @@ import { Event, EventApiResponse } from "./AllEventsDataType";
 export const fetchAllEvents = async (): Promise<Event[]> => {
   try {
     const res = await fetch("https://admin.eventstailor.com/api/v1/events", {
-      cache: "no-store", // ✅ always fetch fresh data
+      next: { revalidate: 1 }, // force no caching
     });
 
     if (!res.ok) {

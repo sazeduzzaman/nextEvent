@@ -5,7 +5,7 @@ export const fetchEventTypes = async (): Promise<EventType[]> => {
     const res = await fetch(
       "https://admin.eventstailor.com/api/v1/event-types",
       {
-        cache: "no-store",
+         next: { revalidate: 1 }, // force no caching
       }
     );
 

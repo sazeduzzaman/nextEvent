@@ -16,10 +16,6 @@ const EventHeader = ({ eventData }: EventHeaderProps) => {
   console.log(eventData.slug, "eventData");
 
   const formattedDate = formatFullDateWithWeekday(eventData.start_date);
-  // const formattedTime = formatTime(eventData.start_time);
-  // const exactDateTime = `${formatDate(eventData.start_date)} ${
-  //   eventData.start_time
-  // }`;
   const [imgSrc, setImgSrc] = useState(`/images/${eventData.image}`);
 
   return (

@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import EventsCard from "./EventsCards";
 import { fetchAllEvents } from "@/lib/api/AllEvents/AllEventsDataSet";
 import { Event } from "@/lib/api/AllEvents/AllEventsDataType";
-
 type AllEventsProps = {
   filters: {
     city: string;

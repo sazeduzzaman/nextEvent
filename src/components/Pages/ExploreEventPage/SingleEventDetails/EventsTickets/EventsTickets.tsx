@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import TicketsCategory from "./TicketsCategory";
 import EventHeader from "../EventDetailsInformation/EventHeader";
 import toast from "react-hot-toast";
+import { Event } from "@/lib/api/AllEvents/AllEventsDataType";
 
 const ticketCategories = [
   { id: "vip", name: "VIP", price: 100, available: 18 },
@@ -13,10 +14,10 @@ const ticketCategories = [
 ];
 
 type TicketSelectionProps = {
-  slug: string;
+  eventData: Event;
 };
 
-const ParentComponent = ({ slug }: TicketSelectionProps) => {
+const ParentComponent = ({ eventData }: TicketSelectionProps) => {
   // 👇 Store selected seat IDs per category
   const [selectedTickets, setSelectedTickets] = useState<
     Record<string, string[]>
@@ -62,10 +63,10 @@ const ParentComponent = ({ slug }: TicketSelectionProps) => {
 
   return (
     <div>
-      <EventHeader slug={slug} />
+      <EventHeader eventData={eventData} />
       <div className="pb-20 pt-10">
         <TicketsCategory
-          slug={slug}
+          slug={eventData.slug}
           ticketCategories={ticketCategories}
           selectedTickets={selectedTickets}
           handleSeatToggle={handleSeatToggle}

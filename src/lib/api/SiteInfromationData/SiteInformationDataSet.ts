@@ -5,7 +5,7 @@ export const fetchSiteInformation = async (): Promise<SiteInfo> => {
     const res = await fetch(
       "https://admin.eventstailor.com/api/v1/site-informations",
       {
-        cache: "no-store", // 🔁 Always fetch fresh
+        next: { revalidate: 1 }, // force no caching
       }
     );
 

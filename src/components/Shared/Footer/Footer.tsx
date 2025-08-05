@@ -8,24 +8,19 @@ import { fetchSiteInformation } from "@/lib/api/SiteInfromationData/SiteInformat
 
 const Footer = async () => {
   const siteInfo = await fetchSiteInformation();
-  console.log(siteInfo.website_name, "siteInfo");
   return (
     <div className="bg-black py-15 pb-0 footer-main">
       <footer className="footer sm:footer-horizontal p-10 container mx-auto px-0">
         <aside>
           <Link href="/">
             <Image
-              src="/images/logo.webp"
+              src={siteInfo.site_logo_black || siteInfo.site_logo_white || "/images/logo.webp"}
               width={200}
               height={200}
               alt="Picture of the author"
-            />
+            /> 
           </Link>
-          <p className="text-white pt-5">
-            Join our event management community for exclusive <br /> updates,
-            special offers, and the latest news delivered <br /> straight to
-            your inbox
-          </p>
+          <p className="text-white pt-5 w-80">{siteInfo.footer_description}</p>
           <div>
             <SocialIcons siteInfo={siteInfo} />
           </div>

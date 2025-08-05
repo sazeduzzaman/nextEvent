@@ -15,8 +15,8 @@ export async function generateSiteMetadata(): Promise<Metadata> {
       siteInfo.website_name || siteInfo.company_name || "Event Tailor",
     category: "business",
     generator: "Next.js",
-    themeColor: siteInfo.theme_color || "#3490dc",
-    colorScheme: siteInfo.dark_mode ? "dark" : "light",
+    // themeColor: siteInfo.theme_color || "#3490dc",
+    // colorScheme: siteInfo.dark_mode ? "dark" : "light",
 
     icons: {
       icon: siteInfo.site_favicon || "/favicon.ico",

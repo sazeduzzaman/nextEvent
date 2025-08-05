@@ -41,7 +41,8 @@ const events = [
   },
 ];
 
-const FeatureEvents = () => {
+const FeatureEvents = ({ allEvents }: any) => {
+  console.log(allEvents, "allEvents")
   return (
     <div className="feature-image py-12">
       <div className="container mx-auto  text-white">

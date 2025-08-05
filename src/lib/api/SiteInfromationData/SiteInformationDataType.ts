@@ -51,6 +51,7 @@ export interface SiteInfo {
   og_image: string;
   og_title: string;
   og_description: string;
+  footer_description: string;
   canonical_url: string;
   copyright_title: string;
   copyright_url: string;

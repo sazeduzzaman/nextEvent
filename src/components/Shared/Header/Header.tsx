@@ -11,7 +11,7 @@ import TopBar from "./TopBar";
 import "./Css/Header.css";
 import SiteButtonOne from "@/components/Buttons/SiteButtonOne/SiteButtonOne";
 
-const Header = () => {
+const Header = ({ siteInfo }: any) => {
   const pathname = usePathname();
   const isHome = pathname === "/";
 
@@ -45,12 +45,16 @@ const Header = () => {
         ${isVisible ? "header-show" : "header-hide"}`}
     >
       <div className="container mx-auto">
-        <TopBar />
+        <TopBar siteInfo={siteInfo} />
         <div className="navbar px-3 lg:px-0">
           <div className="navbar-start">
             <Link href="/">
               <Image
-                src="/images/logo.webp"
+                src={
+                  siteInfo.site_logo_black ||
+                  siteInfo.site_logo_white ||
+                  "/images/logo.webp"
+                }
                 width={200}
                 height={200}
                 alt="Logo"

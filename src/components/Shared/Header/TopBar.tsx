@@ -2,7 +2,7 @@ import Link from "next/link";
 import React from "react";
 import { FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
 
-const TopBar = () => {
+const TopBar = ({ siteInfo }: any) => {
   return (
     <div className="top-bar mb-none">
       <div className="flex justify-between items-center py-2">
@@ -13,18 +13,25 @@ const TopBar = () => {
         <div className="flex items-center">
           <div className="me-5">
             <p>
-              <small className="site-txt">Toll Free:</small>{" "}
-              <small className="text-gray-300">1800.899.900</small>
+              <small className="site-txt">Call:</small>{" "}
+              <a
+                href={`tel:${siteInfo.primary_phone}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-300"
+              >
+                <small>{siteInfo.primary_phone}</small>
+              </a>
             </p>
           </div>
           <div className="flex items-center gap-4">
-            <Link href={"/"}>
+            <Link href={siteInfo.facebook_url}>
               <FaFacebookF className="hover:text-[#f7c62d] text-white" />
             </Link>
-            <Link href={"/"}>
+            <Link href={siteInfo.twitter_url}>
               <FaTwitter className="hover:text-[#f7c62d] text-white" />
             </Link>
-            <Link href={"/"}>
+            <Link href={siteInfo.instagram_url}>
               <FaInstagram className="hover:text-[#f7c62d] text-white" />
             </Link>
           </div>

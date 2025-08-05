@@ -16,7 +16,7 @@ const EventsCard = ({ event }: EventHeaderProps) => {
 
   return (
     <Link href={`/events/details/${event.slug}`} key={event.id}>
-      <div className="bg-[#101113] rounded-lg shadow-md group overflow-hidden">
+      <div className="bg-[#101113] rounded-lg shadow-md group overflow-hidden animate-fade-in">
         {/* Image Container */}
         <div className="relative h-[490px] w-full overflow-hidden">
           <Image

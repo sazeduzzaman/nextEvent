@@ -1,11 +1,27 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import Image from "next/image";
 import EventTimeCount from "./EventTimeCount";
+import { Event } from "@/lib/api/AllEvents/AllEventsDataType";
+import {
+  formatDate,
+  formatTime,
+  formatFullDateWithWeekday,
+} from "@/utils/dateFormatter";
 
 type EventHeaderProps = {
-  slug: string;
+  eventData: Event;
 };
-const EventHeader = ({ slug }: EventHeaderProps) => {
+const EventHeader = ({ eventData }: EventHeaderProps) => {
+  console.log(eventData.slug, "eventData");
+
+  const formattedDate = formatFullDateWithWeekday(eventData.start_date);
+  // const formattedTime = formatTime(eventData.start_time);
+  // const exactDateTime = `${formatDate(eventData.start_date)} ${
+  //   eventData.start_time
+  // }`;
+  const [imgSrc, setImgSrc] = useState(`/images/${eventData.image}`);
+
   return (
     <div
       className="relative py-20 bg-cover bg-center bg-no-repeat backdrop-blur-sm"
@@ -24,27 +40,42 @@ const EventHeader = ({ slug }: EventHeaderProps) => {
                   width={30}
                   height={30}
                   src="/images/download.svg"
-                  alt="Eventa Iftar Party 2025"
+                  alt={eventData.name}
                   className="object-cover rounded-lg"
                 />
-                <p className="ps-2">Israt Karim</p>
+                <p className="ps-2">{eventData.event_type}</p>
               </div>
               <h2 className="text-2xl md:text-6xl font-bold mb-2 site-txt">
-                {slug
-                  .split("-")
-                  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                  .join(" ")}
+                {eventData.name}
               </h2>
               <div className="text-2xl site-txt mt-10 mb-4">
-                <p className="pb-4">📅Sunday, August 2, 2025</p>
+                <p className="pb-4">📅{formattedDate}</p>
                 <p className="pb-4">
-                  📍House 39/a-2, Road 4/A, Dhanmondi, Dhaka
+                  📍
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                      eventData.venue
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className=""
+                  >
+                    {eventData.venue}
+                  </a>
                 </p>
-                <p className="pb-4">⏰11:30 AM - 01:00 PM</p>
+                <p className="pb-4">
+                  ⏰ {formatTime(eventData.start_time)} -{" "}
+                  {formatTime(eventData.end_time)}
+                </p>
               </div>
             </div>
             <div>
-              <EventTimeCount time="August 2, 2025 18:00:00" slug={slug} />
+              <EventTimeCount
+                time={`${formatDate(eventData.start_date)} ${
+                  eventData.start_time
+                }`}
+                slug={eventData.slug}
+              />
             </div>
           </div>
           <div className="col-span-6">
@@ -52,9 +83,10 @@ const EventHeader = ({ slug }: EventHeaderProps) => {
               <Image
                 width={350}
                 height={350}
-                src="/images/event1.jpeg"
-                alt="Eventa Iftar Party 2025"
+                src={imgSrc}
+                alt={eventData.name}
                 className="object-cover rounded-lg"
+                onError={() => setImgSrc("/images/featureEvents.jpg")}
               />
             </div>
           </div>

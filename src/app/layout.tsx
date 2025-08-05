@@ -3,11 +3,11 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "../styles/globals.css";
 import Header from "@/components/Shared/Header/Header";
 import Footer from "@/components/Shared/Footer/Footer";
-import CustomCursor from "@/util/CustomCursor/CustomCursor";
+import CustomCursor from "@/utils/CustomCursor/CustomCursor";
 import { Toaster } from "react-hot-toast";
 
 const PlusJakarta = Plus_Jakarta_Sans({
-  variable: "--font-plus-jakarta", 
+  variable: "--font-plus-jakarta",
   subsets: ["latin"],
 });
 
@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${PlusJakarta.variable} antialiased`}>
-        <CustomCursor/>
+        <CustomCursor />
         <Toaster position="top-right" />
         <Header />
         {children}

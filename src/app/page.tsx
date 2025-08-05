@@ -1,3 +1,4 @@
+import { generateSiteMetadata } from "@/components/MetaData/SiteMeta";
 import FooterAction from "@/components/Pages/FooterAction/FooterAction";
 import AboutSection from "@/components/Pages/HomePage/AboutSection/AboutSection";
 import BannerSection from "@/components/Pages/HomePage/BannerSection/BannerSection";
@@ -6,14 +7,19 @@ import FeatureEvents from "@/components/Pages/HomePage/FeatureEvents/FeatureEven
 import InfoSection from "@/components/Pages/HomePage/InfoSection/InfoSection";
 import LatestEvents from "@/components/Pages/HomePage/LatestEvents/LatestEvents";
 import UpcomingEvents from "@/components/Pages/HomePage/UpcomingEvents/UpcomingEvents";
-import React from "react";
+import type { Metadata } from "next";
+
+// ✅ This dynamically generates the metadata for the page
+export async function generateMetadata(): Promise<Metadata> {
+  return await generateSiteMetadata();
+}
 
 const page = () => {
   return (
     <div>
       <BannerSection />
       <AboutSection />
-      <UpcomingEvents/>
+      <UpcomingEvents />
       <InfoSection />
       <LatestEvents />
       <FeatureEvents />

@@ -4,8 +4,11 @@ import React from "react";
 import SocialIcons from "./SocialIcons/SocialIcons";
 import "./Css/Footer.css";
 import { IoChevronForward } from "react-icons/io5";
+import { fetchSiteInformation } from "@/lib/api/SiteInfromationData/SiteInformationDataSet";
 
-const Footer = () => {
+const Footer = async () => {
+  const siteInfo = await fetchSiteInformation();
+  console.log(siteInfo.website_name, "siteInfo");
   return (
     <div className="bg-black py-15 pb-0 footer-main">
       <footer className="footer sm:footer-horizontal p-10 container mx-auto px-0">
@@ -24,7 +27,7 @@ const Footer = () => {
             your inbox
           </p>
           <div>
-            <SocialIcons />
+            <SocialIcons siteInfo={siteInfo} />
           </div>
         </aside>
         <nav>
@@ -86,14 +89,17 @@ const Footer = () => {
       <div className="container mx-auto footer-copy py-5 mt-10 flex justify-between items-center">
         {/* Left side: copyright */}
         <div className="text-white text-sm">
-          © {new Date().getFullYear()} GoEvent. All rights reserved.
+          © {new Date().getFullYear()}
+          <Link href={siteInfo.copyright_url}>
+            {siteInfo.copyright_title.slice(6)}
+          </Link>
         </div>
 
         {/* Right side: links */}
         <div className="flex space-x-6">
           <p className="text-white text-sm flex items-center">
             Developed With Love By
-            <Link href="/">
+            <Link href={siteInfo.copyright_url}>
               <Image
                 width={50}
                 height={50}

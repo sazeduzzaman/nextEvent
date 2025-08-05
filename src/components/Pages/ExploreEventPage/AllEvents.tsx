@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import EventsCard from "./EventsCards";
-import { fetchAllEvents } from "@/lib/api/AllEvents/AllEventsDataSet";
-import { Event } from "@/lib/api/AllEvents/AllEventsDataType";
+import useFilteredEvents from "@/utils/useFilteredEvents";
+import Image from "next/image";
+
 type AllEventsProps = {
   filters: {
     city: string;
@@ -13,51 +14,18 @@ type AllEventsProps = {
 };
 
 const AllEvents = ({ filters }: AllEventsProps) => {
-  const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadEvents() {
-      setLoading(true);
-      const allEvents = await fetchAllEvents();
-
-      const filteredEvents = allEvents.filter((event) => {
-        const cityMatch = filters.city
-          ? event.venue.toLowerCase().includes(filters.city.toLowerCase())
-          : true;
-
-        const typeMatch =
-          filters.eventTypes.length === 0 ||
-          filters.eventTypes.includes(event.event_type) ||
-          (event.event_type_data &&
-            filters.eventTypes.includes(event.event_type_data.name));
-
-        const dateMatch = filters.date
-          ? (() => {
-              const eventDate = new Date(event.start_date);
-              const filterDate = filters.date!;
-              return (
-                eventDate.getFullYear() === filterDate.getFullYear() &&
-                eventDate.getMonth() === filterDate.getMonth() &&
-                eventDate.getDate() === filterDate.getDate()
-              );
-            })()
-          : true;
-
-        return cityMatch && typeMatch && dateMatch;
-      });
-
-      setEvents(filteredEvents);
-      setLoading(false);
-    }
-
-    loadEvents();
-  }, [filters]);
+  const { events, loading } = useFilteredEvents(filters);
 
   if (loading)
     return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        <p className="text-white text-lg font-medium">Loading events...</p>
+      <div className="flex justify-center items-center h-screen">
+        <Image
+          src="/images/preloader.gif"
+          alt="Loading..."
+          width={100}
+          height={100}
+          priority
+        />
       </div>
     );
 

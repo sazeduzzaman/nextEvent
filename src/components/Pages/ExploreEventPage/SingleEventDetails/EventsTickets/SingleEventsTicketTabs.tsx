@@ -1,39 +1,28 @@
+"use client";
+
 import React from "react";
 
-type TicketCategory = {
-  id: string;
-  name: string;
-  price: number;
-  available: number;
+interface TicketTabsProps {
+  ticketCategories: any[];
+  activeTab: number;
+  setActiveTab: (id: number) => void;
+  selectedTickets: Record<number, string[]>;
+  handleSeatToggle: (categoryId: number, seatId: string) => void;
+}
+
+const seatPrefixes: Record<number, string> = {
+  1: "A", // VIP
+  2: "B", // Regular
+  3: "C", // Others
 };
 
-type TicketCategoryTabProps = {
-  ticketCategories: TicketCategory[];
-  eventData: any;
-  selectedTickets: Record<string, string[]>; // Seat names selected per category ID
-  handleSeatToggle: (categoryId: string, seatId: string) => void;
-  activeTab: string;
-  setActiveTab: React.Dispatch<React.SetStateAction<string>>;
-};
-
-const seatPrefixes: Record<string, string> = {
-  vip: "A",
-  regular: "B",
-  economy: "C",
-  noseat: "No💺",
-};
-
-const TicketCategoryTab = ({
+const SingleEventsTicketTabs: React.FC<TicketTabsProps> = ({
   ticketCategories,
-  selectedTickets,
-  handleSeatToggle,
   activeTab,
   setActiveTab,
-  eventData,
-}: TicketCategoryTabProps) => {
-  console.log(eventData.slug || "", "eventData event_seats asdasd");
-
-  
+  selectedTickets,
+  handleSeatToggle,
+}) => {
   return (
     <div>
       <p className="mb-5 text-3xl">Select Ticket</p>
@@ -54,19 +43,14 @@ const TicketCategoryTab = ({
             py-1 rounded-lg`}
             onClick={() => setActiveTab(id)}
             aria-selected={activeTab === id}
-            aria-controls={`tabpanel-${id}`}
-            id={`tab-${id}`}
           >
             {name}
           </button>
         ))}
       </div>
 
-      {/* Active Tab Seats */}
       <div
         role="tabpanel"
-        aria-labelledby={`tab-${activeTab}`}
-        id={`tabpanel-${activeTab}`}
         className="site-second-bg p-8 rounded-lg shadow-lg space-y-6"
       >
         {ticketCategories
@@ -77,9 +61,7 @@ const TicketCategoryTab = ({
             return (
               <div key={id}>
                 <div className="mb-6">
-                  <p className="font-bold text-2xl text-white tracking-wide">
-                    {name}
-                  </p>
+                  <p className="font-bold text-2xl text-white tracking-wide">{name}</p>
                   <p className="text-yellow-400 font-semibold text-lg">
                     ${price} per ticket
                   </p>
@@ -93,11 +75,10 @@ const TicketCategoryTab = ({
                   )}
                 </div>
 
-                {/* Seat Selection Buttons */}
                 <div className="grid grid-cols-5 gap-4">
                   {Array.from({ length: available }, (_, i) => {
-                    const prefix = seatPrefixes[id] || "A"; // fallback 'A'
-                    const seatId = `${prefix}${i + 1}`;
+                    const seatId =
+                      name === "No Seat" ? `${i + 1}` : `${seatPrefixes[id] || "A"}${i + 1}`;
                     const isSelected = selectedSeats.includes(seatId);
                     return (
                       <label
@@ -113,15 +94,12 @@ const TicketCategoryTab = ({
                           className="peer hidden"
                         />
                         <div
-                          className={`w-full py-3 rounded-lg border-2 text-center font-semibold
-                            transition duration-300
-                            cursor-pointer
-                            ${
-                              isSelected
-                                ? "bg-yellow-400 border-yellow-500 text-black shadow-md"
-                                : "bg-neutral-800 border-neutral-800 text-gray-300 hover:bg-yellow-400 hover:text-black hover:border-yellow-500"
-                            }
-                          `}
+                          className={`w-full py-3 rounded-lg border-2 text-center font-semibold transition duration-300 cursor-pointer
+                          ${
+                            isSelected
+                              ? "bg-yellow-400 border-yellow-500 text-black shadow-md"
+                              : "bg-neutral-800 border-neutral-800 text-gray-300 hover:bg-yellow-400 hover:text-black hover:border-yellow-500"
+                          }`}
                         >
                           {seatId}
                         </div>
@@ -137,4 +115,4 @@ const TicketCategoryTab = ({
   );
 };
 
-export default TicketCategoryTab;
+export default SingleEventsTicketTabs;

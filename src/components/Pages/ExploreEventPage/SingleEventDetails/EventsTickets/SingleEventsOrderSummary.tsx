@@ -1,32 +1,24 @@
-import { Event } from "@/lib/api/AllEvents/AllEventsDataType";
 import React from "react";
 
-type TicketCategory = {
-  id: string;
-  name: string;
-  price: number;
-  available: number;
-};
-
-type OrderSummaryProps = {
-  ticketCategories: TicketCategory[];
-  selectedTickets: Record<string, string[]>; // selected seat IDs per category
+interface OrderSummaryProps {
+  selectedTickets: Record<number, string[]>;
+  ticketCategories: any[];
   totalTickets: number;
   totalPrice: number;
-  eventData: Event;
+  eventData: any;
   proceedToPurchase: () => void;
-};
+}
 
-const OrderSummary = ({
-  ticketCategories,
+const SingleEventsOrderSummary: React.FC<OrderSummaryProps> = ({
   selectedTickets,
+  ticketCategories,
   totalTickets,
   totalPrice,
-  proceedToPurchase,
   eventData,
-}: OrderSummaryProps) => {
+  proceedToPurchase,
+}) => {
   return (
-    <div className="bg-neutral-900 border border-yellow-500 rounded-lg shadow-xl p-8 max-w-md mx-auto transition duration-300">
+    <div className="bg-neutral-900 border border-yellow-500 rounded-lg shadow-xl p-8 transition duration-300">
       <h3 className="text-3xl font-extrabold mb-6 text-white text-start">
         Order Summary
       </h3>
@@ -60,8 +52,8 @@ const OrderSummary = ({
       </div>
 
       {totalTickets === 0 ? (
-        <p className="text-start site-txt font-medium mt-10  text-2xl">
-          🎟️No seats selected yet.
+        <p className="text-start site-txt font-medium mt-10 text-2xl">
+          🎟️ No seats selected yet.
         </p>
       ) : (
         <>
@@ -107,7 +99,7 @@ const OrderSummary = ({
             onClick={proceedToPurchase}
             className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
           >
-            🚀 Proceed to Purchase 
+            🚀 Proceed to Purchase
           </button>
         </>
       )}
@@ -115,4 +107,4 @@ const OrderSummary = ({
   );
 };
 
-export default OrderSummary;
+export default SingleEventsOrderSummary;

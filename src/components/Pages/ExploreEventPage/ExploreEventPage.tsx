@@ -8,7 +8,7 @@ const ExploreEventPage = async () => {
   const allEvents = await fetchAllEvents();
   return (
     <div className="bg-black">
-      <FeatureEvents allEvents={allEvents}/>
+      <FeatureEvents allEvents={allEvents} />
       <div className="container mx-auto pt-15">
         <EventsWithSidebar />
       </div>

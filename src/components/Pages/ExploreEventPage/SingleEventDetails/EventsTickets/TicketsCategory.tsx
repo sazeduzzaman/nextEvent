@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import TicketCategoryTab from "./TicketCategoryTab";
 import OrderSummary from "./OrderSummary";
+import { Event } from "@/lib/api/AllEvents/AllEventsDataType";
 
 type TicketCategory = {
   id: string;
@@ -13,11 +14,11 @@ type TicketCategory = {
 
 type TicketsCategoryProps = {
   ticketCategories: TicketCategory[];
-  selectedTickets: Record<string, string[]>; // selected seat IDs per category
+  selectedTickets: Record<string, string[]>;
   handleSeatToggle: (categoryId: string, seatId: string) => void;
   totalTickets: number;
   totalPrice: number;
-  slug: string;
+  eventData: Event; // 👈 Correct type for eventData
   proceedToPurchase: () => void;
 };
 
@@ -28,15 +29,18 @@ const TicketsCategory = ({
   totalTickets,
   totalPrice,
   proceedToPurchase,
-  slug,
+  eventData, // ✅ FIXED: no more slug here
 }: TicketsCategoryProps) => {
   const [activeTab, setActiveTab] = useState(ticketCategories[0]?.id || "");
+
+  console.log(eventData.slug, "eventData event_seats");
 
   return (
     <div className="container mx-auto p-6 text-white rounded-lg shadow-lg mt-10">
       <div className="grid grid-cols-12 gap-10">
         <div className="col-span-9">
           <TicketCategoryTab
+          eventData={eventData}
             ticketCategories={ticketCategories}
             selectedTickets={selectedTickets}
             handleSeatToggle={handleSeatToggle}
@@ -47,7 +51,7 @@ const TicketsCategory = ({
 
         <div className="col-span-3">
           <OrderSummary
-            slug={slug}
+            eventData={eventData} // 👈 Passing full event object
             ticketCategories={ticketCategories}
             selectedTickets={selectedTickets}
             totalTickets={totalTickets}

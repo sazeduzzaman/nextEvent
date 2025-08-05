@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
 import { Event } from "@/lib/api/AllEvents/AllEventsDataType";
+import SiteButtonOne from "@/components/Buttons/SiteButtonOne/SiteButtonOne";
+import { Dice6, Dice6Icon, LocationEditIcon } from "lucide-react";
 
 type EventHeaderProps = {
   event: Event;
@@ -31,31 +33,39 @@ const EventsCard = ({ event }: EventHeaderProps) => {
         {/* Content */}
         <div className="p-5 bg-[#1a1b1e] rounded-b-lg">
           {/* Title & Description */}
-          <div>
-            <h3 className="text-xl site-txt h-16 font-bold text-white mb-2 line-clamp-2">
+          <div className="top-minus-badge">
+            <div className="flex gap-2 justify-between items-center">
+              <span className="text-xs badge text-yellow-400">
+                {formattedDate}
+              </span>
+              <span className="text-xs badge text-yellow-400">
+                {event.event_type}
+              </span>
+            </div>
+            <h3 className="text-2xl site-txt h-18 font-bold text-white mb-2 line-clamp-2 flex items-center">
               {event.name}
             </h3>
+            {/* Date & Type */}
+            <div className="flex justify-between items-center bg-[#2c2e33] site-txt  p-2 mb-3 rounded-2xl">
+              <div className="">
+                {/* Venue */}
+                <p className="text-xs site-txt flex">
+                  <LocationEditIcon className="text-4xl me-3" size={30} />
+                  {event.venue}
+                </p>
+              </div>
+            </div>
 
-            <p className="text-sm text-gray-300 leading-relaxed mb-4 line-clamp-3">
-              {event.description.split(" ").slice(0, 20).join(" ") + ""}
+            <p className="text-sm text-gray-300 leading-relaxed line-clamp-3">
+              {event.description.split(" ").slice(0, 12).join(" ") + ""}
             </p>
           </div>
 
-          {/* Date & Type */}
-          <div className="flex flex-wrap justify-between items-center gap-y-2">
-            <div className="text-sm text-gray-400 flex items-center gap-1">
-              📅 <span className="font-medium">{formattedDate}</span>
+          <div className="pt-4 flex items-center justify-between">
+            <div>
+              <SiteButtonOne text="Explore Event" />
             </div>
-
-            <span className="px-3 py-1 text-xs rounded-full bg-[#2c2e33] text-gray-200 border border-gray-600">
-              {event.event_type}
-            </span>
           </div>
-
-          {/* Venue */}
-          <p className="text-xs text-gray-400 mt-3 italic truncate">
-            📍 {event.venue}
-          </p>
         </div>
       </div>
     </Link>

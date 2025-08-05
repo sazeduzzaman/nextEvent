@@ -1,3 +1,19 @@
+export interface Seat {
+  id: number;
+  name: string;
+  row: string;
+  column: string;
+  status: string;  // e.g. "active", "inactive"
+  price: string;   // e.g. "150.00"
+  code: string;
+}
+
+export interface EventSeatGroup {
+  seat_type: string;     // e.g. "VIP"
+  seat_type_id: number;  // e.g. 1
+  seats: Seat[];
+}
+
 export interface EventTypeData {
   id: number;
   name: string;
@@ -20,11 +36,12 @@ export interface Event {
   banner_image: string;
   video_teaser_url: string;
   location_map_url: string;
-  start_date: string; // e.g. "2025-08-29"
-  end_date: string;   // e.g. "2025-08-31"
-  start_time: string; // e.g. "14:00:00"
-  end_time: string;   // e.g. "19:00:00"
+  start_date: string;
+  end_date: string;
+  start_time: string;
+  end_time: string;
   venue: string;
+  thumbnail: string;
   organizer_name: string;
   organizer_brand: string;
   purchase_deadline: string;
@@ -37,6 +54,10 @@ export interface Event {
   created_at: string;
   updated_at: string;
   event_type_data: EventTypeData;
+  is_featured: number;
+
+  // Add this new property for event seats
+  event_seats: EventSeatGroup[];
 }
 
 export interface EventApiResponse {

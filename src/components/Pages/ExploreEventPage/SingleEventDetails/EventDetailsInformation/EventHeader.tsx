@@ -12,18 +12,23 @@ import {
 type EventHeaderProps = {
   eventData: Event;
 };
-const EventHeader = ({ eventData }: EventHeaderProps) => {
-  console.log(eventData.slug, "eventData");
 
+const EventHeader = ({ eventData }: EventHeaderProps) => {
   const formattedDate = formatFullDateWithWeekday(eventData.start_date);
   const [imgSrc, setImgSrc] = useState(`/images/${eventData.image}`);
+  const backgroundImageUrl = imgSrc || "/images/featureEvents.jpg";
 
   return (
     <div
       className="relative py-20 bg-cover bg-center bg-no-repeat backdrop-blur-sm"
-      style={{ backgroundImage: "url('/images/event1.jpeg')" }}
+      style={{ backgroundImage: `url(${backgroundImageUrl})` }}
     >
-      {/* Overlay */}
+      <img
+        src={imgSrc}
+        alt={eventData.name}
+        onError={() => setImgSrc("/images/featureEvents.jpg")}
+        className="hidden"
+      />
       <div className="absolute inset-0 bg-black/80 z-0"></div>
 
       {/* Content */}
@@ -54,7 +59,6 @@ const EventHeader = ({ eventData }: EventHeaderProps) => {
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className=""
                   >
                     {eventData.venue}
                   </a>

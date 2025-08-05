@@ -10,34 +10,12 @@ import UserMenu from "./UserMenu";
 import TopBar from "./TopBar";
 import "./Css/Header.css";
 import SiteButtonOne from "@/components/Buttons/SiteButtonOne/SiteButtonOne";
+import useStickyHeader from "@/utils/useStickyHeader";
 
 const Header = ({ siteInfo }: any) => {
   const pathname = usePathname();
   const isHome = pathname === "/";
-
-  const [isSticky, setIsSticky] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentY = window.scrollY;
-
-      if (currentY < 50) {
-        setIsSticky(false);
-        setIsVisible(true);
-      } else {
-        setIsSticky(true);
-        setIsVisible(currentY < lastScrollY);
-      }
-
-      setLastScrollY(currentY);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
-
+  const { isSticky, isVisible } = useStickyHeader();
   return (
     <div
       className={`header-main ${!isHome ? "header-dark" : ""} 

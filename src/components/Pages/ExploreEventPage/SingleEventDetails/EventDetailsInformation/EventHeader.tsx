@@ -49,7 +49,7 @@ const EventHeader = ({ eventData }: EventHeaderProps) => {
               <h2 className="text-2xl md:text-6xl font-bold mb-2 site-txt">
                 {eventData.name}
               </h2>
-              <div className="text-2xl site-txt mt-10 mb-4">
+              <div className="text-2xl text-white mt-10 mb-4">
                 <p className="pb-4">📅{formattedDate}</p>
                 <p className="pb-4">
                   📍

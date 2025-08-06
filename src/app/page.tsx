@@ -5,7 +5,7 @@ import BannerSection from "@/components/Pages/HomePage/BannerSection/BannerSecti
 import FeaturedGallary from "@/components/Pages/HomePage/FeaturedGallary/FeaturedGallary";
 import FeatureEvents from "@/components/Pages/HomePage/FeatureEvents/FeatureEvents";
 import InfoSection from "@/components/Pages/HomePage/InfoSection/InfoSection";
-import LatestEvents from "@/components/Pages/HomePage/LatestEvents/LatestEvents";
+// import LatestEvents from "@/components/Pages/HomePage/LatestEvents/LatestEvents";
 import UpcomingEvents from "@/components/Pages/HomePage/UpcomingEvents/UpcomingEvents";
 import type { Metadata } from "next";
 
@@ -21,7 +21,7 @@ const page = () => {
       <AboutSection />
       <UpcomingEvents />
       <InfoSection />
-      <LatestEvents />
+      {/* <LatestEvents /> */}
       <FeatureEvents />
       <FeaturedGallary />
       <FooterAction />

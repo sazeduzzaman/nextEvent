@@ -7,15 +7,18 @@ const Login = () => {
   return (
     <div>
       <div className="h-screen bg-gradient-to-br from-yellow-400 to-yellow-500 flex items-center justify-center p-4">
-        <div className="bg-white w-full max-w-md p-8 rounded-lg shadow-2xl relative">
+        <div className="bg-black pb-20 pt-10 w-full max-w-md p-8 rounded-lg shadow-2xl relative">
           {/* Logo icon or circle */}
-          <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-800 p-4 rounded-full shadow-md">
+          <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-yellow-400 p-4 rounded-full shadow-md">
             <FaUser className="text-white text-3xl" />
           </div>
 
-          <h2 className="text-center text-2xl font-bold mb-6 mt-6 site-txt">
-            Login to Your Account
-          </h2>
+          <div className="text-center">
+            <h2 className="text-center text-2xl font-bold mb-6 mt-6 site-txt">
+              Login to Your Account
+            </h2>
+            <p>Welcome To Event Tailor</p>
+          </div>
 
           <LoginForm />
 
@@ -37,7 +40,7 @@ const Login = () => {
           </div>
 
           {/* Register Link */}
-          <p className="text-center text-sm text-gray-600 mt-6">
+          <p className="text-center text-sm text-white mt-6">
             Don’t have an account?{" "}
             <Link
               href="/auth/register"

@@ -3,12 +3,13 @@ import RegisterForm from "./RegisterForm";
 import Link from "next/link";
 import { FaUser, FaFacebookF, FaGoogle } from "react-icons/fa";
 const Register = () => {
+  
   return (
     <div>
       <div className="min-h-screen bg-gradient-to-br from-yellow-400 to-yellow-500 flex items-center justify-center p-4">
-        <div className="bg-white w-full max-w-md p-8 rounded-lg shadow-2xl relative">
+        <div className="bg-black w-full max-w-md p-8 rounded-lg shadow-2xl relative">
           {/* Icon */}
-          <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-800 p-4 rounded-full shadow-md">
+          <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-yellow-400 p-4 rounded-full shadow-md">
             <FaUser className="text-white text-3xl" />
           </div>
 
@@ -36,7 +37,7 @@ const Register = () => {
           </div>
 
           {/* Login Redirect */}
-          <p className="text-center text-sm text-gray-600 mt-6">
+          <p className="text-center text-sm text-white mt-6">
             Already have an account?{" "}
             <Link
               href="/auth/login"

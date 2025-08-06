@@ -27,7 +27,7 @@ const ContactForm = () => {
       onSubmit={handleSubmit}
       className="bg-white/5 backdrop-blur-md p-8 rounded-3xl shadow-2xl border border-white/10 text-white space-y-6"
     >
-      <h2 className="text-3xl font-bold text-amber-400 mb-2">Let's Talk</h2>
+      <h2 className="text-4xl font-extrabold mb-6 text-amber-400 border-l-4 border-amber-400 pl-4">Let's Talk</h2>
       <p className="text-gray-400 mb-6 text-sm">
         Fill out the form and our team will get back to you within 24 hours.
       </p>

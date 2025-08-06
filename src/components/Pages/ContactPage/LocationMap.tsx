@@ -2,8 +2,10 @@ import React from "react";
 
 const LocationMap = () => {
   return (
-    <div className="bg-white/5 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/10 h-full space-y-4">
-      <h2 className="text-2xl font-bold text-amber-400">Our Location</h2>
+    <div className=" space-y-4">
+      <h2 className="text-4xl font-extrabold mb-6 text-amber-400 border-l-4 border-amber-400 pl-4">
+        Our Location
+      </h2>
       <p className="text-sm text-gray-400">
         Find us on the map — we’re always here for your event needs.
       </p>

@@ -1,5 +1,7 @@
 "use client";
 import React, { useState } from "react";
+import Cookies from "js-cookie";
+import toast from "react-hot-toast";
 import {
   FaEnvelope,
   FaLock,
@@ -8,14 +10,18 @@ import {
   FaEye,
   FaEyeSlash,
 } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 const RegisterForm = () => {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     password: "",
+    password_confirmation: "",
   });
   const [loading, setLoading] = useState(false);
 
@@ -25,8 +31,13 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
 
+    if (formData.password !== formData.password_confirmation) {
+      toast.error("Passwords do not match.");
+      return;
+    }
+
+    setLoading(true);
     try {
       const res = await fetch(
         "https://admin.eventstailor.com/api/v1/register",
@@ -42,16 +53,29 @@ const RegisterForm = () => {
 
       const data = await res.json();
 
-      if (!res.ok) {
-        console.error("Registration failed:", data.message);
-        alert(data.message || "Registration failed");
+      if (res.ok) {
+        toast.success(data.message || "Registration successful");
+
+        // Save token and username in cookies with 1 minute expiration
+        Cookies.set("authToken", data.data.token, { expires: 1 / 1440 });
+        Cookies.set("userName", data.data.name, { expires: 1 / 1440 });
+
+        // Save token and username in localStorage (no expiry here)
+        localStorage.setItem("authToken", data.data.token);
+        localStorage.setItem("userName", data.data.name);
+
+        // Dispatch event to notify other components about auth update
+        window.dispatchEvent(new Event("authChanged"));
+
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 1500);
       } else {
-        alert("Registration successful");
-        setFormData({ name: "", email: "", phone: "", password: "" });
+        toast.error(data.message || "Registration failed");
       }
     } catch (error: any) {
       console.error("Error:", error);
-      alert("Something went wrong. Try again.");
+      toast.error("Something went wrong. Try again.");
     } finally {
       setLoading(false);
     }
@@ -118,6 +142,26 @@ const RegisterForm = () => {
           className="absolute top-3.5 right-3 text-yellow-400 cursor-pointer"
         >
           {showPassword ? <FaEyeSlash /> : <FaEye />}
+        </span>
+      </div>
+
+      {/* Confirm Password */}
+      <div className="relative">
+        <FaLock className="absolute top-3.5 left-3 text-yellow-400" />
+        <input
+          type={showConfirmPassword ? "text" : "password"}
+          name="password_confirmation"
+          value={formData.password_confirmation}
+          onChange={handleChange}
+          placeholder="Confirm Password"
+          className="pl-10 pr-10 py-2 w-full site-txt bg-transparent border border-yellow-400 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+          required
+        />
+        <span
+          onClick={() => setShowConfirmPassword((prev) => !prev)}
+          className="absolute top-3.5 right-3 text-yellow-400 cursor-pointer"
+        >
+          {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
         </span>
       </div>
 

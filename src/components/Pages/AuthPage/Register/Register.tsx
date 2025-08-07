@@ -3,7 +3,6 @@ import RegisterForm from "./RegisterForm";
 import Link from "next/link";
 import { FaUser, FaFacebookF, FaGoogle } from "react-icons/fa";
 const Register = () => {
-  
   return (
     <div>
       <div className="min-h-screen bg-gradient-to-br from-yellow-400 to-yellow-500 flex items-center justify-center p-4">

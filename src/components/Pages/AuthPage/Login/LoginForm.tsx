@@ -21,8 +21,10 @@ const LoginForm = () => {
   } = useForm<LoginData>();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data: LoginData) => {
+    setLoading(true);
     toast.loading("Logging in...", { id: "login" });
 
     try {
@@ -32,37 +34,57 @@ const LoginForm = () => {
         body: JSON.stringify(data),
       });
 
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || "Login failed");
-      }
-
       const result = await res.json();
 
-      // Assuming API returns user data and maybe token
-      // Save user info or token in cookie/localStorage
-      // Example: saving token if available
-      if (result.token) {
-        Cookies.set("authToken", result.token, { expires: 1 }); // 1 day expiry
+      if (!res.ok) {
+        throw new Error(result?.message || "Login failed");
       }
-      // Save user info if provided (adjust keys as per your API response)
+
+      if (result.token) {
+        Cookies.set("authToken", result.token, {
+          expires: 1 / 1440, // expires in 1 minute
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "Strict",
+          path: "/",
+        });
+        localStorage.setItem("authToken", result.token);
+      }
+
       if (result.user) {
-        Cookies.set("authUser", JSON.stringify(result.user), { expires: 1 });
+        Cookies.set("userName", result.user.name, {
+          expires: 1 / 1440, // expires in 1 minute
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "Strict",
+          path: "/",
+        });
+        localStorage.setItem("userName", result.user.name);
+        Cookies.set("authUser", JSON.stringify(result.user), {
+          expires: 1 / 1440, // expires in 1 minute
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "Strict",
+          path: "/",
+        });
       }
 
       toast.success("Login successful!", { id: "login" });
+
+      // Dispatch custom event to notify other components
+      window.dispatchEvent(new Event("authChanged"));
+
       router.push("/dashboard");
     } catch (error: any) {
       toast.error(error.message || "Login failed", { id: "login" });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <form
-      className="space-y-5 max-w-md mx-auto mt-10 "
+      className="space-y-5 max-w-md mx-auto mt-10"
       onSubmit={handleSubmit(onSubmit)}
     >
-      {/* Email */}
+      {/* Email Field */}
       <div className="relative">
         <FaUser className="absolute top-3.5 left-3 text-yellow-400" />
         <input
@@ -76,7 +98,7 @@ const LoginForm = () => {
         )}
       </div>
 
-      {/* Password */}
+      {/* Password Field */}
       <div className="relative">
         <FaLock className="absolute top-3.5 left-3 text-yellow-400" />
         <input
@@ -96,12 +118,17 @@ const LoginForm = () => {
         )}
       </div>
 
-      {/* Submit */}
+      {/* Submit Button */}
       <button
         type="submit"
-        className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-md font-semibold transition duration-300"
+        disabled={loading}
+        className={`w-full ${
+          loading
+            ? "bg-yellow-300 cursor-not-allowed"
+            : "bg-yellow-500 hover:bg-yellow-600"
+        } text-white py-2 rounded-md font-semibold transition duration-300`}
       >
-        Login
+        {loading ? "Logging in..." : "Login"}
       </button>
     </form>
   );

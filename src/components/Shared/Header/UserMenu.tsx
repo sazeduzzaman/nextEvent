@@ -3,43 +3,59 @@
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { BiUser } from "react-icons/bi";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 const UserMenu = () => {
-  // Simulate authentication (replace with real auth logic)
+  const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState("");
+
+  // Function to load auth info from cookies/localStorage
+  const loadAuthInfo = () => {
+    const token = Cookies.get("authToken") || localStorage.getItem("authToken");
+    const name = Cookies.get("userName") || localStorage.getItem("userName");
+    setIsLoggedIn(!!token);
+    setUserName(name || "");
+  };
 
   useEffect(() => {
-    // Simulated auth check (e.g., check token in localStorage)
-    const token = localStorage.getItem("authToken");
-    setIsLoggedIn(!!token);
+    loadAuthInfo();
+
+    // Listen for auth changes (login/register/logout)
+    const handleAuthChange = () => {
+      loadAuthInfo();
+    };
+
+    window.addEventListener("authChanged", handleAuthChange);
+
+    return () => {
+      window.removeEventListener("authChanged", handleAuthChange);
+    };
   }, []);
 
   return (
     <div>
       {!isLoggedIn ? (
-        // Show login icon if not logged in
         <Link href="/auth/login" className="flex items-center">
           <BiUser size={24} className="text-white" />
         </Link>
       ) : (
-        // Show avatar dropdown if logged in
         <div className="dropdown dropdown-end">
           <div
             tabIndex={0}
             role="button"
-            className="btn btn-ghost btn-circle avatar ring-1"
+            className="btn btn-ghost btn-circle text-white ring font-medium capitalize"
           >
-            <div className="w-10 rounded-full">
-              <img
-                alt="User Avatar"
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-              />
-            </div>
+            {userName.slice(0, 2)}
           </div>
           <ul
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow border-t"
           >
+            <li>
+              <Link href="/dashboard">Dashboard</Link>
+            </li>
             <li>
               <Link href="/profile">
                 <span className="justify-between">
@@ -55,7 +71,12 @@ const UserMenu = () => {
               <button
                 onClick={() => {
                   localStorage.removeItem("authToken");
+                  localStorage.removeItem("userName");
+                  Cookies.remove("authToken");
+                  Cookies.remove("userName");
                   setIsLoggedIn(false);
+                  setUserName("");
+                  router.push("/"); // SPA navigation on logout
                 }}
               >
                 Logout

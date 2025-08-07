@@ -1,105 +1,77 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { BiUser } from "react-icons/bi";
-import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-
-const TOKEN_EXPIRY_MINUTES = 1;
+import Cookies from "js-cookie";
+import { useAuthInfo } from "@/hooks/useAuthInfo";
+import { logout } from "@/lib/api/UserData/userApi";
 
 const UserMenu = () => {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userName, setUserName] = useState("");
+  const { isLoggedIn, userName, loadAuthInfo } = useAuthInfo();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // Function to load auth info from cookies/localStorage
-  const loadAuthInfo = () => {
-    const token = Cookies.get("authToken") || localStorage.getItem("authToken");
-    const name = Cookies.get("userName") || localStorage.getItem("userName");
-    setIsLoggedIn(!!token);
-    setUserName(name || "");
-  };
+  const handleDropdownToggle = () => setIsDropdownOpen(!isDropdownOpen);
+  const closeDropdown = () => setIsDropdownOpen(false);
 
-  useEffect(() => {
-    loadAuthInfo();
-
-    // Listen for auth changes (login/register/logout)
-    const handleAuthChange = () => {
-      loadAuthInfo();
-    };
-
-    window.addEventListener("authChanged", handleAuthChange);
-
-    // Setup token expiry timer
-    const timer = setTimeout(() => {
-      // Remove tokens from cookies and localStorage after expiry time
-      Cookies.remove("authToken");
-      Cookies.remove("userName");
-      localStorage.removeItem("authToken");
-      localStorage.removeItem("userName");
-      setIsLoggedIn(false);
-      setUserName("");
-      window.dispatchEvent(new Event("authChanged")); // notify other components
-      router.push("/auth/login"); // Redirect to login after token expiration
-    }, TOKEN_EXPIRY_MINUTES * 60 * 1000);
-
-    return () => {
-      window.removeEventListener("authChanged", handleAuthChange);
-      clearTimeout(timer);
-    };
-  }, [router]);
+  // Format initials
+  const userInitials = userName
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word, _, arr) =>
+      arr.length === 1 ? word.slice(0, 2) : word.charAt(0)
+    )
+    .join("")
+    .toUpperCase();
 
   return (
-    <div>
+    <div className="relative">
       {!isLoggedIn ? (
         <Link href="/auth/login" className="flex items-center">
           <BiUser size={24} className="text-white" />
         </Link>
       ) : (
-        <div className="dropdown dropdown-end">
+        <div>
           <div
-            tabIndex={0}
-            role="button"
-            className="btn btn-ghost btn-circle text-white ring font-medium capitalize"
+            onClick={handleDropdownToggle}
+            className="btn btn-ghost btn-circle text-white ring font-medium capitalize cursor-pointer"
           >
-            {userName.slice(0, 2)}
+            {userInitials}
           </div>
-          <ul
-            tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow border-t"
-          >
-            <li>
-              <Link href="/dashboard">Dashboard</Link>
-            </li>
-            <li>
-              <Link href="/profile">
-                <span className="justify-between">
-                  Profile
-                  <span className="badge">New</span>
-                </span>
-              </Link>
-            </li>
-            <li>
-              <Link href="/settings">Settings</Link>
-            </li>
-            <li>
-              <button
-                onClick={() => {
-                  localStorage.removeItem("authToken");
-                  localStorage.removeItem("userName");
-                  Cookies.remove("authToken");
-                  Cookies.remove("userName");
-                  setIsLoggedIn(false);
-                  setUserName("");
-                  window.dispatchEvent(new Event("authChanged"));
-                  router.push("/"); // SPA navigation on logout
-                }}
-              >
-                Logout
-              </button>
-            </li>
-          </ul>
+
+          {isDropdownOpen && (
+            <ul className="menu menu-sm dropdown-content absolute right-0 mt-3 w-52 bg-base-100 rounded-box z-10 p-2 shadow border-t">
+              <li>
+                <Link href="/dashboard" onClick={closeDropdown}>
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link href="/profile" onClick={closeDropdown}>
+                  <span className="justify-between">
+                    Profile <span className="badge">New</span>
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/settings" onClick={closeDropdown}>
+                  Settings
+                </Link>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    logout();
+                  }}
+                >
+                  Logout
+                </button>
+              </li>
+            </ul>
+          )}
         </div>
       )}
     </div>

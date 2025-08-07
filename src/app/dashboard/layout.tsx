@@ -1,4 +1,3 @@
-// app/user/layout.tsx
 import CommonBanner from "@/components/CommonBanner/CommonBanner";
 import DashboardSidebar from "@/components/Pages/UserDashboard/Dashboard/DashboardSidebar/DashboardSidebar";
 import React from "react";

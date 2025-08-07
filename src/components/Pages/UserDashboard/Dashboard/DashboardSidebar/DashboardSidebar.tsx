@@ -3,30 +3,15 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import toast from "react-hot-toast";
+import Cookies from "js-cookie";
+import { getProfile, logout } from "@/lib/api/UserData/userApi";
+import Image from "next/image";
 
 const DashboardSidebar = () => {
-  const pathname = usePathname();
   const router = useRouter();
-  const [user, setUser] = useState<{
-    name: string;
-    email: string;
-    imageUrl: string;
-  } | null>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-
-    const userData = sessionStorage.getItem("userData");
-    console.log(userData, "userData")
-    if (userData) {
-      setUser(JSON.parse(userData));
-    } else {
-      // Redirect to login if no session
-      router.push("/auth/login");
-    }
-  }, [router]);
+  const pathname = usePathname();
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   const isActive = (href: string) => pathname === href;
 
@@ -36,24 +21,52 @@ const DashboardSidebar = () => {
     { href: "/dashboard/profile", label: "Update Profile" },
   ];
 
-  if (!mounted || !user) return null;
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userData = await getProfile();
+        setUser(userData);
+      } catch (err) {
+        console.error("Failed to fetch user profile:", err);
+        router.push("/auth/login"); // Redirect if not authenticated
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchUser();
+  }, [router]);
+
+  if (loading) {
+    return (
+      <div>
+        <div className="loading-wrapper">
+          <Image
+            src="/images/preloader.gif"
+            alt="Loading..."
+            width={100}
+            height={100}
+            priority
+          />
+        </div>
+      </div>
+    );
+  }
   return (
     <aside className="flex flex-col justify-between w-full p-6 border border-yellow-400 rounded-lg shadow-lg space-y-6 site-second-bg">
-      {/* Top section */}
       <div>
-        {/* User Info */}
         <div className="flex flex-col items-center text-center mb-8">
           <img
-            src={user.imageUrl || "https://i.pravatar.cc/100"}
-            alt={user.name}
+            src={user?.avatar || "https://i.pravatar.cc/100"} // fallback avatar
+            alt="User Avatar"
             className="w-24 h-24 rounded-full object-cover mb-4 border-4 border-yellow-400"
           />
-          <h2 className="text-xl font-semibold site-txt">{user.name}</h2>
-          <p className="text-white text-sm">{user.email}</p>
+          <h2 className="text-xl font-semibold site-txt">
+            {user?.name || "Unknown User"}
+          </h2>
+          <p className="text-white text-sm">{user?.email || "N/A"}</p>
         </div>
 
-        {/* Navigation Links */}
         <nav>
           <ul className="space-y-3 px-10">
             {menuLinks.map(({ href, label }) => (
@@ -74,14 +87,11 @@ const DashboardSidebar = () => {
         </nav>
       </div>
 
-      {/* Logout Button */}
       <div className="mt-20">
         <button
           type="button"
           onClick={() => {
-            sessionStorage.removeItem("userData");
-            toast.success("Logged out successfully");
-            router.push("/auth/login");
+            logout();
           }}
           className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-md font-semibold transition"
         >

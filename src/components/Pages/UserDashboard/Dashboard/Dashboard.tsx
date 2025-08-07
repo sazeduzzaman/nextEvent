@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 type User = {
   name?: string;
@@ -10,7 +11,7 @@ type User = {
   role?: string;
 };
 
-const TOKEN_EXPIRY_MINUTES = 1;
+const TOKEN_EXPIRY_MINUTES = 60;
 
 const Dashboard = () => {
   const router = useRouter();
@@ -70,12 +71,25 @@ const Dashboard = () => {
     return () => clearTimeout(timer);
   }, [router]);
 
-  if (loading) return <div>Loading profile...</div>;
+  if (loading)
+    return (
+      <div>
+        <div className="loading-wrapper">
+          <Image
+            src="/images/preloader.gif"
+            alt="Loading..."
+            width={100}
+            height={100}
+            priority
+          />
+        </div>
+      </div>
+    );
   if (error) return <div className="text-red-600">Error: {error}</div>;
   if (!user) return <div>No user data found.</div>;
 
   return (
-    <div className="max-w-md mx-auto mt-20 p-6 bg-gray-100 rounded-md shadow-md">
+    <div className="mt-20 p-6  rounded-md shadow-md">
       <h1 className="text-2xl font-bold mb-4">
         Welcome, {user.name || user.email}
       </h1>

@@ -57,8 +57,8 @@ const RegisterForm = () => {
         toast.success(data.message || "Registration successful");
 
         // Save token and username in cookies with 1 minute expiration
-        Cookies.set("authToken", data.data.token, { expires: 1 / 1440 });
-        Cookies.set("userName", data.data.name, { expires: 1 / 1440 });
+        Cookies.set("authToken", data.data.token, { expires: 60 / 1440 });
+        Cookies.set("userName", data.data.name, { expires: 60 / 1440 });
 
         // Save token and username in localStorage (no expiry here)
         localStorage.setItem("authToken", data.data.token);

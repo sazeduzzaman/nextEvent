@@ -42,7 +42,7 @@ const LoginForm = () => {
 
       if (result.token) {
         Cookies.set("authToken", result.token, {
-          expires: 1 / 1440, // expires in 1 minute
+          expires: 60 / 1440, // expires in 1 minute
           secure: process.env.NODE_ENV === "production",
           sameSite: "Strict",
           path: "/",
@@ -52,14 +52,14 @@ const LoginForm = () => {
 
       if (result.user) {
         Cookies.set("userName", result.user.name, {
-          expires: 1 / 1440, // expires in 1 minute
+          expires: 60 / 1440, // expires in 1 minute
           secure: process.env.NODE_ENV === "production",
           sameSite: "Strict",
           path: "/",
         });
         localStorage.setItem("userName", result.user.name);
         Cookies.set("authUser", JSON.stringify(result.user), {
-          expires: 1 / 1440, // expires in 1 minute
+          expires: 60 / 1440, // expires in 1 minute
           secure: process.env.NODE_ENV === "production",
           sameSite: "Strict",
           path: "/",

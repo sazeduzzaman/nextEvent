@@ -1,5 +1,4 @@
 import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
 
 const API_BASE = "https://admin.eventstailor.com/api/v1";
 
@@ -9,6 +8,9 @@ export const logout = (router?: any) => {
   Cookies.remove("authToken");
   Cookies.remove("userName");
   Cookies.remove("authUser");
+
+  // 🔥 Dispatch a global event
+  window.dispatchEvent(new Event("authChanged"));
 
   if (router) {
     router.push("/auth/login");

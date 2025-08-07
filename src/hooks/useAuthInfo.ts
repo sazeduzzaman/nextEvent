@@ -14,7 +14,6 @@ export const useAuthInfo = () => {
   const loadAuthInfo = useCallback(() => {
     const cookieToken = Cookies.get("authToken");
     const storageToken = localStorage.getItem("authToken");
-
     const isValidToken = !!cookieToken && !!storageToken;
 
     const cookieName = Cookies.get("userName");
@@ -27,12 +26,10 @@ export const useAuthInfo = () => {
   useEffect(() => {
     loadAuthInfo();
 
-    const handleAuthChange = () => {
-      loadAuthInfo();
-    };
-
+    const handleAuthChange = () => loadAuthInfo();
     window.addEventListener("authChanged", handleAuthChange);
 
+    // Setup token expiry
     const timer = setTimeout(() => {
       Cookies.remove("authToken");
       Cookies.remove("userName");

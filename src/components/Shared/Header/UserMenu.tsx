@@ -62,7 +62,11 @@ const UserMenu = () => {
               </li>
               <li>
                 <button
-                  onClick={() => logout(router)}
+                  onClick={() => {
+                    logout(router);
+                    loadAuthInfo(); // <- This will reload the auth state from localStorage
+                    closeDropdown(); // optional
+                  }}
                 >
                   Logout
                 </button>

@@ -3,19 +3,18 @@ import { useRouter } from "next/navigation";
 
 const API_BASE = "https://admin.eventstailor.com/api/v1";
 
-export const logout = () => {
-  const router = useRouter();
-  // Remove from localStorage
+export const logout = (router?: any) => {
   localStorage.removeItem("authToken");
   localStorage.removeItem("userName");
-
-  // Remove from cookies
   Cookies.remove("authToken");
   Cookies.remove("userName");
   Cookies.remove("authUser");
 
-  // Redirect to login
-  router.push("/");
+  if (router) {
+    router.push("/auth/login");
+  } else {
+    window.location.href = "/auth/login";
+  }
 };
 
 export const updateProfile = async (updatedData: any) => {

@@ -4,7 +4,6 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { BiUser } from "react-icons/bi";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
 import { useAuthInfo } from "@/hooks/useAuthInfo";
 import { logout } from "@/lib/api/UserData/userApi";
 
@@ -63,9 +62,7 @@ const UserMenu = () => {
               </li>
               <li>
                 <button
-                  onClick={() => {
-                    logout();
-                  }}
+                  onClick={() => logout(router)}
                 >
                   Logout
                 </button>

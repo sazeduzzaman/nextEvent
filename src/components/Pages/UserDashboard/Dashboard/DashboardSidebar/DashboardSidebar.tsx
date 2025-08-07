@@ -90,9 +90,7 @@ const DashboardSidebar = () => {
       <div className="mt-20">
         <button
           type="button"
-          onClick={() => {
-            logout();
-          }}
+          onClick={() => logout(router)}
           className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-md font-semibold transition"
         >
           Logout

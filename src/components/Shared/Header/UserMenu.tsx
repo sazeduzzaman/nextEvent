@@ -6,6 +6,8 @@ import { BiUser } from "react-icons/bi";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
+const TOKEN_EXPIRY_MINUTES = 1;
+
 const UserMenu = () => {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -29,10 +31,24 @@ const UserMenu = () => {
 
     window.addEventListener("authChanged", handleAuthChange);
 
+    // Setup token expiry timer
+    const timer = setTimeout(() => {
+      // Remove tokens from cookies and localStorage after expiry time
+      Cookies.remove("authToken");
+      Cookies.remove("userName");
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("userName");
+      setIsLoggedIn(false);
+      setUserName("");
+      window.dispatchEvent(new Event("authChanged")); // notify other components
+      router.push("/auth/login"); // Redirect to login after token expiration
+    }, TOKEN_EXPIRY_MINUTES * 60 * 1000);
+
     return () => {
       window.removeEventListener("authChanged", handleAuthChange);
+      clearTimeout(timer);
     };
-  }, []);
+  }, [router]);
 
   return (
     <div>
@@ -76,6 +92,7 @@ const UserMenu = () => {
                   Cookies.remove("userName");
                   setIsLoggedIn(false);
                   setUserName("");
+                  window.dispatchEvent(new Event("authChanged"));
                   router.push("/"); // SPA navigation on logout
                 }}
               >

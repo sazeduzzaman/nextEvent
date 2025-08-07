@@ -2,50 +2,45 @@
 
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 type User = {
   name?: string;
   email?: string;
   role?: string;
-  // add more fields if needed based on your API response
 };
 
+const TOKEN_EXPIRY_MINUTES = 1;
+
 const Dashboard = () => {
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const token = Cookies.get("authToken");
+    if (!token) {
+      router.push("/auth/login");
+      return;
+    }
+
+    // Fetch user profile
     const fetchProfile = async () => {
-      const token = Cookies.get("authToken");
-      console.log("Token from cookie:", token);
-
-      if (!token) {
-        setError("Authentication token not found. Please login.");
-        setLoading(false);
-        return;
-      }
-
       try {
         const res = await fetch(
           "https://admin.eventstailor.com/api/v1/profile",
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
           }
         );
-        console.log("Profile fetch status:", res.status);
 
         if (!res.ok) {
-          const errorText = await res.text();
-          console.error("Profile fetch error:", errorText);
           throw new Error("Failed to fetch profile");
         }
 
         const data = await res.json();
-        console.log("Profile data:", data);
-        setUser(data.user); // <-- set only the user object here
+        setUser(data.user);
       } catch (err: any) {
         setError(err.message || "An error occurred");
       } finally {
@@ -54,7 +49,26 @@ const Dashboard = () => {
     };
 
     fetchProfile();
-  }, []);
+
+    // Set a timer to check token expiration and redirect after expiry
+    const timer = setTimeout(() => {
+      // Remove token and user data from cookies
+      Cookies.remove("authToken");
+      Cookies.remove("userName");
+      Cookies.remove("authUser");
+
+      // Remove token and user data from localStorage
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("userName");
+      localStorage.removeItem("authUser");
+
+      // Redirect to login page
+      router.push("/auth/login");
+    }, TOKEN_EXPIRY_MINUTES * 60 * 1000);
+
+    // Cleanup timer on unmount
+    return () => clearTimeout(timer);
+  }, [router]);
 
   if (loading) return <div>Loading profile...</div>;
   if (error) return <div className="text-red-600">Error: {error}</div>;
@@ -65,7 +79,6 @@ const Dashboard = () => {
       <h1 className="text-2xl font-bold mb-4">
         Welcome, {user.name || user.email}
       </h1>
-      {/* Display more user info if available */}
       <p>Role: {user.role || "N/A"}</p>
     </div>
   );

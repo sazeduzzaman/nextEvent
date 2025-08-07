@@ -13,6 +13,20 @@ type User = {
 
 const TOKEN_EXPIRY_MINUTES = 60;
 
+const getProfile = async (token: string) => {
+  const res = await fetch("https://admin.eventstailor.com/api/v1/profile", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch profile");
+  }
+
+  const data = await res.json();
+  console.log("✅ getProfile result:", data); // <-- Log the profile data here
+  return data;
+};
+
 const Dashboard = () => {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
@@ -26,23 +40,12 @@ const Dashboard = () => {
       return;
     }
 
-    // Fetch user profile
     const fetchProfile = async () => {
       try {
-        const res = await fetch(
-          "https://admin.eventstailor.com/api/v1/profile",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch profile");
-        }
-
-        const data = await res.json();
+        const data = await getProfile(token);
         setUser(data.user);
       } catch (err: any) {
+        console.error("❌ Error fetching profile:", err);
         setError(err.message || "An error occurred");
       } finally {
         setLoading(false);
@@ -50,46 +53,26 @@ const Dashboard = () => {
     };
 
     fetchProfile();
-
-    // Set a timer to check token expiration and redirect after expiry
-    const timer = setTimeout(() => {
-      // Remove token and user data from cookies
-      Cookies.remove("authToken");
-      Cookies.remove("userName");
-      Cookies.remove("authUser");
-
-      // Remove token and user data from localStorage
-      localStorage.removeItem("authToken");
-      localStorage.removeItem("userName");
-      localStorage.removeItem("authUser");
-
-      // Redirect to login page
-      router.push("/auth/login");
-    }, TOKEN_EXPIRY_MINUTES * 60 * 1000);
-
-    // Cleanup timer on unmount
-    return () => clearTimeout(timer);
   }, [router]);
 
   if (loading)
     return (
-      <div>
-        <div className="loading-wrapper">
-          <Image
-            src="/images/preloader.gif"
-            alt="Loading..."
-            width={100}
-            height={100}
-            priority
-          />
-        </div>
+      <div className="loading-wrapper">
+        <Image
+          src="/images/preloader.gif"
+          alt="Loading..."
+          width={100}
+          height={100}
+          priority
+        />
       </div>
     );
+
   if (error) return <div className="text-red-600">Error: {error}</div>;
   if (!user) return <div>No user data found.</div>;
 
   return (
-    <div className="mt-20 p-6  rounded-md shadow-md">
+    <div className="mt-20 p-6 rounded-md shadow-md">
       <h1 className="text-2xl font-bold mb-4">
         Welcome, {user.name || user.email}
       </h1>

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import Cookies from "js-cookie";
+import { loginUser } from "@/lib/api/UserData/authLogin";
 
 type LoginData = {
   email: string;
@@ -28,49 +28,9 @@ const LoginForm = () => {
     toast.loading("Logging in...", { id: "login" });
 
     try {
-      const res = await fetch("https://admin.eventstailor.com/api/v1/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      const result = await res.json();
-
-      if (!res.ok) {
-        throw new Error(result?.message || "Login failed");
-      }
-
-      if (result.token) {
-        Cookies.set("authToken", result.token, {
-          expires: 60 / 1440, // expires in 1 minute
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "Strict",
-          path: "/",
-        });
-        localStorage.setItem("authToken", result.token);
-      }
-
-      if (result.user) {
-        Cookies.set("userName", result.user.name, {
-          expires: 60 / 1440, // expires in 1 minute
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "Strict",
-          path: "/",
-        });
-        localStorage.setItem("userName", result.user.name);
-        Cookies.set("authUser", JSON.stringify(result.user), {
-          expires: 60 / 1440, // expires in 1 minute
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "Strict",
-          path: "/",
-        });
-      }
+      await loginUser(data);
 
       toast.success("Login successful!", { id: "login" });
-
-      // Dispatch custom event to notify other components
-      window.dispatchEvent(new Event("authChanged"));
-
       router.push("/dashboard");
     } catch (error: any) {
       toast.error(error.message || "Login failed", { id: "login" });
@@ -84,7 +44,7 @@ const LoginForm = () => {
       className="space-y-5 max-w-md mx-auto mt-10"
       onSubmit={handleSubmit(onSubmit)}
     >
-      {/* Email Field */}
+      {/* Email */}
       <div className="relative">
         <FaUser className="absolute top-3.5 left-3 text-yellow-400" />
         <input
@@ -98,7 +58,7 @@ const LoginForm = () => {
         )}
       </div>
 
-      {/* Password Field */}
+      {/* Password */}
       <div className="relative">
         <FaLock className="absolute top-3.5 left-3 text-yellow-400" />
         <input

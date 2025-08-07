@@ -11,6 +11,7 @@ import {
   FaEyeSlash,
 } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { registerUser } from "@/lib/api/UserData/authRegister";
 
 const RegisterForm = () => {
   const router = useRouter();
@@ -39,43 +40,11 @@ const RegisterForm = () => {
 
     setLoading(true);
     try {
-      const res = await fetch(
-        "https://admin.eventstailor.com/api/v1/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
-
-      const data = await res.json();
-
-      if (res.ok) {
-        toast.success(data.message || "Registration successful");
-
-        // Save token and username in cookies with 1 minute expiration
-        Cookies.set("authToken", data.data.token, { expires: 60 / 1440 });
-        Cookies.set("userName", data.data.name, { expires: 60 / 1440 });
-
-        // Save token and username in localStorage (no expiry here)
-        localStorage.setItem("authToken", data.data.token);
-        localStorage.setItem("userName", data.data.name);
-
-        // Dispatch event to notify other components about auth update
-        window.dispatchEvent(new Event("authChanged"));
-
-        setTimeout(() => {
-          router.push("/dashboard");
-        }, 1500);
-      } else {
-        toast.error(data.message || "Registration failed");
-      }
+      await registerUser(formData);
+      toast.success("Registration successful");
+      await router.push("/dashboard");
     } catch (error: any) {
-      console.error("Error:", error);
-      toast.error("Something went wrong. Try again.");
+      toast.error(error.message || "Registration failed");
     } finally {
       setLoading(false);
     }

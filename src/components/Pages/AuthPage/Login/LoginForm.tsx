@@ -41,17 +41,17 @@ const LoginForm = () => {
 
   return (
     <form
-      className="space-y-5 max-w-md mx-auto mt-10"
+      className="space-y-5 max-w-md mx-auto mt-15"
       onSubmit={handleSubmit(onSubmit)}
     >
       {/* Email */}
       <div className="relative">
-        <FaUser className="absolute top-3.5 left-3 text-yellow-400" />
+        <FaUser className="absolute top-3.5 left-3 text-white" />
         <input
           type="email"
           {...register("email", { required: "Email is required" })}
           placeholder="Email"
-          className="pl-10 py-2 w-full site-txt bg-transparent border border-yellow-400 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+          className="pl-10 py-2 w-full text-white bg-transparent border border-yellow-400 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
         />
         {errors.email && (
           <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
@@ -60,12 +60,12 @@ const LoginForm = () => {
 
       {/* Password */}
       <div className="relative">
-        <FaLock className="absolute top-3.5 left-3 text-yellow-400" />
+        <FaLock className="absolute top-3.5 left-3 text-white" />
         <input
           type={showPassword ? "text" : "password"}
           {...register("password", { required: "Password is required" })}
           placeholder="Password"
-          className="pl-10 pr-10 py-2 w-full site-txt bg-transparent border border-yellow-400 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+          className="pl-10 pr-10 py-2 w-full text-white bg-transparent border border-yellow-400 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
         />
         <span
           onClick={() => setShowPassword((prev) => !prev)}
@@ -86,9 +86,9 @@ const LoginForm = () => {
           loading
             ? "bg-yellow-300 cursor-not-allowed"
             : "bg-yellow-500 hover:bg-yellow-600"
-        } text-white py-2 rounded-md font-semibold transition duration-300`}
+        } text-white py-3 rounded-md font-semibold transition duration-300 cursor-pointer`}
       >
-        {loading ? "Logging in..." : "Login"}
+        {loading ? "Logging in..." : "Login Now 🔒"}
       </button>
     </form>
   );

@@ -54,61 +54,61 @@ const RegisterForm = () => {
     <form className="space-y-5" onSubmit={handleSubmit}>
       {/* Full Name */}
       <div className="relative">
-        <FaUser className="absolute top-3.5 left-3 text-yellow-400" />
+        <FaUser className="absolute top-3.5 left-3 text-white" />
         <input
           type="text"
           name="name"
           value={formData.name}
           onChange={handleChange}
           placeholder="Your Name"
-          className="pl-10 py-2 w-full site-txt bg-transparent border border-yellow-400 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+          className="pl-10 py-2 w-full text-white bg-transparent border border-yellow-400 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
           required
         />
       </div>
 
       {/* Email */}
       <div className="relative">
-        <FaEnvelope className="absolute top-3.5 left-3 text-yellow-400" />
+        <FaEnvelope className="absolute top-3.5 left-3 text-white" />
         <input
           type="email"
           name="email"
           value={formData.email}
           onChange={handleChange}
           placeholder="Email Address"
-          className="pl-10 py-2 w-full site-txt bg-transparent border border-yellow-400 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+          className="pl-10 py-2 w-full text-white bg-transparent border border-yellow-400 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
           required
         />
       </div>
 
       {/* Phone */}
       <div className="relative">
-        <FaPhone className="absolute top-3.5 left-3 text-yellow-400" />
+        <FaPhone className="absolute top-3.5 left-3 text-white" />
         <input
           type="number"
           name="phone"
           value={formData.phone}
           onChange={handleChange}
           placeholder="Phone Number"
-          className="pl-10 py-2 w-full site-txt bg-transparent border border-yellow-400 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+          className="pl-10 py-2 w-full text-white bg-transparent border border-yellow-400 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
           required
         />
       </div>
 
       {/* Password */}
       <div className="relative">
-        <FaLock className="absolute top-3.5 left-3 text-yellow-400" />
+        <FaLock className="absolute top-3.5 left-3 text-white" />
         <input
           type={showPassword ? "text" : "password"}
           name="password"
           value={formData.password}
           onChange={handleChange}
           placeholder="Password"
-          className="pl-10 pr-10 py-2 w-full site-txt bg-transparent border border-yellow-400 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+          className="pl-10 pr-10 py-2 w-full text-white bg-transparent border border-yellow-400 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
           required
         />
         <span
           onClick={() => setShowPassword((prev) => !prev)}
-          className="absolute top-3.5 right-3 text-yellow-400 cursor-pointer"
+          className="absolute top-3.5 right-3 text-gray-500 cursor-pointer"
         >
           {showPassword ? <FaEyeSlash /> : <FaEye />}
         </span>
@@ -116,19 +116,19 @@ const RegisterForm = () => {
 
       {/* Confirm Password */}
       <div className="relative">
-        <FaLock className="absolute top-3.5 left-3 text-yellow-400" />
+        <FaLock className="absolute top-3.5 left-3 text-white" />
         <input
           type={showConfirmPassword ? "text" : "password"}
           name="password_confirmation"
           value={formData.password_confirmation}
           onChange={handleChange}
           placeholder="Confirm Password"
-          className="pl-10 pr-10 py-2 w-full site-txt bg-transparent border border-yellow-400 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+          className="pl-10 pr-10 py-2 w-full text-white bg-transparent border border-yellow-400 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
           required
         />
         <span
           onClick={() => setShowConfirmPassword((prev) => !prev)}
-          className="absolute top-3.5 right-3 text-yellow-400 cursor-pointer"
+          className="absolute top-3.5 right-3 text-gray-500 cursor-pointer"
         >
           {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
         </span>
@@ -138,9 +138,9 @@ const RegisterForm = () => {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-md font-semibold transition duration-300"
+        className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-3 rounded-md font-semibold transition duration-300 cursor-pointer"
       >
-        {loading ? "Registering..." : "Register"}
+        {loading ? "Registering..." : "Register Now 🔒"}
       </button>
     </form>
   );

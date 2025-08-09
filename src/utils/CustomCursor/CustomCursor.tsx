@@ -1,5 +1,5 @@
-'use client';
-import React, { useEffect, useRef, useState } from 'react';
+"use client";
+import React, { useEffect, useRef, useState } from "react";
 
 const CustomCursor = () => {
   const cursorRef = useRef<HTMLDivElement>(null);
@@ -30,29 +30,38 @@ const CustomCursor = () => {
       targetY.current = e.clientY;
 
       const element = e.target as HTMLElement;
-      const computedCursor = window.getComputedStyle(element).getPropertyValue('cursor');
+      const computedCursor = window
+        .getComputedStyle(element)
+        .getPropertyValue("cursor");
 
-      const interactiveTags = ['A', 'BUTTON', 'INPUT', 'SELECT', 'TEXTAREA', 'LABEL'];
+      const interactiveTags = [
+        "A",
+        "BUTTON",
+        "INPUT",
+        "SELECT",
+        "TEXTAREA",
+        "LABEL",
+      ];
       const isClickable =
-        computedCursor === 'pointer' ||
+        computedCursor === "pointer" ||
         interactiveTags.includes(element.tagName) ||
-        element.getAttribute('role') === 'button' ||
+        element.getAttribute("role") === "button" ||
         element.closest('button, a, [role="button"], [role="link"]');
 
       setIsPointer(!!isClickable);
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
   const flareSize = isPointer ? 0 : 30;
-  const cursorStyle = isPointer ? { left: '-100px', top: '-100px' } : {};
+  const cursorStyle = isPointer ? { left: "-100px", top: "-100px" } : {};
 
   return (
     <div
       ref={cursorRef}
-      className={`flare ${isPointer ? 'pointer' : ''}`}
+      className={`flare ${isPointer ? "pointer" : ""}`}
       style={{
         ...cursorStyle,
         width: `${flareSize}px`,

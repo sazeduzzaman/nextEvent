@@ -31,7 +31,7 @@ const Header = ({ siteInfo }: any) => {
                 src={
                   siteInfo.site_logo_black ||
                   siteInfo.site_logo_white ||
-                  "/images/logo.webp"
+                  "/images/logo.png"
                 }
                 width={200}
                 height={200}

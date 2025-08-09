@@ -39,7 +39,7 @@ body {
   color: var(--primary-color);
 }
 .site-second-bg {
-  background-color: var(--secondary-color);
+  background-color: var(--secondary-color) !important;
 }
 
 @media only screen and (max-width: 600px) {
@@ -104,7 +104,7 @@ body {
 .flare.pointer {
   width: 45px !important;
   height: 45px !important;
-  backdrop-filter: blur(6px) !important;
+  backdrop-filter: blur(2px) !important;
   box-shadow: 0 0 20px var(--primary-color) !important;
   border-color: var(--primary-color) !important;
   background-color: rgba(0, 0, 0, 0.05) !important;

@@ -42,22 +42,24 @@ const UserMenu = () => {
           </div>
 
           {isDropdownOpen && (
-            <ul className="menu menu-sm dropdown-content absolute right-0 mt-3 w-52 bg-base-100 rounded-box z-10 p-2 shadow border-t">
+            <ul className="menu menu-sm dropdown-content absolute right-0 mt-3 w-52 bg-base-100 rounded-box z-10 p-2 shadow border-t border-yellow-400">
               <li>
                 <Link href="/dashboard" onClick={closeDropdown}>
                   Dashboard
                 </Link>
               </li>
               <li>
-                <Link href="/profile" onClick={closeDropdown}>
+                <Link href="/dashboard/profile" onClick={closeDropdown}>
                   <span className="justify-between">
-                    Profile <span className="badge">New</span>
+                    Profile
                   </span>
                 </Link>
               </li>
               <li>
-                <Link href="/settings" onClick={closeDropdown}>
-                  Settings
+                <Link href="/dashboard/tickets" onClick={closeDropdown}>
+                  <span className="justify-between">
+                    My Tickets
+                  </span>
                 </Link>
               </li>
               <li>

@@ -31,7 +31,7 @@ export default async function RootLayout({
       <body className={`${PlusJakarta.variable} antialiased`}>
         <CustomCursor />
         <Toaster position="top-right" />
-        <Header siteInfo={siteInfo} /> {/* ✅ Pass data to component */}
+        <Header siteInfo={siteInfo} />
         {children}
         <Footer />
       </body>

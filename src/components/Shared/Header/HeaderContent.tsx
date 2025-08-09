@@ -19,7 +19,7 @@ const HeaderContent = async () => {
               src={
                 siteInfo.site_logo_black ||
                 siteInfo.site_logo_white ||
-                "/images/logo.png"
+                "/images/logo.webp"
               }
               width={200}
               height={200}

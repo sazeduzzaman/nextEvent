@@ -31,7 +31,6 @@ const TicketCategoryTab = ({
   setActiveTab,
   eventData,
 }: TicketCategoryTabProps) => {
-  console.log(eventData.slug || "", "eventData event_seats asdasd");
 
   
   return (

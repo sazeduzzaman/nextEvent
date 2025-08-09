@@ -52,7 +52,7 @@ const EventsDetailsGallery = () => {
         >
           <button
             onClick={showPrev}
-            className="absolute left-4 text-white text-3xl font-bold"
+            className="absolute left-4 text-white text-3xl font-bold cursor-pointer"
             aria-label="Previous image"
           >
             ‹
@@ -65,14 +65,14 @@ const EventsDetailsGallery = () => {
           />
           <button
             onClick={showNext}
-            className="absolute right-4 text-white text-3xl font-bold"
+            className="absolute right-4 text-white text-3xl font-bold cursor-pointer"
             aria-label="Next image"
           >
             ›
           </button>
           <button
             onClick={closeLightbox}
-            className="absolute top-4 right-4 text-white text-3xl font-bold"
+            className="absolute top-4 right-4 text-white text-3xl font-bold cursor-pointer"
             aria-label="Close lightbox"
           >
             ×

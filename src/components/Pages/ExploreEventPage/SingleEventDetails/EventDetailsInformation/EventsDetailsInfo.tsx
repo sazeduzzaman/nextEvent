@@ -24,7 +24,6 @@ const EventsDetailsInfo = ({ eventData }: EventHeaderProps) => {
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
         const data = await res.json();
-        console.log("Fetched Event Data:", data);
         setEventDetails(data.event_details); // Save to state
         setEventSeats(data.event_seats); // Save to state
         setEventDataSet(data.event_details);
@@ -35,9 +34,6 @@ const EventsDetailsInfo = ({ eventData }: EventHeaderProps) => {
 
     fetchData();
   }, [eventData?.slug]);
-
-  // Now you can log eventSeats here or use it in JSX
-  console.log(eventDetails, "eventDetails asdasdasdasd");
 
   return (
     <div className="bg-black py-20">

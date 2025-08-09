@@ -33,14 +33,12 @@ const TicketsCategory = ({
 }: TicketsCategoryProps) => {
   const [activeTab, setActiveTab] = useState(ticketCategories[0]?.id || "");
 
-  console.log(eventData.slug, "eventData event_seats");
-
   return (
     <div className="container mx-auto p-6 text-white rounded-lg shadow-lg mt-10">
       <div className="grid grid-cols-12 gap-10">
         <div className="col-span-9">
           <TicketCategoryTab
-          eventData={eventData}
+            eventData={eventData}
             ticketCategories={ticketCategories}
             selectedTickets={selectedTickets}
             handleSeatToggle={handleSeatToggle}

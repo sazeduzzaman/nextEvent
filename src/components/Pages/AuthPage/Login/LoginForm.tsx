@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -14,6 +14,9 @@ type LoginData = {
 
 const LoginForm = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") || "/dashboard";
+
   const {
     register,
     handleSubmit,
@@ -31,7 +34,9 @@ const LoginForm = () => {
       await loginUser(data);
 
       toast.success("Login successful!", { id: "login" });
-      router.push("/dashboard");
+
+      // Redirect user to original requested page or fallback to /dashboard
+      router.push(redirect);
     } catch (error: any) {
       toast.error(error.message || "Login failed", { id: "login" });
     } finally {

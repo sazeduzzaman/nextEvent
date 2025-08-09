@@ -1,12 +1,44 @@
 import { Event, EventSeatGroup } from "@/lib/api/AllEvents/AllEventsDataType";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
 interface EventSeatsProps {
   eventSeats: EventSeatGroup[];
   eventDetails: Event | null;
+  loading?: boolean;
 }
-const EventsDetailsSeat = ({ eventSeats, eventDetails }: EventSeatsProps) => {
+
+const EventsDetailsSeat = ({
+  eventSeats,
+  eventDetails,
+  loading = false,
+}: EventSeatsProps) => {
+  if (loading) {
+    return (
+      <div className="loading-wrapper flex justify-center items-center h-48">
+        <Image
+          src="/images/preloader.gif"
+          alt="Loading..."
+          width={100}
+          height={100}
+          priority
+        />
+      </div>
+    );
+  }
+
+  if (!eventSeats || eventSeats.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-48">
+        {/* Replace this with your spinner or preloader image */}
+        <span className="text-yellow-400 text-lg font-semibold">
+          Loading seats...
+        </span>
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-12 mt-10 gap-6">
       {eventSeats.map((seatGroup, id) => (

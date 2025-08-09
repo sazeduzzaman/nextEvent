@@ -1,4 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getProfile } from "@/lib/api/UserData/userApi"; // Adjust path if needed
+
+interface UserProfile {
+  name: string;
+  email: string;
+  phone: string;
+}
 
 interface OrderSummaryProps {
   selectedTickets: Record<number, string[]>;
@@ -17,6 +24,39 @@ const SingleEventsOrderSummary: React.FC<OrderSummaryProps> = ({
   eventData,
   proceedToPurchase,
 }) => {
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [loadingProfile, setLoadingProfile] = useState(true);
+  const [profileError, setProfileError] = useState<string | null>(null);
+  useEffect(() => {
+    async function fetchProfile() {
+      try {
+        setLoadingProfile(true);
+        const profileData = await getProfile();
+        // profileData can be null if no user logged in
+        if (profileData) {
+          setUserProfile(profileData);
+        } else {
+          setUserProfile(null); // no user logged in
+        }
+      } catch (error) {
+        setProfileError("Failed to load user profile.");
+      } finally {
+        setLoadingProfile(false);
+      }
+    }
+    fetchProfile();
+  }, []);
+
+  if (loadingProfile) {
+    return (
+      <div className="flex justify-center items-center h-48 text-yellow-400">
+        Loading user profile...
+      </div>
+    );
+  }
+
+  // Here we do NOT block showing order summary if userProfile is null
+  // Instead we just show "N/A" for user info fields
   return (
     <div className="bg-neutral-900 border border-yellow-500 rounded-lg shadow-xl p-8 transition duration-300">
       <h3 className="text-3xl font-extrabold mb-6 text-white text-start">
@@ -30,18 +70,20 @@ const SingleEventsOrderSummary: React.FC<OrderSummaryProps> = ({
         <p>
           <span className="text-gray-400">Name:</span>{" "}
           <span className="text-yellow-400 font-semibold">
-            Sazeduzzaman Saju
+            {userProfile?.name || "N/A"}
           </span>
         </p>
         <p>
           <span className="text-gray-400">Email:</span>{" "}
           <span className="text-yellow-400 font-semibold">
-            szamansaju@gmail.com
+            {userProfile?.email || "N/A"}
           </span>
         </p>
         <p>
           <span className="text-gray-400">Phone:</span>{" "}
-          <span className="text-yellow-400 font-semibold">01576614451</span>
+          <span className="text-yellow-400 font-semibold">
+            {userProfile?.phone || "N/A"}
+          </span>
         </p>
         <p>
           <span className="text-gray-400">Event:</span>{" "}

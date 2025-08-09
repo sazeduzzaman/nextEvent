@@ -1,4 +1,5 @@
 import { Event } from "@/lib/api/AllEvents/AllEventsDataType";
+import Link from "next/link";
 import React from "react";
 
 type TicketCategory = {
@@ -8,12 +9,19 @@ type TicketCategory = {
   available: number;
 };
 
+type UserInfo = {
+  name?: string | null;
+  email?: string | null;
+  phone?: string | null;
+};
+
 type OrderSummaryProps = {
   ticketCategories: TicketCategory[];
   selectedTickets: Record<string, string[]>; // selected seat IDs per category
   totalTickets: number;
   totalPrice: number;
   eventData: Event;
+  userInfo?: UserInfo | null; // dynamically passed user info
   proceedToPurchase: () => void;
 };
 
@@ -24,7 +32,10 @@ const OrderSummary = ({
   totalPrice,
   proceedToPurchase,
   eventData,
+  userInfo,
 }: OrderSummaryProps) => {
+  const isUserLoggedIn = !!userInfo?.name;
+
   return (
     <div className="bg-neutral-900 border border-yellow-500 rounded-lg shadow-xl p-8 max-w-md mx-auto transition duration-300">
       <h3 className="text-3xl font-extrabold mb-6 text-white text-start">
@@ -38,18 +49,20 @@ const OrderSummary = ({
         <p>
           <span className="text-gray-400">Name:</span>{" "}
           <span className="text-yellow-400 font-semibold">
-            Sazeduzzaman Saju
+            {userInfo?.name || "N/A"}
           </span>
         </p>
         <p>
           <span className="text-gray-400">Email:</span>{" "}
           <span className="text-yellow-400 font-semibold">
-            szamansaju@gmail.com
+            {userInfo?.email || "N/A"}
           </span>
         </p>
         <p>
           <span className="text-gray-400">Phone:</span>{" "}
-          <span className="text-yellow-400 font-semibold">01576614451</span>
+          <span className="text-yellow-400 font-semibold">
+            {userInfo?.phone || "N/A"}
+          </span>
         </p>
         <p>
           <span className="text-gray-400">Event:</span>{" "}
@@ -60,8 +73,8 @@ const OrderSummary = ({
       </div>
 
       {totalTickets === 0 ? (
-        <p className="text-start site-txt font-medium mt-10  text-2xl">
-          🎟️No seats selected yet.
+        <p className="text-start site-txt font-medium mt-10 text-2xl">
+          🎟️ No seats selected yet.
         </p>
       ) : (
         <>
@@ -103,12 +116,24 @@ const OrderSummary = ({
             </p>
           </div>
 
-          <button
-            onClick={proceedToPurchase}
-            className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
-          >
-            🚀 Proceed to Purchase 
-          </button>
+          {isUserLoggedIn ? (
+            <button
+              onClick={proceedToPurchase}
+              className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+            >
+              🚀 Proceed to Purchase
+            </button>
+          ) : (
+            <div className="text-center mt-6">
+              <p className="mb-2 text-yellow-400 font-semibold">
+                Please{" "}
+                <Link href="/login" className="underline hover:text-yellow-500">
+                  login
+                </Link>{" "}
+                first to proceed.
+              </p>
+            </div>
+          )}
         </>
       )}
     </div>

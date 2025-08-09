@@ -12,7 +12,6 @@ export default async function page({ params }: any) {
   );
   const json = await res.json();
   const eventData = json.event_details;
-  console.log(eventData, "json");
 
   return (
     <div>

@@ -30,7 +30,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${PlusJakarta.variable} antialiased`}>
         <CustomCursor />
-        <Toaster position="top-right" />
+        <Toaster position="bottom-right" />
         <Header siteInfo={siteInfo} />
         {children}
         <Footer />

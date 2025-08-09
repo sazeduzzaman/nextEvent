@@ -1,65 +1,66 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
+interface PurchaseData {
+  name?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  event?: string | null;
+  categories?: Record<string, string[]>;
+  totalTickets?: number;
+  totalPrice?: number;
+}
 
 const PurchaseConfirm = () => {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<PurchaseData | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
-    const stored = sessionStorage.getItem("purchaseData");
+    const stored = localStorage.getItem("purchaseData");
+
     if (stored) {
-      const parsedData = JSON.parse(stored);
-      setData(parsedData);
-      console.log("Purchase Data JSON:", JSON.stringify(parsedData, null, 2));
+      const parsed: PurchaseData = JSON.parse(stored);
+      console.log("Purchase Data (JSON):", parsed); // ✅ log as JSON
+      setData(parsed);
+      localStorage.removeItem("purchaseData"); // clear after load
+    } else {
+      console.warn("No purchase data found");
+      router.push("/"); // Redirect if no data
     }
-  }, []);
+  }, [router]);
 
   if (!data) return <p>Loading confirmation...</p>;
 
   return (
     <div className="max-w-xl mx-auto p-6 bg-white text-black rounded shadow mt-10">
       <h1 className="text-2xl font-bold mb-6">Purchase Confirmation</h1>
-      <p>
-        <strong>Name:</strong> {data.name}
-      </p>
-      <p>
-        <strong>Email:</strong> {data.email}
-      </p>
-      <p>
-        <strong>Phone:</strong> {data.phone}
-      </p>
-      <p>
-        <strong>Event:</strong> {data.event}
-      </p>
+      <p><strong>Name:</strong> {data.name || "N/A"}</p>
+      <p><strong>Email:</strong> {data.email || "N/A"}</p>
+      <p><strong>Phone:</strong> {data.phone || "N/A"}</p>
+      <p><strong>Event:</strong> {data.event || "N/A"}</p>
 
-      {/* Render seats grouped by category */}
       <div className="mt-4">
         {data.categories &&
-          Object.entries(data.categories).map(([category, seats]) => {
-            const seatList = seats as string[];
-            return (
-              <div key={category} className="mb-4">
-                <p className="font-semibold">{category} Seats:</p>
-                {seatList.length > 0 ? (
-                  <ul className="list-disc list-inside">
-                    {seatList.map((seat, i) => (
-                      <li key={i}>{seat}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p>No seats selected</p>
-                )}
-              </div>
-            );
-          })}
+          Object.entries(data.categories).map(([category, seats]) => (
+            <div key={category} className="mb-4">
+              <p className="font-semibold">{category} Seats:</p>
+              {seats.length > 0 ? (
+                <ul className="list-disc list-inside">
+                  {seats.map((seat, i) => (
+                    <li key={i}>{seat}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No seats selected</p>
+              )}
+            </div>
+          ))}
       </div>
 
-      <p className="mt-4">
-        <strong>Total Tickets:</strong> {data.totalTickets}
-      </p>
-      <p>
-        <strong>Total Price:</strong> ${data.totalPrice.toFixed(2)}
-      </p>
+      <p className="mt-4"><strong>Total Tickets:</strong> {data.totalTickets ?? "N/A"}</p>
+      <p><strong>Total Price:</strong> ${data.totalPrice?.toFixed(2) ?? "N/A"}</p>
     </div>
   );
 };

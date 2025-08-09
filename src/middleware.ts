@@ -2,19 +2,37 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, search } = request.nextUrl;
   const token = request.cookies.get("authToken");
 
-  if (
-    pathname.startsWith("/dashboard") ||
-    pathname.startsWith("/user") ||
-    pathname.startsWith("/admin")
-  ) {
-    if (!token) {
-      return NextResponse.redirect(new URL("/auth/login", request.url));
+  // Define protected routes
+  const protectedPaths = [
+    "/dashboard",
+    "/user",
+    "/admin",
+    "/events/details/",
+  ];
+
+  // Check if current path is protected
+  const isProtectedRoute = protectedPaths.some((p) => {
+    if (p === "/events/details/") {
+      // Protect exactly /events/details/[slug]/ticket
+      return (
+        pathname.startsWith(p) &&
+        /^\/events\/details\/[^\/]+\/ticket$/.test(pathname)
+      );
     }
+    return pathname.startsWith(p);
+  });
+
+  if (isProtectedRoute && !token) {
+    // Redirect to login with current full path + query as redirect param
+    const loginUrl = new URL("/auth/login", request.url);
+    loginUrl.searchParams.set("redirect", pathname + search);
+    return NextResponse.redirect(loginUrl);
   }
 
+  // Prevent logged-in user from going back to login page
   if (pathname === "/auth/login" && token) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
@@ -28,5 +46,6 @@ export const config = {
     "/user/:path*",
     "/admin/:path*",
     "/auth/login",
+    "/events/details/:slug/ticket",
   ],
 };

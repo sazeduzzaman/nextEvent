@@ -1,39 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Send } from "lucide-react";
-import toast from "react-hot-toast";
-import { contactData } from "@/lib/api/Contacts/ContactsPost";
+import { useContactForm } from "@/lib/api/ContactPost/ContactFormLogic";
 
-const ContactForm = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      await contactData(formData);
-      toast.success("Message sent successfully!");
-      setFormData({ name: "", email: "", message: "" });
-    } catch (error: any) {
-      toast.error(error.message || "Something went wrong!");
-    } finally {
-      setLoading(false);
-    }
-  };
+const ContactForm: React.FC = () => {
+  const { formData, loading, handleChange, handleSubmit } = useContactForm();
 
   return (
     <form
@@ -75,6 +47,34 @@ const ContactForm = () => {
         />
       </div>
 
+      {/* Phone */}
+      <div className="form-control w-full">
+        <label className="label text-sm text-gray-400">Phone</label>
+        <input
+          type="tel"
+          name="phone"
+          placeholder="1234567890"
+          value={formData.phone}
+          onChange={handleChange}
+          className="input input-bordered w-full bg-gray-800 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-400"
+          required
+        />
+      </div>
+
+      {/* Subject */}
+      <div className="form-control w-full">
+        <label className="label text-sm text-gray-400">Subject</label>
+        <input
+          type="text"
+          name="subject"
+          placeholder="Subject here"
+          value={formData.subject}
+          onChange={handleChange}
+          className="input input-bordered w-full bg-gray-800 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-400"
+          required
+        />
+      </div>
+
       {/* Message */}
       <div className="form-control w-full">
         <label className="label text-sm text-gray-400">Message</label>
@@ -86,7 +86,22 @@ const ContactForm = () => {
           onChange={handleChange}
           className="textarea textarea-bordered w-full bg-gray-800 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-400"
           required
-        ></textarea>
+        />
+      </div>
+
+      {/* Call Checkbox */}
+      <div className="form-control w-full flex items-center gap-2">
+        <input
+          type="checkbox"
+          name="call"
+          checked={formData.call === "1"}
+          onChange={handleChange}
+          className="checkbox checkbox-amber"
+          id="callCheckbox"
+        />
+        <label htmlFor="callCheckbox" className="label text-sm text-gray-400">
+          Need a Call?
+        </label>
       </div>
 
       {/* Submit */}
@@ -95,10 +110,14 @@ const ContactForm = () => {
         disabled={loading}
         className="btn bg-amber-400 text-gray-900 font-semibold w-full hover:bg-amber-300 transition-all duration-200"
       >
-        {loading ? "Sending..." : <>
-          <Send className="w-4 h-4 mr-2" />
-          Send Message
-        </>}
+        {loading ? (
+          "Sending..."
+        ) : (
+          <>
+            <Send className="w-4 h-4 mr-2" />
+            Send Message
+          </>
+        )}
       </button>
     </form>
   );

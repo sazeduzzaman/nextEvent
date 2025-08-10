@@ -1,4 +1,5 @@
 "use client";
+import Cookies from "js-cookie";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -155,13 +156,12 @@ export function useTicketSelection({ eventData }: UseTicketSelectionProps) {
     return sum + seatCount * category.price;
   }, 0);
 
-  const proceedToPurchase = () => {
+  const proceedToPurchase = async () => {
     if (loadingUser) {
       toast.error("User profile is still loading, please wait.");
       return;
     }
     if (!userInfo) {
-      // Save current selections in localStorage before redirect
       localStorage.setItem(
         "pendingSelectedTickets",
         JSON.stringify(selectedTickets)
@@ -185,23 +185,70 @@ export function useTicketSelection({ eventData }: UseTicketSelectionProps) {
       return;
     }
 
-    // Save purchase data for confirmation page
-    const purchaseData = {
-      name: userInfo.name,
-      email: userInfo.email,
-      phone: userInfo.phone,
-      event: eventData?.name,
-      categories: ticketCategories.reduce((acc, category) => {
-        acc[category.name] = selectedTickets[category.id] || [];
-        return acc;
-      }, {} as Record<string, string[]>),
-      totalTickets,
-      totalPrice,
-    };
-    localStorage.setItem("purchaseData", JSON.stringify(purchaseData));
+    const seat_ids = Object.values(selectedTickets)
+      .flat()
+      .map((id) => Number(id))
+      .filter((id) => !isNaN(id));
 
-    toast.success("Proceeding to purchase...");
-    router.push("/purchase-confirm");
+    const purchaseData = {
+      user: {
+        name: userInfo.name,
+        email: userInfo.email,
+      },
+      event_id: Number(eventData?.id),
+      seat_ids,
+    };
+    // First Set Purchase data
+    localStorage.setItem("purchaseData", JSON.stringify(purchaseData));
+    const token = Cookies.get("authToken");
+
+    console.log("Purchase Data to send:", purchaseData);
+    console.log("Auth Token:", token);
+    // If the auth token not found then remove the Purchase data
+    if (!token) {
+      toast.error("Authentication token not found. Please login again.");
+
+      // Clear purchaseData and cookie
+      localStorage.removeItem("purchaseData");
+      localStorage.removeItem("pendingSelectedTickets");
+      localStorage.removeItem("pendingTicketCategories");
+      localStorage.removeItem("pendingEventData");
+
+      // Delete auth token cookie — requires cookie lib or manual method
+      Cookies.remove("authToken");
+
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "https://admin.eventstailor.com/api/v1/booking/initiate",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(purchaseData),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Something went wrong");
+      }
+
+      const data = await response.json();
+      console.log("API Response:", data);
+      toast.success("Booking initiated successfully!");
+
+      if (data.status === "success" && data.redirect_url) {
+        window.location.href = data.redirect_url;
+      }
+    } catch (error: any) {
+      console.error("API Error:", error.message);
+      toast.error(error.message || "Something went wrong");
+    }
   };
 
   return {

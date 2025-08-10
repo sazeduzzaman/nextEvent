@@ -91,6 +91,12 @@ const SingleEventsOrderSummary: React.FC<OrderSummaryProps> = ({
             {eventData.name}
           </span>
         </p>
+        <p>
+          <span className="text-gray-400">Event:</span>{" "}
+          <span className="text-yellow-400 font-semibold">
+            {eventData.id}
+          </span>
+        </p>
       </div>
 
       {totalTickets === 0 ? (

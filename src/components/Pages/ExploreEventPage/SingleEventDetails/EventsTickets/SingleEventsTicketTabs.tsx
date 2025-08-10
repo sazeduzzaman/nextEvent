@@ -2,19 +2,31 @@
 
 import React from "react";
 
-interface TicketTabsProps {
-  ticketCategories: any[];
-  activeTab: number;
-  setActiveTab: (id: number) => void;
-  selectedTickets: Record<number, string[]>;
-  handleSeatToggle: (categoryId: number, seatId: string) => void;
+interface Seat {
+  id: number;
+  name: string;
+  row: string;
+  column: string;
+  status: string;
+  price: string;
+  code: string;
 }
 
-const seatPrefixes: Record<number, string> = {
-  1: "A", // VIP
-  2: "B", // Regular
-  3: "C", // Others
-};
+interface TicketCategory {
+  id: number;
+  name: string;
+  price: number;
+  available: number;
+  seats: Seat[];
+}
+
+interface TicketTabsProps {
+  ticketCategories: TicketCategory[];
+  activeTab: number;
+  setActiveTab: (id: number) => void;
+  selectedTickets: Record<number, string[]>; // Stores seat IDs as strings
+  handleSeatToggle: (categoryId: number, seatId: string) => void;
+}
 
 const SingleEventsTicketTabs: React.FC<TicketTabsProps> = ({
   ticketCategories,
@@ -26,6 +38,8 @@ const SingleEventsTicketTabs: React.FC<TicketTabsProps> = ({
   return (
     <div>
       <p className="mb-5 text-3xl">Select Ticket</p>
+
+      {/* Ticket Tabs */}
       <div
         role="tablist"
         className="tabs tabs-boxed mb-8 site-second-bg rounded-lg shadow-inner w-3xl"
@@ -35,12 +49,12 @@ const SingleEventsTicketTabs: React.FC<TicketTabsProps> = ({
             key={id}
             role="tab"
             className={`tab flex-1 text-lg font-semibold transition-all duration-300 ticket-tabs
-            ${
-              activeTab === id
-                ? "tab-active bg-yellow-400 text-white shadow-lg"
-                : "!text-white hover:!text-yellow-400 hover:bg-neutral-800"
-            }
-            py-1 rounded-lg`}
+              ${
+                activeTab === id
+                  ? "tab-active bg-yellow-400 text-white shadow-lg"
+                  : "!text-white hover:!text-yellow-400 hover:bg-neutral-800"
+              }
+              py-1 rounded-lg`}
             onClick={() => setActiveTab(id)}
             aria-selected={activeTab === id}
           >
@@ -49,19 +63,23 @@ const SingleEventsTicketTabs: React.FC<TicketTabsProps> = ({
         ))}
       </div>
 
+      {/* Ticket Content */}
       <div
         role="tabpanel"
         className="site-second-bg p-8 rounded-lg shadow-lg space-y-6"
       >
         {ticketCategories
           .filter((category) => category.id === activeTab)
-          .map(({ id, name, price, available }) => {
+          .map(({ id, name, price, available, seats }) => {
             const selectedSeats = selectedTickets[id] || [];
 
             return (
               <div key={id}>
+                {/* Category Info */}
                 <div className="mb-6">
-                  <p className="font-bold text-2xl text-white tracking-wide">{name}</p>
+                  <p className="font-bold text-2xl text-white tracking-wide">
+                    {name}
+                  </p>
                   <p className="text-yellow-400 font-semibold text-lg">
                     ${price} per ticket
                   </p>
@@ -75,11 +93,16 @@ const SingleEventsTicketTabs: React.FC<TicketTabsProps> = ({
                   )}
                 </div>
 
+                {/* Seat Grid */}
                 <div className="grid grid-cols-5 gap-4">
-                  {Array.from({ length: available }, (_, i) => {
-                    const seatId =
-                      name === "No Seat" ? `${i + 1}` : `${seatPrefixes[id] || "A"}${i + 1}`;
-                    const isSelected = selectedSeats.includes(seatId);
+                  {seats.map((seat) => {
+                    const seatId = seat.id; // real backend ID
+                    const seatLabel =
+                      name === "No Seat"
+                        ? `${seat.id}`
+                        : seat.code || `${seat.row}${seat.column}`;
+                    const isSelected = selectedSeats.includes(String(seatId));
+
                     return (
                       <label
                         key={seatId}
@@ -90,18 +113,21 @@ const SingleEventsTicketTabs: React.FC<TicketTabsProps> = ({
                           type="checkbox"
                           id={`${id}-${seatId}`}
                           checked={isSelected}
-                          onChange={() => handleSeatToggle(id, seatId)}
+                          onChange={() => handleSeatToggle(id, String(seatId))}
                           className="peer hidden"
                         />
                         <div
                           className={`w-full py-3 rounded-lg border-2 text-center font-semibold transition duration-300 cursor-pointer
-                          ${
-                            isSelected
-                              ? "bg-yellow-400 border-yellow-500 text-black shadow-md"
-                              : "bg-neutral-800 border-neutral-800 text-gray-300 hover:bg-yellow-400 hover:text-black hover:border-yellow-500"
-                          }`}
+                            ${
+                              isSelected
+                                ? "bg-yellow-400 border-yellow-500 text-black shadow-md"
+                                : "bg-neutral-800 border-neutral-800 text-gray-300 hover:bg-yellow-400 hover:text-black hover:border-yellow-500"
+                            }`}
                         >
-                          {seatId}
+                          {seatLabel}{" "}
+                          <span className="text-xs text-gray-400">
+                            ({seatId})
+                          </span>
                         </div>
                       </label>
                     );

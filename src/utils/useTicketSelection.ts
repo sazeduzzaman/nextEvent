@@ -243,7 +243,7 @@ export function useTicketSelection({ eventData }: UseTicketSelectionProps) {
       toast.success("Booking initiated successfully!");
 
       if (data.status === "success" && data.redirect_url) {
-        window.location.href = data.redirect_url;
+        window.open(data.redirect_url, "_blank");
       }
     } catch (error: any) {
       console.error("API Error:", error.message);

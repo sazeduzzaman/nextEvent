@@ -1,116 +1,129 @@
 "use client";
 
-import React from "react";
-import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
+import React, { useEffect, useState } from "react";
+import { getProfile } from "@/lib/api/UserData/userApi";
+import { useProfileUpdate } from "@/lib/api/UserData/useProfileUpdate";
 
-type ProfileFormData = {
-  fullName: string;
+interface ProfileFormData {
+  name: string;
   email: string;
-  phone?: string;
-};
+  username: string;
+  phone: string;
+  address: string;
+  country: string;
+  city: string;
+  zipcode: string;
+  profile_image: File | null;
+}
 
-const UserProfile = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    reset,
-  } = useForm<ProfileFormData>({
-    defaultValues: {
-      fullName: "",
-      email: "",
-      phone: "",
-    },
+const ProfileUpdatePage = () => {
+  const [formData, setFormData] = useState<ProfileFormData>({
+    name: "",
+    email: "",
+    username: "",
+    phone: "",
+    address: "",
+    country: "",
+    city: "",
+    zipcode: "",
+    profile_image: null,
   });
 
-  const onSubmit = async (data: ProfileFormData) => {
-    try {
-      // Here you can call your API to update profile
-      // await api.updateProfile(data);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const { updateProfile, loading } = useProfileUpdate();
 
-      toast.success("Profile updated successfully!");
-      reset(data);
-    } catch (error) {
-      toast.error("Failed to update profile.");
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const user = await getProfile();
+        setFormData({
+          name: user.name || "",
+          email: user.email || "",
+          username: user.username || "",
+          phone: user.phone || "",
+          address: user.address || "",
+          country: user.country || "",
+          city: user.city || "",
+          zipcode: user.zipcode || "",
+          profile_image: null,
+        });
+        if (user.profile_image) {
+          setPreviewImage(user.profile_image);
+        }
+      } catch (err) {
+        console.error("Error loading profile:", err);
+      }
+    };
+    fetchProfile();
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.length) {
+      const file = e.target.files[0];
+      setFormData((prev) => ({ ...prev, profile_image: file }));
+      setPreviewImage(URL.createObjectURL(file));
     }
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateProfile(formData);
+  };
+
   return (
-    <div className="w-full mx-auto site-second-bg p-6 rounded shadow">
-      <h2 className="text-2xl font-semibold mb-6">Update Profile</h2>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {/* Full Name */}
-        <div>
-          <label htmlFor="fullName" className="block mb-1 font-medium">
-            Full Name
-          </label>
+    <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl shadow-2xl border border-white/10 text-white space-y-6">
+      <h2 className="text-xl font-bold mb-4">Update Profile</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {[
+          { name: "name", label: "Name" },
+          { name: "email", label: "Email", readOnly: true },
+          { name: "username", label: "Username" },
+          { name: "phone", label: "Phone" },
+          { name: "address", label: "Address" },
+          { name: "country", label: "Country" },
+          { name: "city", label: "City" },
+          { name: "zipcode", label: "Zip Code" },
+        ].map(({ name, label, readOnly }) => (
           <input
-            id="fullName"
+            key={name}
             type="text"
-            {...register("fullName", { required: "Full Name is required" })}
-            className={`w-full border text-white rounded px-3 py-2 focus:outline-none focus:ring-2 ${
-              errors.fullName
-                ? "border-red-500 focus:ring-red-400"
-                : "border-gray-300 focus:ring-yellow-400"
-            }`}
+            name={name}
+            value={(formData as any)[name]}
+            onChange={handleChange}
+            placeholder={label}
+            readOnly={readOnly}
+            className="input input-bordered w-full bg-gray-800 text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-amber-400"
           />
-          {errors.fullName && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.fullName.message}
-            </p>
-          )}
-        </div>
+        ))}
 
-        {/* Email */}
-        <div>
-          <label htmlFor="email" className="block mb-1 font-medium">
-            Email
-          </label>
-          <input
-            id="email"
-            type="email"
-            {...register("email", {
-              required: "Email is required",
-              pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: "Invalid email address",
-              },
-            })}
-            className={`w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 ${
-              errors.email
-                ? "border-red-500 focus:ring-red-400"
-                : "border-gray-300 focus:ring-yellow-400"
-            }`}
-          />
-          {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
-          )}
-        </div>
+        {previewImage && (
+          <div>
+            <p className="text-sm text-gray-500 mb-1">Profile Image Preview:</p>
+            <img
+              src={previewImage}
+              alt="Profile Preview"
+              className="w-20 h-20 rounded-full object-cover border"
+            />
+          </div>
+        )}
 
-        {/* Phone (optional) */}
-        <div>
-          <label htmlFor="phone" className="block mb-1 font-medium">
-            Phone (optional)
-          </label>
-          <input
-            id="phone"
-            type="tel"
-            {...register("phone")}
-            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-          />
-        </div>
+        <input type="file" onChange={handleFileChange} className="w-full" />
 
         <button
           type="submit"
-          disabled={isSubmitting}
-          className="w-full mt-18 bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded font-semibold transition"
+          disabled={loading}
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
         >
-          {isSubmitting ? "Updating..." : "Update Profile"}
+          {loading ? "Updating..." : "Update Profile"}
         </button>
       </form>
     </div>
   );
 };
 
-export default UserProfile;
+export default ProfileUpdatePage;

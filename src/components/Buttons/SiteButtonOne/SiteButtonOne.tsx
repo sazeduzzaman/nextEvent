@@ -2,15 +2,27 @@ import React from "react";
 import { LuPartyPopper } from "react-icons/lu";
 import "../Css/SiteButtonOne.css";
 
-const SiteButtonOne = ({ text = "Explore Event" }) => {
+interface SiteButtonOneProps {
+  text?: string;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
+}
+
+const SiteButtonOne: React.FC<SiteButtonOneProps> = ({
+  text = "Explore Event",
+  type,
+  disabled,
+}) => {
   return (
-    <div>
-      <button className="site-btn-one me-3">
-        <span className="button-content flex items-center">
-          {text} <LuPartyPopper className="ms-3" />
-        </span>
-      </button>
-    </div>
+    <button
+      className="site-btn-one me-3"
+      {...(type ? { type } : {})}
+      {...(disabled !== undefined ? { disabled } : {})}
+    >
+      <span className="button-content flex items-center">
+        {text} <LuPartyPopper className="ms-3" />
+      </span>
+    </button>
   );
 };
 

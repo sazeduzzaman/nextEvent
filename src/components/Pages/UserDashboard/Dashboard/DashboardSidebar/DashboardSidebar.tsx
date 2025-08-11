@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import Cookies from "js-cookie";
 import { getProfile, logout } from "@/lib/api/UserData/userApi";
 import Image from "next/image";
 
@@ -15,49 +14,55 @@ const DashboardSidebar = () => {
 
   const isActive = (href: string) => pathname === href;
 
-  const menuLinks = [
-    { href: "/dashboard", label: "Dashboard" },
-    { href: "/dashboard/tickets", label: "Purchase Tickets" },
-    { href: "/dashboard/profile", label: "Update Profile" },
-  ];
+  // Extracted fetch function to reuse on mount and on authChanged event
+  const fetchUser = async () => {
+    try {
+      setLoading(true);
+      const userData = await getProfile();
+      setUser(userData);
+    } catch (err) {
+      console.error("Failed to fetch user profile:", err);
+      router.push("/auth/login"); // Redirect if not authenticated
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const userData = await getProfile();
-        setUser(userData);
-      } catch (err) {
-        console.error("Failed to fetch user profile:", err);
-        router.push("/auth/login"); // Redirect if not authenticated
-      } finally {
-        setLoading(false);
-      }
+    fetchUser();
+
+    // Listen to the custom "authChanged" event
+    const handleAuthChange = () => {
+      fetchUser();
     };
 
-    fetchUser();
+    window.addEventListener("authChanged", handleAuthChange);
+
+    return () => {
+      window.removeEventListener("authChanged", handleAuthChange);
+    };
   }, [router]);
 
   if (loading) {
     return (
-      <div>
-        <div className="loading-wrapper">
-          <Image
-            src="/images/preloader.gif"
-            alt="Loading..."
-            width={100}
-            height={100}
-            priority
-          />
-        </div>
+      <div className="loading-wrapper">
+        <Image
+          src="/images/preloader.gif"
+          alt="Loading..."
+          width={100}
+          height={100}
+          priority
+        />
       </div>
     );
   }
+
   return (
     <aside className="flex flex-col justify-between w-full p-6 border border-yellow-400 rounded-lg shadow-lg space-y-6 site-second-bg">
       <div>
         <div className="flex flex-col items-center text-center mb-8">
           <img
-            src={user?.avatar || "https://i.pravatar.cc/100"} // fallback avatar
+            src={user?.avatar || "https://i.pravatar.cc/100"}
             alt="User Avatar"
             className="w-24 h-24 rounded-full object-cover mb-4 border-4 border-yellow-400"
           />
@@ -69,7 +74,11 @@ const DashboardSidebar = () => {
 
         <nav>
           <ul className="space-y-3 px-10">
-            {menuLinks.map(({ href, label }) => (
+            {[
+              { href: "/dashboard", label: "Dashboard" },
+              { href: "/dashboard/tickets", label: "Purchase Tickets" },
+              { href: "/dashboard/profile", label: "Update Profile" },
+            ].map(({ href, label }) => (
               <li key={href}>
                 <Link
                   href={href}

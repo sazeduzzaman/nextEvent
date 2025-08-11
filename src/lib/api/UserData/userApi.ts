@@ -2,6 +2,9 @@ import Cookies from "js-cookie";
 
 const API_BASE = "https://admin.eventstailor.com/api/v1";
 
+const COOKIE_EXPIRY_MINUTES = 60;
+const COOKIE_EXPIRY_DAYS = COOKIE_EXPIRY_MINUTES / (60 * 24); // convert 60 mins to days fraction
+
 export const logout = (router?: any) => {
   localStorage.removeItem("authToken");
   localStorage.removeItem("userName");
@@ -73,4 +76,21 @@ export const getProfile = async () => {
     console.error("Profile fetch error:", err);
     throw err;
   }
+};
+
+// Update local storage and cookies with new username, with 60-minute expiry, and notify listeners
+export const updateLocalUserInfo = (name: string, token?: string) => {
+  if (!name) return;
+
+  // Save username and token (if provided)
+  localStorage.setItem("userName", name);
+  Cookies.set("userName", name, { expires: COOKIE_EXPIRY_DAYS });
+
+  if (token) {
+    localStorage.setItem("authToken", token);
+    Cookies.set("authToken", token, { expires: COOKIE_EXPIRY_DAYS });
+  }
+
+  // Notify app that auth info changed
+  window.dispatchEvent(new Event("authChanged"));
 };

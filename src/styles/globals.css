@@ -79,7 +79,7 @@ body {
   pointer-events: none;
   transform: translate(-50%, -50%);
   z-index: 999999 !important;
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(0px);
   mix-blend-mode: normal;
   box-shadow: 0 0 10px var(--primary-color);
   transition: width 0.2s ease, height 0.2s ease, opacity 0.2s ease,

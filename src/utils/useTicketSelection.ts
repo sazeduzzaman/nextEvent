@@ -256,7 +256,7 @@ export function useTicketSelection({ eventData }: UseTicketSelectionProps) {
         toast.error("Booking failed");
       }
     } catch (error: any) {
-      console.error("API Error:", error.message);
+      // Removed console.error to prevent Next.js console error
       toast.error(error.message || "Something went wrong");
     }
   };

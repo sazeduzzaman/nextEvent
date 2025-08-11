@@ -36,7 +36,7 @@ const UserMenu = () => {
         <div>
           <div
             onClick={handleDropdownToggle}
-            className="btn btn-ghost btn-circle text-white ring font-medium capitalize cursor-pointer"
+            className="btn btn-ghost btn-circle site-txt ring font-medium capitalize cursor-pointer"
           >
             {userInitials}
           </div>

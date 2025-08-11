@@ -59,19 +59,16 @@ export function useTicketSelection({ eventData }: UseTicketSelectionProps) {
         const parsedCategories = JSON.parse(savedCategories);
         const parsedEvent = JSON.parse(savedEvent);
 
-        // Check if saved event slug matches current event
         if (parsedEvent.slug === eventData.slug) {
           setSelectedTickets(parsedSelected);
           setTicketCategories(parsedCategories);
           if (parsedCategories.length > 0) setActiveTab(parsedCategories[0].id);
 
-          // Clear storage after restoring
           localStorage.removeItem("pendingSelectedTickets");
           localStorage.removeItem("pendingTicketCategories");
           localStorage.removeItem("pendingEventData");
         }
       } catch {
-        // Invalid data, clear storage anyway
         localStorage.removeItem("pendingSelectedTickets");
         localStorage.removeItem("pendingTicketCategories");
         localStorage.removeItem("pendingEventData");
@@ -95,7 +92,6 @@ export function useTicketSelection({ eventData }: UseTicketSelectionProps) {
           await res.json();
 
         if (data.success) {
-          // Only set categories if not restored from localStorage
           if (ticketCategories.length === 0) {
             const categories = data.event_seats.map((cat) => ({
               id: cat.seat_type_id,
@@ -151,7 +147,6 @@ export function useTicketSelection({ eventData }: UseTicketSelectionProps) {
     0
   );
 
-  // Optimized totalPrice calculation with useMemo and rounding
   const totalPrice = useMemo(() => {
     const total = ticketCategories.reduce((sum, category) => {
       const seatCount = selectedTickets[category.id]?.length || 0;
@@ -207,24 +202,30 @@ export function useTicketSelection({ eventData }: UseTicketSelectionProps) {
       seat_ids,
       total_amount: totalPrice,
     };
-    // First Set Purchase data
+
+    // Save purchase data in localStorage
     localStorage.setItem("purchaseData", JSON.stringify(purchaseData));
+
     const token = Cookies.get("authToken");
 
-    console.log("Purchase Data to send:", purchaseData);
-    console.log("Auth Token:", token);
-    // If the auth token not found then remove the Purchase data
     if (!token) {
-      toast.error("Authentication token not found. Please login again.");
-
-      // Clear purchaseData and cookie
+      // Remove purchaseData and related data if token not found
       localStorage.removeItem("purchaseData");
       localStorage.removeItem("pendingSelectedTickets");
       localStorage.removeItem("pendingTicketCategories");
       localStorage.removeItem("pendingEventData");
 
-      // Delete auth token cookie — requires cookie lib or manual method
+      toast.error("Authentication token not found. Please login again.");
+
+      // Remove cookie (optional)
       Cookies.remove("authToken");
+
+      // Redirect to login
+      router.push(
+        `/auth/login?redirect=${encodeURIComponent(
+          window.location.pathname + window.location.search
+        )}`
+      );
 
       return;
     }
@@ -248,14 +249,7 @@ export function useTicketSelection({ eventData }: UseTicketSelectionProps) {
       }
 
       const data = await response.json();
-      console.log("API Response:", data);
-      toast.success("Booking initiated successfully!");
 
-      // if (data.status === "success" && data.redirect_url) {
-      //   window.open(data.redirect_url, "_blank");
-      // }
-
-      console.log("API Response:", data);
       if (data.status === "success") {
         toast.success("Booking initiated successfully!");
       } else {

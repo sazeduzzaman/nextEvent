@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { getProfile } from "@/lib/api/UserData/userApi";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { useProfileUpdate } from "@/lib/api/UserData/useProfileUpdate";
 
 interface ProfileFormData {
@@ -13,30 +14,57 @@ interface ProfileFormData {
   country: string;
   city: string;
   zipcode: string;
-  profile_image: File | null;
+  // Removed profile_image from interface because not sent to backend
 }
 
-const ProfileUpdatePage = () => {
-  const [formData, setFormData] = useState<ProfileFormData>({
-    name: "",
-    email: "",
-    username: "",
-    phone: "",
-    address: "",
-    country: "",
-    city: "",
-    zipcode: "",
-    profile_image: null,
+function getCookie(name: string): string | null {
+  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+  return match ? decodeURIComponent(match[2]) : null;
+}
+
+async function getProfile(token: string) {
+  const res = await fetch("https://admin.eventstailor.com/api/v1/profile", {
+    headers: { Authorization: `Bearer ${token}` },
   });
 
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.message || "Failed to fetch profile");
+  }
+  const data = await res.json();
+  return data.user;
+}
+
+const ProfileUpdateForm = () => {
   const { updateProfile, loading } = useProfileUpdate();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ProfileFormData>({
+    defaultValues: {
+      name: "",
+      email: "",
+      username: "",
+      phone: "",
+      address: "",
+      country: "",
+      city: "",
+      zipcode: "",
+    },
+  });
 
   useEffect(() => {
     const fetchProfile = async () => {
+      const token = getCookie("authToken");
+      if (!token) {
+        toast.error("No auth token found. Please login.");
+        return;
+      }
       try {
-        const user = await getProfile();
-        setFormData({
+        const user = await getProfile(token);
+        reset({
           name: user.name || "",
           email: user.email || "",
           username: user.username || "",
@@ -45,85 +73,54 @@ const ProfileUpdatePage = () => {
           country: user.country || "",
           city: user.city || "",
           zipcode: user.zipcode || "",
-          profile_image: null,
         });
-        if (user.profile_image) {
-          setPreviewImage(user.profile_image);
-        }
-      } catch (err) {
-        console.error("Error loading profile:", err);
+      } catch (err: any) {
+        toast.error(err.message || "Failed to load profile data");
       }
     };
+
     fetchProfile();
-  }, []);
+  }, [reset]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.length) {
-      const file = e.target.files[0];
-      setFormData((prev) => ({ ...prev, profile_image: file }));
-      setPreviewImage(URL.createObjectURL(file));
+  const onSubmit = async (data: ProfileFormData) => {
+    try {
+      await updateProfile(data);
+    } catch {
+      // handled in hook
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    updateProfile(formData);
-  };
-
   return (
-    <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl shadow-2xl border border-white/10 text-white space-y-6">
-      <h2 className="text-xl font-bold mb-4">Update Profile</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {[
-          { name: "name", label: "Name" },
-          { name: "email", label: "Email", readOnly: true },
-          { name: "username", label: "Username" },
-          { name: "phone", label: "Phone" },
-          { name: "address", label: "Address" },
-          { name: "country", label: "Country" },
-          { name: "city", label: "City" },
-          { name: "zipcode", label: "Zip Code" },
-        ].map(({ name, label, readOnly }) => (
-          <input
-            key={name}
-            type="text"
-            name={name}
-            value={(formData as any)[name]}
-            onChange={handleChange}
-            placeholder={label}
-            readOnly={readOnly}
-            className="input input-bordered w-full bg-gray-800 text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-amber-400"
-          />
-        ))}
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      {[
+        { name: "name", label: "Name" },
+        { name: "email", label: "Email", readOnly: true },
+        { name: "username", label: "Username" },
+        { name: "phone", label: "Phone" },
+        { name: "address", label: "Address" },
+        { name: "country", label: "Country" },
+        { name: "city", label: "City" },
+        { name: "zipcode", label: "Zip Code" },
+      ].map(({ name, label, readOnly }) => (
+        <input
+          key={name}
+          {...register(name as keyof ProfileFormData)}
+          type="text"
+          placeholder={label}
+          readOnly={readOnly}
+          className="input input-bordered w-full bg-gray-800 text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-amber-400"
+        />
+      ))}
 
-        {previewImage && (
-          <div>
-            <p className="text-sm text-gray-500 mb-1">Profile Image Preview:</p>
-            <img
-              src={previewImage}
-              alt="Profile Preview"
-              className="w-20 h-20 rounded-full object-cover border"
-            />
-          </div>
-        )}
-
-        <input type="file" onChange={handleFileChange} className="w-full" />
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          {loading ? "Updating..." : "Update Profile"}
-        </button>
-      </form>
-    </div>
+      <button
+        type="submit"
+        disabled={loading}
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {loading ? "Updating..." : "Update Profile"}
+      </button>
+    </form>
   );
 };
 
-export default ProfileUpdatePage;
+export default ProfileUpdateForm;

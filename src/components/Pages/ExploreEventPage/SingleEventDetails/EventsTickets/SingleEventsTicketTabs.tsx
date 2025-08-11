@@ -42,7 +42,7 @@ const SingleEventsTicketTabs: React.FC<TicketTabsProps> = ({
       {/* Ticket Tabs */}
       <div
         role="tablist"
-        className="tabs tabs-boxed mb-8 site-second-bg rounded-lg shadow-inner w-3xl"
+        className="tabs tabs-boxed mb-8 site-second-bg rounded-lg shadow-inner w-full"
       >
         {ticketCategories.map(({ id, name }) => (
           <button
@@ -94,7 +94,7 @@ const SingleEventsTicketTabs: React.FC<TicketTabsProps> = ({
                 </div>
 
                 {/* Seat Grid */}
-                <div className="grid grid-cols-5 gap-4">
+                <div className="grid grid-cols-3 sm:grid-cols-5 gap-4">
                   {seats.map((seat) => {
                     const seatId = seat.id; // real backend ID
                     const seatLabel =

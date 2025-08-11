@@ -5,14 +5,13 @@ import UpcommingEventsCard from "./UpcommingEventsCard";
 const UpcomingEvents = async () => {
   const allEvents = await fetchAllEvents();
 
-
   return (
-    <div className="py-20 site-second-bg">
-      <div className="container mx-auto pb-20">
+    <section className="py-16 sm:py-20 site-second-bg">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-20">
         {/* Section Heading */}
-        <div className="text-center flex justify-center items-center">
+        <div className="flex justify-center items-center">
           <div className="w-fit text-center">
-            <h2 className="text-amber-400 text-sm font-semibold uppercase tracking-widest mb-3">
+            <h2 className="text-amber-400 text-xs sm:text-sm font-semibold uppercase tracking-widest mb-3">
               Most Recent Event
             </h2>
             <div className="flex items-center justify-center space-x-2">
@@ -22,18 +21,17 @@ const UpcomingEvents = async () => {
             </div>
           </div>
         </div>
-        <div className="text-center">
-          <h1 className="text-5xl font-bold mt-5">
-            Don&apos;t <span className="site-txt px-3">Miss</span> It
-          </h1>
-        </div>
+
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mt-5 text-center">
+          Don&apos;t <span className="site-txt px-2 sm:px-3">Miss</span> It
+        </h1>
       </div>
 
-      {/* Event Card */}
-      <div className="container mx-auto px-4">
-        <UpcommingEventsCard allEvents={allEvents}/>
+      {/* Event Cards */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <UpcommingEventsCard allEvents={allEvents} />
       </div>
-    </div>
+    </section>
   );
 };
 

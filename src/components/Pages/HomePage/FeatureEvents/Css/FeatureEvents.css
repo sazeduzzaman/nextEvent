@@ -2,3 +2,24 @@
   border-top-left-radius: 30px;
   border-bottom-left-radius: 30px;
 }
+
+/* Desktop: show desktop version, hide mobile */
+.event-show-mobile {
+  display: none;
+}
+
+.event-show-desktop {
+  display: flex; /* keep flex layout for desktop */
+}
+
+/* Mobile: show mobile version, hide desktop */
+@media only screen and (max-width: 600px) {
+  .event-show-mobile {
+    display: grid; /* keep your grid layout for mobile */
+    grid-template-columns: 1fr; /* single column on mobile */
+    gap: 1rem;
+  }
+  .event-show-desktop {
+    display: none;
+  }
+}

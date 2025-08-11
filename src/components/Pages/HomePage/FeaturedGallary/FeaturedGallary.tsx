@@ -8,17 +8,12 @@ const columns = [
   ["/images/event1.jpeg", "/images/event3.jpeg", "/images/event1.jpeg"],
   ["/images/event1.jpeg", "/images/event3.jpeg", "/images/event1.jpeg"],
   ["/images/event1.jpeg", "/images/event3.jpeg", "/images/event1.jpeg"],
-  ["/images/event1.jpeg", "/images/event3.jpeg", "/images/event1.jpeg"],
-  ["/images/event1.jpeg", "/images/event3.jpeg", "/images/event1.jpeg"],
-  ["/images/event1.jpeg", "/images/event3.jpeg", "/images/event1.jpeg"],
-  ["/images/event1.jpeg", "/images/event3.jpeg", "/images/event1.jpeg"],
-  ["/images/event1.jpeg", "/images/event3.jpeg", "/images/event1.jpeg"],
 ];
 
 const FeaturedGallary = () => {
   return (
     <div className="py-20">
-      <div className="container mx-auto pb-10">
+      <div className="container mx-auto pb-10 px-4">
         {/* Heading */}
         <div className="text-center">
           <h2 className="text-amber-400 text-sm font-semibold uppercase tracking-widest mb-3">
@@ -36,12 +31,17 @@ const FeaturedGallary = () => {
       </div>
 
       {/* Gallery */}
-      <div className="container mx-auto overflow-hidden rounded-3xl">
-        <div className="flex gap-4">
+      <div className="container mx-auto overflow-hidden rounded-3xl px-4">
+        {/* Flex container: horizontal scroll on mobile, grid on md+ */}
+        <div className="flex md:grid md:grid-cols-5 gap-4 overflow-x-auto no-scrollbar">
           {columns.slice(0, 5).map((imgs, colIdx) => (
-            <div key={colIdx} className="h-[700px] w-[500px] overflow-hidden">
+            <div
+              key={colIdx}
+              // Responsive widths: full width on mobile (80vw for horizontal scroll), fixed width on md+
+              className="flex-shrink-0 w-[80vw] md:w-full h-[500px] md:h-[700px] overflow-hidden rounded-xl"
+            >
               <div
-                className={`flex flex-col gap-4 w-full ${
+                className={`flex flex-col gap-4 w-full h-full ${
                   colIdx % 2 === 0
                     ? "animate-marquee-up"
                     : "animate-marquee-down"
@@ -50,13 +50,14 @@ const FeaturedGallary = () => {
                 {[...imgs, ...imgs].map((img, i) => (
                   <div
                     key={i}
-                    className="relative w-full h-[300px] rounded-xl overflow-hidden"
+                    className="relative w-full flex-shrink-0 h-[150px] sm:h-[200px] md:h-[300px] rounded-xl overflow-hidden"
                   >
                     <Image
                       src={img}
-                      alt={`gallery-${i}`}
+                      alt={`gallery-${colIdx}-${i}`}
                       fill
                       className="object-cover"
+                      sizes="(max-width: 640px) 80vw, (max-width: 768px) 30vw, (max-width: 1024px) 18vw, 15vw"
                     />
                   </div>
                 ))}

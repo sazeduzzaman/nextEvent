@@ -41,8 +41,9 @@ const TicketSelectionPage = ({ eventData }: TicketSelectionPageProps) => {
   if (error) return <p className="text-center text-red-500 py-10">{error}</p>;
 
   return (
-    <div className="container mx-auto">
-      <div className="grid grid-cols-12 gap-6 py-10 px-4 md:px-12">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+      <div className="grid grid-cols-12 gap-6 py-10">
+        {/* Main content - ticket tabs */}
         <div className="col-span-12 md:col-span-9">
           <SingleEventsTicketTabs
             ticketCategories={ticketCategories}
@@ -53,7 +54,8 @@ const TicketSelectionPage = ({ eventData }: TicketSelectionPageProps) => {
           />
         </div>
 
-        <div className="col-span-12 md:col-span-3">
+        {/* Sidebar - order summary */}
+        <div className="col-span-12 md:col-span-3 mt-8 md:mt-0">
           <SingleEventsOrderSummary
             selectedTickets={selectedTickets}
             ticketCategories={ticketCategories}
@@ -67,5 +69,6 @@ const TicketSelectionPage = ({ eventData }: TicketSelectionPageProps) => {
     </div>
   );
 };
+
 
 export default TicketSelectionPage;

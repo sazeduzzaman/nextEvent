@@ -55,3 +55,13 @@
 .breadcrumb a:hover {
   text-decoration: underline;
 }
+@media only screen and (max-width: 600px) {
+  .banner-content {
+    z-index: 2;
+    text-align: start;
+    color: #fff;
+    position: relative;
+    left: 40px;
+  }
+}
+

@@ -71,16 +71,16 @@ const EventTimeCount = ({ time = "April 2, 2025 18:00:00", slug }: Props) => {
   // If not mounted, render a placeholder or nothing to avoid hydration mismatch
   if (!mounted) {
     return (
-      <div className="flex gap-4">
+      <div className="flex flex-wrap gap-4 justify-center sm:justify-start">
         {[...Array(4)].map((_, i) => (
           <div
             key={i}
-            className="flex flex-col items-center bg-neutral-800 px-4 py-3 rounded-lg shadow-lg border border-yellow-400"
+            className="flex flex-col items-center bg-neutral-800 px-4 py-3 rounded-lg shadow-lg border border-yellow-400 min-w-[70px]"
           >
-            <span className="text-4xl font-bold text-yellow-400 tracking-wider">
+            <span className="text-3xl sm:text-4xl font-bold text-yellow-400 tracking-wider">
               --
             </span>
-            <span className="text-sm mt-1 uppercase tracking-wide text-gray-300">
+            <span className="text-xs sm:text-sm mt-1 uppercase tracking-wide text-gray-300">
               {/* Labels */}
               {["Days", "Hours", "Minutes", "Seconds"][i]}
             </span>
@@ -91,9 +91,9 @@ const EventTimeCount = ({ time = "April 2, 2025 18:00:00", slug }: Props) => {
   }
 
   return (
-    <div className="flex flex-col items-start gap-4 text-white text-center">
+    <div className="flex flex-col items-center sm:items-start gap-6 text-white text-center sm:text-left">
       {/* Countdown Timer */}
-      <div className="flex gap-4">
+      <div className="flex flex-wrap justify-center sm:justify-start gap-4">
         {[
           { label: "Days", value: timeLeft.days },
           { label: "Hours", value: timeLeft.hours },
@@ -102,12 +102,12 @@ const EventTimeCount = ({ time = "April 2, 2025 18:00:00", slug }: Props) => {
         ].map((item, index) => (
           <div
             key={index}
-            className="flex flex-col items-center bg-neutral-800 px-4 py-3 rounded-lg shadow-lg border border-yellow-400"
+            className="flex flex-col items-center bg-neutral-800 px-4 py-3 rounded-lg shadow-lg border border-yellow-400 min-w-[70px]"
           >
-            <span className="text-4xl font-bold text-yellow-400 tracking-wider">
+            <span className="text-3xl sm:text-4xl font-bold text-yellow-400 tracking-wider">
               {item.value}
             </span>
-            <span className="text-sm mt-1 uppercase tracking-wide text-gray-300">
+            <span className="text-xs sm:text-sm mt-1 uppercase tracking-wide text-gray-300">
               {item.label}
             </span>
           </div>
@@ -118,11 +118,14 @@ const EventTimeCount = ({ time = "April 2, 2025 18:00:00", slug }: Props) => {
       {!hideButton && (
         <>
           {timeLeft.isExpired ? (
-            <button className="bg-red-600 rounded-lg text-white px-6 py-2 mt-4 font-semibold shadow-md hover:bg-red-700 transition">
+            <button className="bg-red-600 rounded-lg text-white px-6 py-2 mt-6 font-semibold shadow-md hover:bg-red-700 transition min-w-[180px]">
               Event Expired
             </button>
           ) : (
-            <Link href={`/events/details/${slug}/ticket`} className="mt-10">
+            <Link
+              href={`/events/details/${slug}/ticket`}
+              className="mt-8 w-full max-w-xs sm:max-w-none"
+            >
               <SiteButtonOne text="Purchase Ticket" />
             </Link>
           )}

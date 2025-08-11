@@ -8,102 +8,130 @@ import { fetchSiteInformation } from "@/lib/api/SiteInfromationData/SiteInformat
 
 const Footer = async () => {
   const siteInfo = await fetchSiteInformation();
-  return (
-    <div className="bg-black py-15 pb-0 footer-main">
-      <footer className="footer sm:footer-horizontal p-10 container mx-auto px-0">
-        <aside>
-          <Link href="/">
-            <Image
-              src={siteInfo.site_logo_black || siteInfo.site_logo_white || "/images/logo.webp"}
-              width={200}
-              height={200}
-              alt="Picture of the author"
-            /> 
-          </Link>
-          <p className="text-white pt-5 w-80">{siteInfo.footer_description}</p>
-          <div>
-            <SocialIcons siteInfo={siteInfo} />
-          </div>
-        </aside>
-        <nav>
-          <div className="flex items-center gap-2">
-            <h6 className="site-txt text-1xl line-text font-bold mb-5">
-              EVENT
-            </h6>
-            {/* <span className="w-8 h-0.5 bg-current"></span> */}
-          </div>
 
-          <Link href="/contact" className="footer-link mb-2 flex items-center">
-            <IoChevronForward className="me-3" /> Contact Us
-          </Link>
-          <Link href="/about" className="footer-link mb-2 flex items-center">
-            <IoChevronForward className="me-3" /> About Us
-          </Link>
-          <Link href="/blogs" className="footer-link mb-2 flex items-center">
-            <IoChevronForward className="me-3" /> Blog
-          </Link>
-          <Link href="/" className="footer-link mb-2 flex items-center">
-            <IoChevronForward className="me-3" /> Career
-          </Link>
-        </nav>
-        <nav>
-          <h6 className="site-txt text-1xl line-text font-bold mb-5">
-            FEATURES
-          </h6>
-          <Link href="/" className="footer-link mb-2 flex items-center">
-            <IoChevronForward className="me-3" /> Event Hosting
-          </Link>
-          <Link href="/" className="footer-link mb-2 flex items-center">
-            <IoChevronForward className="me-3" /> Newsletter
-          </Link>
-          <Link href="/" className="footer-link mb-2 flex items-center">
-            <IoChevronForward className="me-3" /> Email Marketing
-          </Link>
-          <Link href="/" className="footer-link mb-2 flex items-center">
-            <IoChevronForward className="me-3" /> QR Code Ticketing
-          </Link>
-        </nav>
-        <nav>
-          <h6 className="site-txt text-1xl line-text font-bold mb-5">
-            SUPPORT
-          </h6>
-          <Link href="/faqs" className="footer-link mb-2 flex items-center">
-            <IoChevronForward className="me-3" /> Help Center / FAQs
-          </Link>
-          <Link href="/" className="footer-link mb-2 flex items-center">
-            <IoChevronForward className="me-3" /> For Event
-          </Link>
-          <Link href="/terms" className="footer-link mb-2 flex items-center">
-            <IoChevronForward className="me-3" /> Terms & Conditions
-          </Link>
-          <Link href="/privacy" className="footer-link mb-2 flex items-center">
-            <IoChevronForward className="me-3" /> Privacy Policy
-          </Link>
-        </nav>
+  return (
+    <div className="bg-black py-12 footer-main">
+      <footer className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          className="
+            flex flex-col items-center text-center
+            sm:flex-row sm:flex-wrap sm:items-start sm:text-left
+            justify-between gap-y-10 gap-x-8
+          "
+        >
+          {/* Logo & Description */}
+          <aside className="sm:w-1/3 max-w-sm flex flex-col items-center sm:items-start">
+            <Link href="/">
+              <Image
+                src={
+                  siteInfo.site_logo_black ||
+                  siteInfo.site_logo_white ||
+                  "/images/logo.webp"
+                }
+                width={160}
+                height={80}
+                alt="Site Logo"
+                className="mx-auto sm:mx-0"
+              />
+            </Link>
+            <p className="text-white mt-4 max-w-xs">{siteInfo.footer_description}</p>
+            <div className="mt-6">
+              <SocialIcons siteInfo={siteInfo} />
+            </div>
+          </aside>
+
+          {/* Navigation Sections */}
+          <nav className="sm:w-1/5 min-w-[160px]">
+            <h6 className="site-txt text-lg font-bold mb-6">EVENT</h6>
+            <ul className="space-y-3">
+              {[
+                { href: "/contact", label: "Contact Us" },
+                { href: "/about", label: "About Us" },
+                { href: "/blogs", label: "Blog" },
+                { href: "/", label: "Career" },
+              ].map(({ href, label }) => (
+                <li key={label}>
+                  <Link
+                    href={href}
+                    className="footer-link flex items-center justify-center sm:justify-start text-white hover:text-yellow-400 transition"
+                  >
+                    <IoChevronForward className="me-3" />
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <nav className="sm:w-1/5 min-w-[160px]">
+            <h6 className="site-txt text-lg font-bold mb-6">FEATURES</h6>
+            <ul className="space-y-3">
+              {[
+                { href: "/", label: "Event Hosting" },
+                { href: "/", label: "Newsletter" },
+                { href: "/", label: "Email Marketing" },
+                { href: "/", label: "QR Code Ticketing" },
+              ].map(({ href, label }) => (
+                <li key={label}>
+                  <Link
+                    href={href}
+                    className="footer-link flex items-center justify-center sm:justify-start text-white hover:text-yellow-400 transition"
+                  >
+                    <IoChevronForward className="me-3" />
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <nav className="sm:w-1/5 min-w-[160px]">
+            <h6 className="site-txt text-lg font-bold mb-6">SUPPORT</h6>
+            <ul className="space-y-3">
+              {[
+                { href: "/faqs", label: "Help Center / FAQs" },
+                { href: "/", label: "For Event" },
+                { href: "/terms", label: "Terms & Conditions" },
+                { href: "/privacy", label: "Privacy Policy" },
+              ].map(({ href, label }) => (
+                <li key={label}>
+                  <Link
+                    href={href}
+                    className="footer-link flex items-center justify-center sm:justify-start text-white hover:text-yellow-400 transition"
+                  >
+                    <IoChevronForward className="me-3" />
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
       </footer>
-      <div className="container mx-auto footer-copy py-5 mt-10 flex justify-between items-center">
-        {/* Left side: copyright */}
-        <div className="text-white text-sm">
-          © {new Date().getFullYear()}
-          <Link href={siteInfo.copyright_url}>
+
+      {/* Bottom Copy and Credits */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-12 border-t border-gray-700 pt-6 flex flex-col items-center text-center sm:flex-row sm:items-center sm:text-left justify-between gap-4 text-white text-sm">
+        <div>
+          © {new Date().getFullYear()}{" "}
+          <Link
+            href={siteInfo.copyright_url}
+            className="underline hover:text-yellow-400"
+          >
             {siteInfo.copyright_title.slice(6)}
           </Link>
         </div>
 
-        {/* Right side: links */}
-        <div className="flex space-x-6">
-          <p className="text-white text-sm flex items-center">
-            Developed With Love By
-            <Link href={siteInfo.copyright_url}>
-              <Image
-                width={50}
-                height={50}
-                alt="Created by"
-                src={"/images/flixzaglobal.webp"}
-                className="ms-2"
-              />
-            </Link>
-          </p>
+        <div className="flex items-center space-x-2">
+          <span>Developed With Love By</span>
+          <Link href={siteInfo.copyright_url}>
+            <Image
+              width={50}
+              height={50}
+              alt="Created by"
+              src={"/images/flixzaglobal.webp"}
+              className="rounded-full"
+            />
+          </Link>
         </div>
       </div>
     </div>

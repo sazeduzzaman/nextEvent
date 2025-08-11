@@ -4,43 +4,118 @@ import Image from "next/image";
 import SiteButtonOne from "@/components/Buttons/SiteButtonOne/SiteButtonOne";
 import Link from "next/link";
 import { Event } from "@/lib/api/AllEvents/AllEventsDataType";
+
 interface EventProps {
   allEvents: Event[];
 }
+
 const FeatureEventsCards = ({ allEvents }: EventProps) => {
-  const [imgSrc, setImgSrc] = useState(`/images/${allEvents[0].image}`);
+  // Track fallback images per event index, so each can fallback separately
+  const [imgErrorIndices, setImgErrorIndices] = useState<Set<number>>(
+    new Set()
+  );
+
+  const handleImgError = (index: number) => {
+    setImgErrorIndices((prev) => new Set(prev).add(index));
+  };
+
   return (
     <div>
-      <div className="w-full h-[500px] flex gap-4 overflow-hidden px-4">
-        {allEvents.slice(0, 4).map((event, i) => (
-          <div
-            key={i}
-            className="group relative flex-1 overflow-hidden rounded-2xl transition-all duration-500 ease-in-out hover:flex-[2]"
-          >
-            <Link href={`/events/details/${event.slug}`}>
-              <Image
-                src={imgSrc}
-                alt={event.name}
-                fill
-                className="object-cover object-center transition-none"
-                onError={() => setImgSrc("/images/featureEvents.jpg")}
-              />
-              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/70 transition duration-300 flex flex-col justify-between p-6 pe-0 text-white">
-                {/* Title at top */}
-                <div className="flex justify-end items-end">
-                  <h2 className="text-1xl font-semibold bg-black/60 w-70 ps-5 py-3 site-txt feature-locate-title">
+      {/* Show only desktop */}
+      <div className="w-full h-[400px] sm:h-[500px] flex gap-4 overflow-hidden px-4 sm:px-0 event-show-desktop">
+        {allEvents.slice(0, 4).map((event, i) => {
+          const imgSrc = imgErrorIndices.has(i)
+            ? "/images/featureEvents.jpg"
+            : `/images/${event.image}`;
+
+          return (
+            <div
+              key={event.id}
+              className="group relative flex-1 overflow-hidden rounded-2xl transition-all duration-500 ease-in-out 
+                hover:flex-[2] sm:hover:flex-[2] flex-shrink-0"
+              style={{ minWidth: 0 }} // important for flex children text truncation
+            >
+              <Link
+                href={`/events/details/${event.slug}`}
+                aria-label={`Explore details for ${event.name}`}
+              >
+                <Image
+                  src={imgSrc}
+                  alt={event.name}
+                  fill
+                  className="object-cover object-center transition-transform duration-300 group-hover:scale-105"
+                  onError={() => handleImgError(i)}
+                  sizes="(max-width: 640px) 90vw, (max-width: 768px) 45vw, (max-width: 1024px) 25vw, 20vw"
+                  priority={i === 0} // prioritize first image
+                />
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/70 transition duration-300 flex flex-col justify-between p-6 pr-0 text-white">
+                  {/* Title at top */}
+                  <div className="flex justify-end items-end">
+                    <h2 className="text-lg sm:text-xl font-semibold bg-black/60 w-full max-w-[18rem] sm:max-w-[22rem] ps-5 py-3 site-txt feature-locate-title truncate">
+                      {event.name}
+                    </h2>
+                  </div>
+                  <div className="opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition duration-500 ease-in-out max-w-[18rem] sm:max-w-[22rem]">
+                    <p className="text-sm sm:text-base mb-4 line-clamp-3">
+                      {event.description}
+                    </p>
+                    <SiteButtonOne text="Explore Event" />
+                  </div>
+                </div>
+              </Link>
+            </div>
+          );
+        })}
+      </div>
+      {/* Show only desktop end*/}
+      {/* Show only mobile  */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-4 sm:px-0 event-show-mobile">
+        {allEvents.slice(0, 4).map((event, i) => {
+          const imgSrc = imgErrorIndices.has(i)
+            ? "/images/featureEvents.jpg"
+            : `/images/${event.image}`;
+
+          return (
+            <div
+              key={event.id}
+              className="group relative overflow-hidden rounded-2xl transition-all duration-500 ease-in-out"
+            >
+              <Link
+                href={`/events/details/${event.slug}`}
+                aria-label={`Explore details for ${event.name}`}
+              >
+                <div className="relative w-full h-64">
+                  <Image
+                    src={imgSrc}
+                    alt={event.name}
+                    fill
+                    className="object-cover object-center transition-transform duration-300 group-hover:scale-105"
+                    onError={() => handleImgError(i)}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    priority={i === 0}
+                  />
+                </div>
+
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/70 transition duration-300 flex flex-col justify-between p-6 text-white">
+                  {/* Title */}
+                  <h2 className="text-lg sm:text-xl font-semibold bg-black/60 p-3 site-txt truncate">
                     {event.name}
                   </h2>
+
+                  {/* Hover content */}
+                  <div className="opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition duration-500 ease-in-out">
+                    <p className="text-sm sm:text-base mb-4 line-clamp-3">
+                      {event.description}
+                    </p>
+                    <SiteButtonOne text="Explore Event" />
+                  </div>
                 </div>
-                <div className="opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition duration-500 ease-in-out">
-                  <p className="text-lg mb-4">{event.description}</p>
-                  <SiteButtonOne text="Explore Event" />
-                </div>
-              </div>
-            </Link>
-          </div>
-        ))}
+              </Link>
+            </div>
+          );
+        })}
       </div>
+      {/* Show only mobile End */}
     </div>
   );
 };

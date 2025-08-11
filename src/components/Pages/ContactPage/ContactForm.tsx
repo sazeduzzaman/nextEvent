@@ -10,18 +10,18 @@ const ContactForm: React.FC = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white/5 backdrop-blur-md p-8 rounded-3xl shadow-2xl border border-white/10 text-white space-y-6"
+      className="bg-white/5 backdrop-blur-md rounded-3xl border border-white/10 shadow-2xl p-6 sm:p-8 mx-auto text-white space-y-6"
     >
-      <h2 className="text-4xl font-extrabold mb-6 text-amber-400 border-l-4 border-amber-400 pl-4">
+      <h2 className="text-3xl sm:text-4xl font-extrabold mb-4 sm:mb-6 text-amber-400 border-l-4 border-amber-400 pl-4">
         Let's Talk
       </h2>
-      <p className="text-gray-400 mb-6 text-sm">
+      <p className="text-gray-400 mb-4 sm:mb-6 text-sm sm:text-base leading-relaxed">
         Fill out the form and our team will get back to you within 24 hours.
       </p>
 
       {/* Name */}
       <div className="form-control w-full">
-        <label className="label text-sm text-gray-400">Full Name</label>
+        <label className="label text-sm sm:text-base text-gray-400">Full Name</label>
         <input
           type="text"
           name="name"
@@ -35,7 +35,7 @@ const ContactForm: React.FC = () => {
 
       {/* Email */}
       <div className="form-control w-full">
-        <label className="label text-sm text-gray-400">Email</label>
+        <label className="label text-sm sm:text-base text-gray-400">Email</label>
         <input
           type="email"
           name="email"
@@ -49,7 +49,7 @@ const ContactForm: React.FC = () => {
 
       {/* Phone */}
       <div className="form-control w-full">
-        <label className="label text-sm text-gray-400">Phone</label>
+        <label className="label text-sm sm:text-base text-gray-400">Phone</label>
         <input
           type="tel"
           name="phone"
@@ -63,7 +63,7 @@ const ContactForm: React.FC = () => {
 
       {/* Subject */}
       <div className="form-control w-full">
-        <label className="label text-sm text-gray-400">Subject</label>
+        <label className="label text-sm sm:text-base text-gray-400">Subject</label>
         <input
           type="text"
           name="subject"
@@ -77,20 +77,20 @@ const ContactForm: React.FC = () => {
 
       {/* Message */}
       <div className="form-control w-full">
-        <label className="label text-sm text-gray-400">Message</label>
+        <label className="label text-sm sm:text-base text-gray-400">Message</label>
         <textarea
           name="message"
           placeholder="Write your message here..."
           rows={5}
           value={formData.message}
           onChange={handleChange}
-          className="textarea textarea-bordered w-full bg-gray-800 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-400"
+          className="textarea textarea-bordered w-full bg-gray-800 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-400 resize-none"
           required
         />
       </div>
 
       {/* Call Checkbox */}
-      <div className="form-control w-full flex items-center gap-2">
+      <div className="form-control w-full flex items-center gap-3">
         <input
           type="checkbox"
           name="call"
@@ -99,7 +99,7 @@ const ContactForm: React.FC = () => {
           className="checkbox checkbox-amber"
           id="callCheckbox"
         />
-        <label htmlFor="callCheckbox" className="label text-sm text-gray-400">
+        <label htmlFor="callCheckbox" className="label text-sm sm:text-base text-gray-400">
           Need a Call?
         </label>
       </div>
@@ -108,13 +108,13 @@ const ContactForm: React.FC = () => {
       <button
         type="submit"
         disabled={loading}
-        className="btn bg-amber-400 text-gray-900 font-semibold w-full hover:bg-amber-300 transition-all duration-200"
+        className="btn bg-amber-400 text-gray-900 font-semibold w-full py-3 hover:bg-amber-300 transition-all duration-200 flex justify-center items-center"
       >
         {loading ? (
           "Sending..."
         ) : (
           <>
-            <Send className="w-4 h-4 mr-2" />
+            <Send className="w-5 h-5 mr-2" />
             Send Message
           </>
         )}

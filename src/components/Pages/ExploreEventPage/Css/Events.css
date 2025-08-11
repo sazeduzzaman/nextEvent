@@ -57,3 +57,15 @@
   z-index: 5;
   position: relative;
 }
+
+@media only screen and (max-width: 600px) {
+  .feature-image {
+    height: auto;
+    text-align: center;
+  }
+  .sticky-sidebar {
+    position: static; /* disable sticky on mobile */
+    top: auto; /* reset top */
+    align-self: start;
+  }
+}

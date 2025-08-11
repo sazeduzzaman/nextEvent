@@ -15,7 +15,7 @@ const BannerSection = () => {
         const { jarallax } = await import("jarallax");
         jarallax(bannerRef.current, {
           speed: 0.5,
-          imgElement: "img",
+          imgSrc: "/images/home/banner.jpg", // use background image mode for responsiveness
         });
       }
     };
@@ -24,7 +24,7 @@ const BannerSection = () => {
   }, []);
 
   return (
-    <section className="relative overflow-hidden section-banner">
+    <section className="section-banner relative overflow-hidden">
       <div ref={bannerRef} className="image-wrapper jarallax">
         <img
           src="/images/home/banner.jpg"
@@ -35,18 +35,21 @@ const BannerSection = () => {
       </div>
 
       <div className="de-gradient-edge-bottom" />
-      <div className="container content-wrapper mx-auto">
-        <h1 className="text-white font-bold banner-title">
+
+      <div className="container content-wrapper mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 className="text-white font-extrabold banner-title leading-tight">
           Where Celebration <br />
           Meets <span className="site-txt">Expertise</span>
         </h1>
-        <p className="lead w-1/2 text-white mt-10 text-2xl text-justify">
+
+        <p className="lead mt-6 max-w-full sm:max-w-xl md:max-w-2xl">
           Your Perfect Partner for Events that Entertain, Inspire, and Connect -
           At Eventa, we make events more accessible, inclusive, and meaningful.
           Host your first event or get tickets to events happening near you!
         </p>
-        <div className="mt-10">
-          <Link href={"/"}>
+
+        <div className="mt-8">
+          <Link href="/">
             <SiteButtonOne text="Explore Events" />
           </Link>
         </div>

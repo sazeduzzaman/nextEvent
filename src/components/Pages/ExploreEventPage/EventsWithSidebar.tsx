@@ -16,13 +16,20 @@ const EventsWithSidebar = () => {
   } = useEventFilters();
 
   return (
-    <div className="grid grid-cols-12 gap-10">
-      <div className="col-span-3 sticky-sidebar h-screen">
-        <div>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10">
+        {/* Sidebar */}
+        <aside
+          className="
+            col-span-12 md:col-span-3
+            md:sticky md:top-20 md:h-[calc(100vh-80px)] md:overflow-auto
+            bg-neutral-900 rounded-lg p-6 shadow-lg
+          "
+        >
           <h2 className="text-3xl font-bold mb-6 text-yellow-400">
             Filter Events
           </h2>
-          <div className="w-full p-6 border border-yellow-400 rounded-lg shadow-lg space-y-6 site-second-bg">
+          <div className="space-y-6">
             {/* Search City */}
             <div>
               <label className="block mb-2 font-semibold text-white text-base">
@@ -60,7 +67,7 @@ const EventsWithSidebar = () => {
                         ${
                           isChecked
                             ? "bg-yellow-400 text-black border-yellow-400"
-                            : "site-second-bg text-white border-gray-700 hover:bg-gray-700"
+                            : "bg-neutral-800 text-white border-gray-700 hover:bg-gray-700"
                         }`}
                       >
                         <input
@@ -110,10 +117,12 @@ const EventsWithSidebar = () => {
               </button>
             </div>
           </div>
-        </div>
-      </div>
-      <div className="col-span-9">
-        <AllEvents filters={filters} />
+        </aside>
+
+        {/* Events List */}
+        <main className="col-span-12 md:col-span-9">
+          <AllEvents filters={filters} />
+        </main>
       </div>
     </div>
   );

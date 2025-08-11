@@ -250,8 +250,8 @@ export function useTicketSelection({ eventData }: UseTicketSelectionProps) {
 
       const data = await response.json();
 
-      if (data.status === "success") {
-        toast.success("Booking initiated successfully!");
+      if (data.status === "success" && data.redirect_url) {
+        window.open(data.redirect_url, "_blank");
       } else {
         toast.error("Booking failed");
       }

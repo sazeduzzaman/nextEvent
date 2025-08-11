@@ -1,7 +1,7 @@
 "use client";
 import Cookies from "js-cookie";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import type {
@@ -151,10 +151,18 @@ export function useTicketSelection({ eventData }: UseTicketSelectionProps) {
     0
   );
 
-  const totalPrice = ticketCategories.reduce((sum, category) => {
-    const seatCount = selectedTickets[category.id]?.length || 0;
-    return sum + seatCount * category.price;
-  }, 0);
+  // Optimized totalPrice calculation with useMemo and rounding
+  const totalPrice = useMemo(() => {
+    const total = ticketCategories.reduce((sum, category) => {
+      const seatCount = selectedTickets[category.id]?.length || 0;
+      const price =
+        typeof category.price === "string"
+          ? parseFloat(category.price)
+          : category.price;
+      return sum + seatCount * price;
+    }, 0);
+    return Math.round(total * 100) / 100;
+  }, [ticketCategories, selectedTickets]);
 
   const proceedToPurchase = async () => {
     if (loadingUser) {
@@ -197,6 +205,7 @@ export function useTicketSelection({ eventData }: UseTicketSelectionProps) {
       },
       event_id: Number(eventData?.id),
       seat_ids,
+      total_amount: totalPrice,
     };
     // First Set Purchase data
     localStorage.setItem("purchaseData", JSON.stringify(purchaseData));
@@ -242,8 +251,15 @@ export function useTicketSelection({ eventData }: UseTicketSelectionProps) {
       console.log("API Response:", data);
       toast.success("Booking initiated successfully!");
 
-      if (data.status === "success" && data.redirect_url) {
-        window.open(data.redirect_url, "_blank");
+      // if (data.status === "success" && data.redirect_url) {
+      //   window.open(data.redirect_url, "_blank");
+      // }
+
+      console.log("API Response:", data);
+      if (data.status === "success") {
+        toast.success("Booking initiated successfully!");
+      } else {
+        toast.error("Booking failed");
       }
     } catch (error: any) {
       console.error("API Error:", error.message);

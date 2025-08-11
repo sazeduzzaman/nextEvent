@@ -102,6 +102,7 @@ const SingleEventsTicketTabs: React.FC<TicketTabsProps> = ({
                         ? `${seat.id}`
                         : seat.code || `${seat.row}${seat.column}`;
                     const isSelected = selectedSeats.includes(String(seatId));
+                    const isReserved = seat.status === "reserved"; // reserved check
 
                     return (
                       <label
@@ -113,21 +114,29 @@ const SingleEventsTicketTabs: React.FC<TicketTabsProps> = ({
                           type="checkbox"
                           id={`${id}-${seatId}`}
                           checked={isSelected}
+                          disabled={isReserved} // disable reserved seats
                           onChange={() => handleSeatToggle(id, String(seatId))}
                           className="peer hidden"
                         />
                         <div
-                          className={`w-full py-3 rounded-lg border-2 text-center font-semibold transition duration-300 cursor-pointer
-                            ${
-                              isSelected
-                                ? "bg-yellow-400 border-yellow-500 text-black shadow-md"
-                                : "bg-neutral-800 border-neutral-800 text-gray-300 hover:bg-yellow-400 hover:text-black hover:border-yellow-500"
-                            }`}
+                          className={`w-full py-3 rounded-lg border-2 text-center font-semibold transition duration-300
+                    ${
+                      isReserved
+                        ? "bg-gray-500 border-gray-500 text-gray-300 cursor-not-allowed"
+                        : isSelected
+                        ? "bg-yellow-400 border-yellow-500 text-black shadow-md"
+                        : "bg-neutral-800 border-neutral-800 text-gray-300 hover:bg-yellow-400 hover:text-black hover:border-yellow-500 cursor-pointer"
+                    }`}
                         >
                           {seatLabel}{" "}
                           <span className="text-xs text-gray-400">
                             ({seatId})
                           </span>
+                          {isReserved && (
+                            <span className="block text-xs text-red-300">
+                              Reserved
+                            </span>
+                          )}
                         </div>
                       </label>
                     );

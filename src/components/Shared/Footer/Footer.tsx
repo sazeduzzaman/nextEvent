@@ -115,7 +115,7 @@ const Footer = async () => {
           © {new Date().getFullYear()}{" "}
           <Link
             href={siteInfo.copyright_url}
-            className="underline hover:text-yellow-400"
+            className=" hover:text-yellow-400"
           >
             {siteInfo.copyright_title.slice(6)}
           </Link>

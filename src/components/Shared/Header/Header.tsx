@@ -41,11 +41,6 @@ const Header = ({ siteInfo }: any) => {
           </div>
           <MenuItems />
           <div className="navbar-end">
-            <div className="mb-none">
-              <Link href="/events">
-                <SiteButtonOne text="Explore Event" />
-              </Link>
-            </div>
             <MobileMenu />
             <UserMenu />
           </div>

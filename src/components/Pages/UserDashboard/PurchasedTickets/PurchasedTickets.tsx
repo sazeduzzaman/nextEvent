@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { BiDownload, BiExpand, BiPrinter } from "react-icons/bi";
+import PurchasedAction from "./PurchasedAction/PurchasedAction";
 
 type Ticket = {
   id: number;
@@ -182,24 +183,7 @@ const PurchasedTickets = () => {
                     </span>
                   </td>
                   <td className="px-6 py-4 border-b border-gray-800 text-end space-x-2">
-                    <button
-                      onClick={() => alert(`Print ticket #${ticket.id}`)}
-                      className="bg-yellow-400 hover:bg-yellow-500 transition rounded px-4 py-1 font-semibold shadow-sm text-black"
-                    >
-                      <BiPrinter/>
-                    </button>
-                    <button
-                      onClick={() => alert(`View ticket #${ticket.id}`)}
-                      className="bg-gray-200 hover:bg-gray-300 transition rounded px-4 py-1 font-semibold shadow-sm text-black"
-                    >
-                      <BiExpand/>
-                    </button>
-                    <button
-                      onClick={() => alert(`View ticket #${ticket.id}`)}
-                      className="bg-gray-200 hover:bg-gray-300 transition rounded px-4 py-1 font-semibold shadow-sm text-black"
-                    >
-                      <BiDownload/>
-                    </button>
+                    <PurchasedAction ticket={ticket} />
                   </td>
                 </tr>
               ))

@@ -29,11 +29,11 @@ const HeaderContent = async () => {
         </div>
         <MenuItems />
         <div className="navbar-end">
-          <div className="mb-none">
+          {/* <div className="mb-none">
             <Link href="/events">
               <SiteButtonOne text="Explore Event" />
             </Link>
-          </div>
+          </div> */}
           <MobileMenu />
           <UserMenu />
         </div>

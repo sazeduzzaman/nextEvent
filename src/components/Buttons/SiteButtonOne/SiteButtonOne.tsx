@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { LuPartyPopper } from "react-icons/lu";
 import "../Css/SiteButtonOne.css";

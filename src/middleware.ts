@@ -6,12 +6,7 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get("authToken");
 
   // Define protected routes
-  const protectedPaths = [
-    "/dashboard",
-    "/user",
-    "/admin",
-    "/events/details/",
-  ];
+  const protectedPaths = ["/dashboard", "/user", "/admin", "/events/details/"];
 
   // Check if current path is protected
   const isProtectedRoute = protectedPaths.some((p) => {

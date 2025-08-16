@@ -12,6 +12,7 @@ interface PurchasedActionProps {
     date: string;
     seat: string;
     price: number;
+    row: string;
     purchaseDate: string;
     expireDate: string;
     status: "Active" | "Expired" | "Cancelled";

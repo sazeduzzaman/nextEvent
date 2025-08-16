@@ -1,14 +1,14 @@
 "use client";
-import { TicketIcon } from "lucide-react";
 import React, { RefObject } from "react";
+import { TbFileInvoice } from "react-icons/tb";
 import { useReactToPrint } from "react-to-print";
 
-interface PrintButtonProps {
+interface PrintInvoiceButtonProps {
   printRef: React.RefObject<HTMLElement | null>; // allow null
   ticketId: number | string;
 }
 
-const PrintButton: React.FC<PrintButtonProps> = ({ printRef, ticketId }) => {
+const InvoiceButton: React.FC<PrintInvoiceButtonProps> = ({ printRef, ticketId }) => {
   const handlePrint = useReactToPrint({
     contentRef: printRef, // must be RefObject<HTMLElement | null>
     documentTitle: `Ticket-${ticketId}`,
@@ -19,12 +19,12 @@ const PrintButton: React.FC<PrintButtonProps> = ({ printRef, ticketId }) => {
   return (
     <button
       onClick={handlePrint}
-      title="Print Ticket"
+      title="Print Invoice"
       className="bg-yellow-400 cursor-pointer hover:bg-yellow-500 transition rounded px-4 py-1 me-2 font-semibold shadow-sm text-black"
     >
-      <TicketIcon />
+      <TbFileInvoice size={25} />
     </button>
   );
 };
 
-export default PrintButton;
+export default InvoiceButton;

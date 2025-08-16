@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { BiDownload, BiExpand, BiPrinter } from "react-icons/bi";
 import PurchasedAction from "./PurchasedAction/PurchasedAction";
 
 type Ticket = {
@@ -9,9 +8,11 @@ type Ticket = {
   date: string;
   seat: string;
   price: number;
+  row: string;
   purchaseDate: string;
   expireDate: string;
   status: "Active" | "Expired" | "Cancelled";
+  eventName: string; // added
 };
 
 const sampleData: Ticket[] = [
@@ -19,37 +20,45 @@ const sampleData: Ticket[] = [
     id: 1,
     date: "2025-08-01",
     seat: "A1",
+    row: "A",
     price: 50,
     purchaseDate: "2025-07-25",
     expireDate: "2025-08-02",
     status: "Active",
+    eventName: "Summer Beats Festival",
   },
   {
     id: 2,
     date: "2025-08-03",
     seat: "B5",
+    row: "B",
     price: 75,
     purchaseDate: "2025-07-26",
     expireDate: "2025-08-04",
     status: "Expired",
+    eventName: "Rock Night Live",
   },
   {
     id: 3,
-    date: "2025-08-03",
-    seat: "B5",
-    price: 75,
-    purchaseDate: "2025-07-26",
-    expireDate: "2025-08-04",
-    status: "Expired",
+    date: "2025-08-05",
+    seat: "C3",
+    row: "C",
+    price: 60,
+    purchaseDate: "2025-07-27",
+    expireDate: "2025-08-06",
+    status: "Cancelled",
+    eventName: "Jazz Evening",
   },
   {
     id: 4,
-    date: "2025-08-03",
-    seat: "B5",
-    price: 75,
-    purchaseDate: "2025-07-26",
-    expireDate: "2025-08-04",
-    status: "Expired",
+    date: "2025-08-07",
+    seat: "D2",
+    row: "D",
+    price: 80,
+    purchaseDate: "2025-07-28",
+    expireDate: "2025-08-08",
+    status: "Active",
+    eventName: "Electronic Fiesta",
   },
 ];
 
@@ -58,14 +67,15 @@ const PurchasedTickets = () => {
   const [pageSize, setPageSize] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Filter tickets by search (seat, status, or date)
+  // Filter tickets by search (seat, status, date, or event name)
   const filteredData = useMemo(() => {
     const searchLower = search.toLowerCase();
     return sampleData.filter(
       (ticket) =>
         ticket.seat.toLowerCase().includes(searchLower) ||
         ticket.status.toLowerCase().includes(searchLower) ||
-        ticket.date.includes(search)
+        ticket.date.includes(search) ||
+        ticket.eventName.toLowerCase().includes(searchLower)
     );
   }, [search]);
 
@@ -99,7 +109,7 @@ const PurchasedTickets = () => {
         <div className="flex gap-4 mb-6 justify-end">
           <input
             type="text"
-            placeholder="Search by seat, status, or date"
+            placeholder="Search by seat, status, date, or event"
             value={search}
             onChange={handleSearchChange}
             className="w-full md:w-1/2 px-4 py-1 rounded-lg border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
@@ -124,10 +134,10 @@ const PurchasedTickets = () => {
           <thead className="bg-yellow-400 text-black uppercase border border-gray-800 text-sm font-semibold tracking-wide">
             <tr>
               <th className="px-6 py-4">SL</th>
-              <th className="px-6 py-4">Date</th>
+              <th className="px-6 py-4">Event</th>
               <th className="px-6 py-4">Seat</th>
               <th className="px-6 py-4">Price</th>
-              <th className="px-6 py-4">Purchase Date</th>
+              <th className="px-6 py-4">Purchase</th>
               <th className="px-6 py-4">Expire</th>
               <th className="px-6 py-4">Status</th>
               <th className="px-6 py-4 text-center">Action</th>
@@ -137,7 +147,7 @@ const PurchasedTickets = () => {
             {currentData.length === 0 ? (
               <tr>
                 <td
-                  colSpan={8}
+                  colSpan={10}
                   className="text-center text-gray-500 py-8 font-medium"
                 >
                   No tickets found.
@@ -154,8 +164,8 @@ const PurchasedTickets = () => {
                   <td className="px-6 py-4 border-b border-gray-800 text-center font-medium">
                     {(currentPage - 1) * pageSize + index + 1}
                   </td>
-                  <td className="px-6 py-4 border-b border-gray-800 text-center">
-                    {ticket.date}
+                  <td className="px-6 py-4 border-b border-gray-800 font-semibold">
+                    {ticket.eventName}
                   </td>
                   <td className="px-6 py-4 border-b border-gray-800 text-center font-semibold site-txt">
                     {ticket.seat}

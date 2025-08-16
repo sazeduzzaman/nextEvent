@@ -15,6 +15,8 @@ type LoginData = {
 const LoginForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  // Read the redirect URL from the query params, default to /dashboard
   const redirect = searchParams.get("redirect") || "/dashboard";
 
   const {
@@ -22,7 +24,6 @@ const LoginForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginData>();
-
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -31,11 +32,12 @@ const LoginForm = () => {
     toast.loading("Logging in...", { id: "login" });
 
     try {
+      // Perform login
       await loginUser(data);
 
       toast.success("Login successful!", { id: "login" });
 
-      // Redirect user to original requested page or fallback to /dashboard
+      // Ensure redirect happens after successful login
       router.push(redirect);
     } catch (error: any) {
       toast.error(error.message || "Login failed", { id: "login" });

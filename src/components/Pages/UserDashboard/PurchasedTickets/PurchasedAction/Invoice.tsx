@@ -1,22 +1,27 @@
 import React from "react";
 
+interface Ticket {
+  id: number;
+  date: string;
+  seat: string;
+  price: number;
+  purchaseDate: string;
+  expireDate: string;
+  row: string;
+  status: "Active" | "Expired" | "Cancelled";
+  eventName?: string;
+  eventLink?: string;
+  buyerName?: string;
+}
+
 interface PurchasedActionProps {
-  ticket: {
-    id: number;
-    date: string;
-    seat: string;
-    price: number;
-    purchaseDate: string;
-    expireDate: string;
-    row: string;
-    status: "Active" | "Expired" | "Cancelled";
-    eventName?: string;
-    eventLink?: string;
-    buyerName?: string;
-  };
+  ticket: Ticket;
 }
 
 const Invoice = ({ ticket }: PurchasedActionProps) => {
+  // Format ticket id as #ev-XXXX
+  const formattedId = `#ev-${ticket.id.toString().padStart(4, "0")}`;
+
   return (
     <div
       style={{
@@ -52,7 +57,7 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
         </div>
         <div style={{ textAlign: "right" }}>
           <h2 style={{ margin: 0, color: "#00bcd4" }}>INVOICE</h2>
-          <p style={{ margin: 0, fontSize: 14 }}>Ticket ID: #{ticket.id}</p>
+          <p style={{ margin: 0, fontSize: 14 }}>Ticket ID: {formattedId}</p>
         </div>
       </div>
 
@@ -112,66 +117,21 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
       >
         <thead>
           <tr style={{ background: "#e0f7fa", color: "#007c91" }}>
-            <th
-              style={{
-                padding: 12,
-                textAlign: "center",
-                fontWeight: 600,
-                border: "1px solid #ccc",
-              }}
-            >
-              Items
-            </th>
-            <th
-              style={{
-                padding: 12,
-                textAlign: "center",
-                fontWeight: 600,
-                border: "1px solid #ccc",
-              }}
-            >
-              Seat
-            </th>
-            <th
-              style={{
-                padding: 12,
-                textAlign: "center",
-                fontWeight: 600,
-                border: "1px solid #ccc",
-              }}
-            >
-              Row
-            </th>
-            <th
-              style={{
-                padding: 12,
-                textAlign: "center",
-                fontWeight: 600,
-                border: "1px solid #ccc",
-              }}
-            >
-              Ticket
-            </th>
-            <th
-              style={{
-                padding: 12,
-                textAlign: "center",
-                fontWeight: 600,
-                border: "1px solid #ccc",
-              }}
-            >
-              Expire
-            </th>
-            <th
-              style={{
-                padding: 12,
-                textAlign: "center",
-                fontWeight: 600,
-                border: "1px solid #ccc",
-              }}
-            >
-              Subtotal
-            </th>
+            {["Items", "Seat", "Row", "Ticket", "Expire", "Subtotal"].map(
+              (head) => (
+                <th
+                  key={head}
+                  style={{
+                    padding: 12,
+                    textAlign: "center",
+                    fontWeight: 600,
+                    border: "1px solid #ccc",
+                  }}
+                >
+                  {head}
+                </th>
+              )
+            )}
           </tr>
         </thead>
         <tbody>
@@ -201,7 +161,7 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
                 border: "1px solid #ccc",
               }}
             >
-              {ticket.row ?? "H"}
+              {ticket.row}
             </td>
             <td
               style={{
@@ -210,7 +170,7 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
                 border: "1px solid #ccc",
               }}
             >
-              #{ticket.id}
+              {formattedId}
             </td>
             <td
               style={{
@@ -232,10 +192,60 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
             </td>
           </tr>
         </tbody>
+
+        {/* ✅ Table Footer */}
+        <tfoot>
+          <tr>
+            <td
+              colSpan={5}
+              style={{
+                padding: 12,
+                textAlign: "right",
+                border: "1px solid #ccc",
+                fontWeight: 600,
+              }}
+            >
+              Tax / VAT (10%)
+            </td>
+            <td
+              style={{
+                padding: 12,
+                textAlign: "center",
+                border: "1px solid #ccc",
+              }}
+            >
+              ${(ticket.price * 0.1).toFixed(2)}
+            </td>
+          </tr>
+          <tr>
+            <td
+              colSpan={5}
+              style={{
+                padding: 12,
+                textAlign: "right",
+                border: "1px solid #ccc",
+                fontWeight: 700,
+              }}
+            >
+              Grand Total
+            </td>
+            <td
+              style={{
+                padding: 12,
+                textAlign: "center",
+                border: "1px solid #ccc",
+                fontWeight: 700,
+                color: "#00bcd4",
+              }}
+            >
+              ${(ticket.price * 1.1).toFixed(2)}
+            </td>
+          </tr>
+        </tfoot>
       </table>
 
       {/* Total */}
-      <div
+      {/* <div
         style={{
           display: "flex",
           justifyContent: "flex-end",
@@ -247,7 +257,7 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
           Total:{" "}
           <span style={{ color: "#00bcd4" }}>${ticket.price.toFixed(2)}</span>
         </h3>
-      </div>
+      </div> */}
 
       {/* Billing, Payment & Venue Info */}
       <table
@@ -259,7 +269,6 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
       >
         <tbody>
           <tr>
-            {/* Billing / Shipping */}
             <td style={{ width: "33%", padding: 12, verticalAlign: "top" }}>
               <strong>BILLING / SHIPPING INFORMATION</strong>
               <p style={{ margin: "5px 0", fontSize: 12 }}>
@@ -272,8 +281,6 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
                 Country
               </p>
             </td>
-
-            {/* Payment */}
             <td style={{ width: "33%", padding: 12, verticalAlign: "top" }}>
               <strong>PAYMENT INFORMATION</strong>
               <p style={{ margin: "5px 0", fontSize: 12 }}>
@@ -285,8 +292,6 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
                 <span style={{ color: "#00bcd4" }}>4185939336</span>
               </p>
             </td>
-
-            {/* Venue */}
             <td style={{ width: "33%", padding: 12, verticalAlign: "top" }}>
               <strong>VENUE INFORMATION</strong>
               <p style={{ margin: "5px 0", fontSize: 12 }}>
@@ -319,7 +324,7 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
           alt="Barcode"
           style={{ maxWidth: "300px", height: "auto" }}
         />
-        <p style={{ marginTop: 5, fontSize: 14 }}>Ticket #{ticket.id}</p>
+        <p style={{ marginTop: 5, fontSize: 14 }}>{formattedId}</p>
       </div>
 
       {/* Footer */}

@@ -13,7 +13,10 @@ interface PurchasedActionProps {
     price: number;
     purchaseDate: string;
     status: "Active" | "Expired" | "Cancelled" | "Pending";
-    eventName: string;
+    eventName?: string;
+    date?: string;
+    row?: string;
+    expireDate?: string;
   };
 }
 

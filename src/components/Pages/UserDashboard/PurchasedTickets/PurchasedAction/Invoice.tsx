@@ -2,13 +2,13 @@ import React from "react";
 
 interface Ticket {
   id: number;
-  date: string;
+  date?: string; // optional now
   seat: string;
   price: number;
   purchaseDate: string;
-  expireDate: string;
-  row: string;
-  status: "Active" | "Expired" | "Cancelled";
+  expireDate?: string; // optional
+  row?: string; // optional
+  status: "Active" | "Expired" | "Cancelled" | "Pending";
   eventName?: string;
   eventLink?: string;
   buyerName?: string;

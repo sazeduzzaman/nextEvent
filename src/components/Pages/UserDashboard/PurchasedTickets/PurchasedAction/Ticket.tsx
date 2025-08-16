@@ -3,16 +3,18 @@ import React from "react";
 interface PurchasedActionProps {
   ticket: {
     id: number;
-    date: string;
     seat: string;
     price: number;
-    row: string;
     purchaseDate: string;
-    expireDate: string;
-    status: "Active" | "Expired" | "Cancelled";
+    status: "Active" | "Expired" | "Cancelled" | "Pending";
+    eventName?: string;
+    date?: string;
+    row?: string;
+    expireDate?: string;
   };
 }
 const Ticket = ({ ticket }: PurchasedActionProps) => {
+  console.log(ticket, "ticket");
   return (
     <div
       style={{
@@ -254,9 +256,6 @@ const Ticket = ({ ticket }: PurchasedActionProps) => {
           </tr>
         </tbody>
       </table>
-      <div>
-        {ticket.length}
-      </div>
     </div>
   );
 };

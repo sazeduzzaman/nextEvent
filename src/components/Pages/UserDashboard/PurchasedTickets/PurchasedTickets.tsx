@@ -1,229 +1,201 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import toast from "react-hot-toast";
 import PurchasedAction from "./PurchasedAction/PurchasedAction";
 
 type Ticket = {
   id: number;
-  date: string;
   seat: string;
   price: number;
-  row: string;
   purchaseDate: string;
-  expireDate: string;
-  status: "Active" | "Expired" | "Cancelled";
-  eventName: string; // added
+  status: "Active" | "Expired" | "Cancelled" | "Pending";
+  eventName: string;
 };
 
-const sampleData: Ticket[] = [
-  {
-    id: 1,
-    date: "2025-08-01",
-    seat: "A1",
-    row: "A",
-    price: 50,
-    purchaseDate: "2025-07-25",
-    expireDate: "2025-08-02",
-    status: "Active",
-    eventName: "Summer Beats Festival",
-  },
-  {
-    id: 2,
-    date: "2025-08-03",
-    seat: "B5",
-    row: "B",
-    price: 75,
-    purchaseDate: "2025-07-26",
-    expireDate: "2025-08-04",
-    status: "Expired",
-    eventName: "Rock Night Live",
-  },
-  {
-    id: 3,
-    date: "2025-08-05",
-    seat: "C3",
-    row: "C",
-    price: 60,
-    purchaseDate: "2025-07-27",
-    expireDate: "2025-08-06",
-    status: "Cancelled",
-    eventName: "Jazz Evening",
-  },
-  {
-    id: 4,
-    date: "2025-08-07",
-    seat: "D2",
-    row: "D",
-    price: 80,
-    purchaseDate: "2025-07-28",
-    expireDate: "2025-08-08",
-    status: "Active",
-    eventName: "Electronic Fiesta",
-  },
-];
-
 const PurchasedTickets = () => {
+  const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [pageSize, setPageSize] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Filter tickets by search (seat, status, date, or event name)
+  useEffect(() => {
+    const fetchTicketsFromSessions = async () => {
+      const storedSessions: string[] =
+        JSON.parse(localStorage.getItem("stripeSessions") || "[]") || [];
+
+      if (!storedSessions.length) {
+        setTickets([]);
+        setLoading(false);
+        return;
+      }
+
+      const allTickets: Ticket[] = [];
+
+      for (const sessionId of storedSessions) {
+        try {
+          setLoading(true);
+          const res = await fetch(
+            `https://admin.eventstailor.com/api/v1/payment/status?session_id=${sessionId}`
+          );
+          if (!res.ok) throw new Error("Failed to fetch booking");
+
+          const data = await res.json();
+
+          if (data.status === "pending") {
+            toast.success("Booking is pending, please wait!");
+            // Push a placeholder ticket for display
+            allTickets.push({
+              id: Number(sessionId.slice(-6)), // unique numeric ID for row
+              seat: "N/A",
+              price: 0,
+              purchaseDate: "N/A",
+              status: "Pending",
+              eventName: "N/A",
+            });
+          } else if (data.status === "confirmed") {
+            const mapped: Ticket[] =
+              data.booking?.seats?.map((seat: any) => ({
+                id: Number(seat.seat_id),
+                seat: seat.seat_name,
+                price: data.booking.total_amount / data.booking.seats.length,
+                purchaseDate: new Date(data.booking.event_datetime)
+                  .toISOString()
+                  .split("T")[0],
+                status:
+                  data.booking.payment_status === "paid"
+                    ? "Active"
+                    : "Cancelled",
+                eventName: data.booking.event || "Unnamed Event",
+              })) || [];
+            allTickets.push(...mapped);
+            toast.success("Booking confirmed!");
+          }
+        } catch (err: any) {
+          toast.error(err.message);
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      setTickets(allTickets);
+    };
+
+    fetchTicketsFromSessions();
+  }, []);
+
+  // Filtering
   const filteredData = useMemo(() => {
-    const searchLower = search.toLowerCase();
-    return sampleData.filter(
-      (ticket) =>
-        ticket.seat.toLowerCase().includes(searchLower) ||
-        ticket.status.toLowerCase().includes(searchLower) ||
-        ticket.date.includes(search) ||
-        ticket.eventName.toLowerCase().includes(searchLower)
+    const s = search.toLowerCase();
+    return tickets.filter(
+      (t) =>
+        t.seat.toLowerCase().includes(s) ||
+        t.status.toLowerCase().includes(s) ||
+        t.purchaseDate.includes(search) ||
+        t.eventName.toLowerCase().includes(s)
     );
-  }, [search]);
+  }, [search, tickets]);
 
   const totalPages = Math.ceil(filteredData.length / pageSize);
 
   const currentData = useMemo(() => {
-    const startIndex = (currentPage - 1) * pageSize;
-    return filteredData.slice(startIndex, startIndex + pageSize);
+    const start = (currentPage - 1) * pageSize;
+    return filteredData.slice(start, start + pageSize);
   }, [filteredData, currentPage, pageSize]);
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-    setCurrentPage(1);
-  };
-
-  const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setPageSize(Number(e.target.value));
-    setCurrentPage(1);
-  };
-
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-  };
 
   return (
     <div className="max-w-7xl mx-auto p-8 site-second-bg rounded-xl shadow-lg">
-      <div className="flex justify-between">
-        <h1 className="text-3xl font-bold site-txt mb-8">Purchased Tickets</h1>
+      <h1 className="text-3xl font-bold site-txt mb-8">Purchased Tickets</h1>
 
-        {/* Search and Page Size Controls */}
-        <div className="flex gap-4 mb-6 justify-end">
-          <input
-            type="text"
-            placeholder="Search by seat, status, date, or event"
-            value={search}
-            onChange={handleSearchChange}
-            className="w-full md:w-1/2 px-4 py-1 rounded-lg border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
-          />
-          <select
-            value={pageSize}
-            onChange={handlePageSizeChange}
-            className="w-full md:w-24 px-4 py-1 rounded-lg border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
-          >
-            {[5, 10, 15, 20].map((size) => (
-              <option key={size} value={size}>
-                Show {size}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
+      {loading && <p>Loading...</p>}
 
-      {/* Table */}
-      <div className="overflow-x-auto rounded-lg shadow-sm">
-        <table className="w-full text-left border-collapse">
-          <thead className="bg-yellow-400 text-black uppercase border border-gray-800 text-sm font-semibold tracking-wide">
+      <table className="w-full text-left border-collapse">
+        <thead className="bg-yellow-400 text-black uppercase text-sm font-semibold">
+          <tr>
+            <th className="px-6 py-4">SL</th>
+            <th className="px-6 py-4">Event</th>
+            <th className="px-6 py-4">Seat</th>
+            <th className="px-6 py-4">Price</th>
+            <th className="px-6 py-4">Purchase</th>
+            <th className="px-6 py-4">Status</th>
+            <th className="px-6 py-4 text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentData.length === 0 ? (
             <tr>
-              <th className="px-6 py-4">SL</th>
-              <th className="px-6 py-4">Event</th>
-              <th className="px-6 py-4">Seat</th>
-              <th className="px-6 py-4">Price</th>
-              <th className="px-6 py-4">Purchase</th>
-              <th className="px-6 py-4">Expire</th>
-              <th className="px-6 py-4">Status</th>
-              <th className="px-6 py-4 text-center">Action</th>
+              <td colSpan={7} className="text-center py-6 text-gray-500">
+                No tickets found
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {currentData.length === 0 ? (
-              <tr>
-                <td
-                  colSpan={10}
-                  className="text-center text-gray-500 py-8 font-medium"
-                >
-                  No tickets found.
-                </td>
+          ) : (
+            currentData.map((ticketsItems, i) => (
+              <tr key={ticketsItems.id}>
+                {ticketsItems.status === "Pending" ? (
+                  <td
+                    colSpan={7}
+                    className="text-center py-4 text-yellow-700 font-semibold"
+                  >
+                    The booking is pending
+                  </td>
+                ) : (
+                  <>
+                    <td className="px-6 py-4">
+                      {(currentPage - 1) * pageSize + i + 1}
+                    </td>
+                    <td className="px-6 py-4">{ticketsItems.eventName}</td>
+                    <td className="px-6 py-4">{ticketsItems.seat}</td>
+                    <td className="px-6 py-4">
+                      ${ticketsItems.price.toFixed(2)}
+                    </td>
+                    <td className="px-6 py-4">{ticketsItems.purchaseDate}</td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                          ticketsItems.status === "Active"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
+                      >
+                        {ticketsItems.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <PurchasedAction ticket={ticketsItems} />
+                    </td>
+                  </>
+                )}
               </tr>
-            ) : (
-              currentData.map((ticket, index) => (
-                <tr
-                  key={ticket.id}
-                  className={
-                    index % 2 === 0 ? "site-second-bg" : "site-second-bg"
-                  }
-                >
-                  <td className="px-6 py-4 border-b border-gray-800 text-center font-medium">
-                    {(currentPage - 1) * pageSize + index + 1}
-                  </td>
-                  <td className="px-6 py-4 border-b border-gray-800 font-semibold">
-                    {ticket.eventName}
-                  </td>
-                  <td className="px-6 py-4 border-b border-gray-800 text-center font-semibold site-txt">
-                    {ticket.seat}
-                  </td>
-                  <td className="px-6 py-4 border-b border-gray-800 text-center font-semibold site-txt">
-                    ${ticket.price.toFixed(2)}
-                  </td>
-                  <td className="px-6 py-4 border-b border-gray-800 text-center">
-                    {ticket.purchaseDate}
-                  </td>
-                  <td className="px-6 py-4 border-b border-gray-800 text-center">
-                    {ticket.expireDate}
-                  </td>
-                  <td className="px-6 py-4 border-b border-gray-800 text-center">
-                    <span
-                      className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
-                        ticket.status === "Active"
-                          ? "bg-green-100 text-green-800"
-                          : ticket.status === "Expired"
-                          ? "bg-red-100 text-red-800"
-                          : "bg-yellow-100 text-yellow-800"
-                      }`}
-                    >
-                      {ticket.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-gray-800 text-end space-x-2">
-                    <PurchasedAction ticket={ticket} />
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+            ))
+          )}
+        </tbody>
+      </table>
 
       {/* Pagination */}
-      <div className="flex flex-col sm:flex-row justify-between items-center mt-6 gap-3">
-        <p className="text-gray-700 font-semibold">
-          Page {currentPage} of {totalPages || 1}
-        </p>
-        <div className="space-x-2">
-          <button
-            disabled={currentPage === 1}
-            onClick={() => handlePageChange(currentPage - 1)}
-            className="px-5 py-2 rounded bg-yellow-400 hover:bg-yellow-500 disabled:opacity-50 transition font-semibold text-black shadow"
-          >
-            Previous
-          </button>
-          <button
-            disabled={currentPage === totalPages || totalPages === 0}
-            onClick={() => handlePageChange(currentPage + 1)}
-            className="px-5 py-2 rounded bg-yellow-400 hover:bg-yellow-500 disabled:opacity-50 transition font-semibold text-black shadow"
-          >
-            Next
-          </button>
+      {filteredData.length > pageSize && (
+        <div className="flex flex-col sm:flex-row justify-between items-center mt-6 gap-3">
+          <p className="text-gray-700 font-semibold">
+            Page {currentPage} of {totalPages || 1}
+          </p>
+          <div className="space-x-2">
+            <button
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(currentPage - 1)}
+              className="px-5 py-2 rounded bg-yellow-400 hover:bg-yellow-500 disabled:opacity-50 transition font-semibold text-black shadow"
+            >
+              Previous
+            </button>
+            <button
+              disabled={currentPage === totalPages || totalPages === 0}
+              onClick={() => setCurrentPage(currentPage + 1)}
+              className="px-5 py-2 rounded bg-yellow-400 hover:bg-yellow-500 disabled:opacity-50 transition font-semibold text-black shadow"
+            >
+              Next
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

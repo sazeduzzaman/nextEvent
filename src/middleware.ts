@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const { pathname, search } = request.nextUrl;
+  const { pathname, searchParams, search } = request.nextUrl;
   const token = request.cookies.get("authToken");
 
   // Define protected routes
@@ -21,7 +21,12 @@ export function middleware(request: NextRequest) {
   });
 
   if (isProtectedRoute && !token) {
-    // Redirect to login with current full path + query as redirect param
+    // ✅ Allow Stripe return (always comes with ?session_id=)
+    if (searchParams.has("session_id")) {
+      return NextResponse.next();
+    }
+
+    // Redirect to login with redirect param
     const loginUrl = new URL("/auth/login", request.url);
     loginUrl.searchParams.set("redirect", pathname + search);
     return NextResponse.redirect(loginUrl);

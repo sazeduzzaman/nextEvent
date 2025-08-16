@@ -9,13 +9,11 @@ import Invoice from "./Invoice";
 interface PurchasedActionProps {
   ticket: {
     id: number;
-    date: string;
     seat: string;
     price: number;
-    row: string;
     purchaseDate: string;
-    expireDate: string;
-    status: "Active" | "Expired" | "Cancelled";
+    status: "Active" | "Expired" | "Cancelled" | "Pending";
+    eventName: string;
   };
 }
 

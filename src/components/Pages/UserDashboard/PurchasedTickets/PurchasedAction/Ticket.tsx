@@ -13,7 +13,6 @@ interface PurchasedActionProps {
   };
 }
 const Ticket = ({ ticket }: PurchasedActionProps) => {
-  console.log(ticket);
   return (
     <div
       style={{
@@ -255,6 +254,9 @@ const Ticket = ({ ticket }: PurchasedActionProps) => {
           </tr>
         </tbody>
       </table>
+      <div>
+        {ticket.length}
+      </div>
     </div>
   );
 };

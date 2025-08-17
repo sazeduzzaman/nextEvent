@@ -1,7 +1,6 @@
 import React from "react";
 
 // types.ts
-// types.ts
 export interface Seat {
   name: string;
   code: string;

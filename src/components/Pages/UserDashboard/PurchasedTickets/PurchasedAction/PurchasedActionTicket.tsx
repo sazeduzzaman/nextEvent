@@ -20,7 +20,7 @@ interface PurchasedActionProps {
   };
 }
 
-const PurchasedAction: React.FC<PurchasedActionProps> = ({ ticket }) => {
+const PurchasedActionTicket: React.FC<PurchasedActionProps> = ({ ticket }) => {
   const ticketPrintRef = useRef<HTMLDivElement>(null);
   const invoicePrintRef = useRef<HTMLDivElement>(null);
   console.log(ticket, "ticket main");
@@ -42,4 +42,4 @@ const PurchasedAction: React.FC<PurchasedActionProps> = ({ ticket }) => {
   );
 };
 
-export default PurchasedAction;
+export default PurchasedActionTicket;

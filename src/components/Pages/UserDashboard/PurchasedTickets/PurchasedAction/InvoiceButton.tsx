@@ -8,7 +8,10 @@ interface PrintInvoiceButtonProps {
   ticketId: number | string;
 }
 
-const InvoiceButton: React.FC<PrintInvoiceButtonProps> = ({ printRef, ticketId }) => {
+const InvoiceButton: React.FC<PrintInvoiceButtonProps> = ({
+  printRef,
+  ticketId,
+}) => {
   const handlePrint = useReactToPrint({
     contentRef: printRef, // must be RefObject<HTMLElement | null>
     documentTitle: `Ticket-${ticketId}`,

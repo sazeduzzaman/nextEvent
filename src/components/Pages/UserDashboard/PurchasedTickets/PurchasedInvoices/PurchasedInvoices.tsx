@@ -1,33 +1,12 @@
 "use client";
 
 import React, { useMemo, useState, useEffect } from "react";
-import { useBookings } from "@/hooks/useTickets";
-
-interface Seat {
-  name: string;
-  code: string;
-  price: string;
-}
-
-interface Booking {
-  id: number;
-  booking_id: string;
-  user_name: string;
-  user_email: string;
-  invoice_number: string;
-  seats: Seat[];
-  event_datetime: string;
-  total_amount: string;
-  payment_status: string;
-  payment_type: string;
-  purchase_date: string | null; // may be null
-  event: {
-    name: string;
-    venue?: string;
-    start_date: string;
-    start_time: string;
-  };
-}
+import {
+  useBookings,
+  Booking as ApiBooking,
+  Seat as ApiSeat,
+} from "@/hooks/useTickets";
+import PurchasedActionInvoice from "../PurchasedAction/PurchasedActionInvoice";
 
 interface FlatInvoice {
   id: number;
@@ -35,14 +14,15 @@ interface FlatInvoice {
   userName: string;
   userEmail: string;
   invoiceNumber: string;
-  seats: string; // combined seat names
+  seats: string; // joined seat names
   eventName: string;
   eventVenue?: string;
   eventDate: string;
   totalAmount: number;
   paymentStatus: string;
   paymentType: string;
-  purchaseDate: string; // guaranteed string
+  purchaseDate?: string;
+  originalBooking: ApiBooking; // ✅ keep full booking reference
 }
 
 const PurchasedInvoices: React.FC = () => {
@@ -50,32 +30,46 @@ const PurchasedInvoices: React.FC = () => {
   const [pageSize, setPageSize] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Flatten bookings into invoices
+  // ✅ Flatten & normalize bookings into invoices but keep originalBooking
   const flatInvoices: FlatInvoice[] = useMemo(() => {
     if (!bookings) return [];
-    return bookings.map((b: Booking) => ({
-      id: b.id,
-      bookingId: b.booking_id,
-      userName: b.user_name,
-      userEmail: b.user_email,
-      invoiceNumber: b.invoice_number,
-      seats: b.seats.map((s) => s.name).join(", "),
-      eventName: b.event.name,
-      eventVenue: b.event.venue,
-      eventDate: b.event_datetime,
-      totalAmount: Number(b.total_amount),
-      paymentStatus: b.payment_status,
-      paymentType: b.payment_type,
-      purchaseDate: b.purchase_date ?? "", // fallback if null
-    }));
+    return bookings.map((b: ApiBooking) => {
+      // normalize purchase date
+      let formattedPurchaseDate: string | undefined;
+      if (b.purchase_date) {
+        const [day, month, year] = b.purchase_date.split(" ")[0].split("-");
+        formattedPurchaseDate = new Date(
+          Number(year),
+          Number(month) - 1,
+          Number(day)
+        ).toISOString();
+      }
+
+      return {
+        id: b.id,
+        bookingId: b.booking_id,
+        userName: b.user_name,
+        userEmail: b.user_email,
+        invoiceNumber: b.invoice_number,
+        seats: b.seats.map((s: ApiSeat) => s.name).join(", "),
+        eventName: b.event.name,
+        eventVenue: b.event.venue ?? undefined,
+        eventDate: b.event_datetime,
+        totalAmount: Number(b.total_amount),
+        paymentStatus: b.payment_status,
+        paymentType: b.payment_type,
+        purchaseDate: formattedPurchaseDate,
+        originalBooking: b, // ✅ keep full booking here
+      };
+    });
   }, [bookings]);
 
-  // Log the data to console
+  // Debugging
   useEffect(() => {
     console.log("FlatInvoices:", flatInvoices);
   }, [flatInvoices]);
 
-  // Pagination logic
+  // Pagination
   const totalPages = Math.ceil(flatInvoices.length / pageSize);
   const paginatedInvoices = flatInvoices.slice(
     (currentPage - 1) * pageSize,
@@ -135,6 +129,7 @@ const PurchasedInvoices: React.FC = () => {
                   <th style={{ width: "5%" }}>Payment</th>
                   <th style={{ width: "5%" }}>Payment Type</th>
                   <th style={{ width: "5%" }}>Purchase Date</th>
+                  <th style={{ width: "5%" }}>Print Invoice</th>
                 </tr>
               </thead>
               <tbody>
@@ -157,21 +152,19 @@ const PurchasedInvoices: React.FC = () => {
                     <td>{inv.paymentType}</td>
                     <td>
                       {inv.purchaseDate
-                        ? (() => {
-                            const [day, month, year] = inv.purchaseDate
-                              .split(" ")[0]
-                              .split("-");
-                            return new Date(
-                              Number(year),
-                              Number(month) - 1,
-                              Number(day)
-                            ).toLocaleDateString("en-US", {
+                        ? new Date(inv.purchaseDate).toLocaleDateString(
+                            "en-US",
+                            {
                               year: "numeric",
                               month: "short",
                               day: "numeric",
-                            });
-                          })()
+                            }
+                          )
                         : "N/A"}
+                    </td>
+                    <td>
+                      {/* ✅ pass the full booking instead of trimmed fields */}
+                      <PurchasedActionInvoice booking={inv.originalBooking} />
                     </td>
                   </tr>
                 ))}

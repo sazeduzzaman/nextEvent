@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import PurchasedAction from "./PurchasedAction/PurchasedAction";
+import PurchasedActionTicket from "./PurchasedAction/PurchasedActionTicket";
 import { useBookings } from "@/hooks/useTickets";
 
 interface Seat {
@@ -194,7 +194,7 @@ const PurchasedTickets: React.FC = () => {
                       {t.status}
                     </td>
                     <td className="px-4 py-2 text-sm border-b-1 border-yellow-400">
-                      <PurchasedAction ticket={t} />
+                      <PurchasedActionTicket ticket={t} />
                     </td>
                   </tr>
                 ))}

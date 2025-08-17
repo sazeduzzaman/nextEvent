@@ -25,7 +25,6 @@ const PurchaseConfirm = () => {
 
     if (stored) {
       const parsed: PurchaseData = JSON.parse(stored);
-      console.log("Purchase Data (JSON):", parsed);
       setData(parsed);
       // ❌ Don't remove here
     } else {

@@ -1,26 +1,31 @@
 import React from "react";
 
-interface Ticket {
-  id: number;
-  date?: string; // optional now
-  seat: string;
-  price: number;
-  purchaseDate: string;
-  expireDate?: string; // optional
-  row?: string; // optional
-  status: "Active" | "Expired" | "Cancelled" | "Pending";
-  eventName?: string;
-  eventLink?: string;
-  buyerName?: string;
-}
-
 interface PurchasedActionProps {
-  ticket: Ticket;
+  ticket: {
+    id: number;
+    seat?: string;
+    price?: number;
+    purchaseDate?: string;
+    status?: "Active" | "Expired" | "Cancelled" | "Pending";
+    eventName?: string;
+    venue?: string;
+    date?: string;
+    qr_url?: string;
+    row?: string;
+    expireDate?: string;
+    bookingId?: number;
+    ticketId?: number;
+    buyerName?: string;
+    eventLink?: string;
+  };
 }
 
 const Invoice = ({ ticket }: PurchasedActionProps) => {
   // Format ticket id as #ev-XXXX
-  const formattedId = `#ev-${ticket.id.toString().padStart(4, "0")}`;
+  const formattedId = `#ev-${(ticket.id ?? 0).toString().padStart(4, "0")}`;
+
+  // Helper for fallback
+  const safe = (value: any) => value ?? "N/A";
 
   return (
     <div
@@ -73,12 +78,10 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
         }}
       >
         <div>
-          <h3 style={{ margin: "0 0 5px 0" }}>
-            {ticket.eventName || "Event Name"}
-          </h3>
+          <h3 style={{ margin: "0 0 5px 0" }}>{safe(ticket.eventName)}</h3>
           <p style={{ margin: 0, fontSize: 14 }}>
-            Date: <strong>{ticket.date}</strong> | Status:{" "}
-            <strong>{ticket.status}</strong>
+            Date: <strong>{safe(ticket.date)}</strong> | Status:{" "}
+            <strong>{safe(ticket.status)}</strong>
           </p>
           {ticket.eventLink && (
             <p style={{ margin: 0, fontSize: 14 }}>
@@ -96,13 +99,13 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
         </div>
         <div style={{ textAlign: "right" }}>
           <p style={{ margin: 0, fontSize: 14 }}>
-            Buyer: <strong>{ticket.buyerName || "John Doe"}</strong>
+            Buyer: <strong>{safe(ticket.buyerName)}</strong>
           </p>
           <p style={{ margin: 0, fontSize: 14 }}>
-            Purchased: <strong>{ticket.purchaseDate}</strong>
+            Purchased: <strong>{safe(ticket.purchaseDate)}</strong>
           </p>
           <p style={{ margin: 0, fontSize: 14 }}>
-            Expires: <strong>{ticket.expireDate}</strong>
+            Expires: <strong>{safe(ticket.expireDate)}</strong>
           </p>
         </div>
       </div>
@@ -143,7 +146,7 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
                 border: "1px solid #ccc",
               }}
             >
-              {ticket.eventName}
+              {safe(ticket.eventName)}
             </td>
             <td
               style={{
@@ -152,7 +155,7 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
                 border: "1px solid #ccc",
               }}
             >
-              {ticket.seat}
+              {safe(ticket.seat)}
             </td>
             <td
               style={{
@@ -161,7 +164,7 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
                 border: "1px solid #ccc",
               }}
             >
-              {ticket.row}
+              {safe(ticket.row)}
             </td>
             <td
               style={{
@@ -179,7 +182,7 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
                 border: "1px solid #ccc",
               }}
             >
-              {ticket.expireDate}
+              {safe(ticket.expireDate)}
             </td>
             <td
               style={{
@@ -188,12 +191,12 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
                 border: "1px solid #ccc",
               }}
             >
-              ${ticket.price.toFixed(2)}
+              ${safe(ticket.price).toFixed?.(2) ?? "N/A"}
             </td>
           </tr>
         </tbody>
 
-        {/* ✅ Table Footer */}
+        {/* Table Footer */}
         <tfoot>
           <tr>
             <td
@@ -214,7 +217,7 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
                 border: "1px solid #ccc",
               }}
             >
-              ${(ticket.price * 0.1).toFixed(2)}
+              ${safe(ticket.price) ? (ticket.price * 0.1).toFixed(2) : "N/A"}
             </td>
           </tr>
           <tr>
@@ -238,26 +241,11 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
                 color: "#00bcd4",
               }}
             >
-              ${(ticket.price * 1.1).toFixed(2)}
+              ${safe(ticket.price) ? (ticket.price * 1.1).toFixed(2) : "N/A"}
             </td>
           </tr>
         </tfoot>
       </table>
-
-      {/* Total */}
-      {/* <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          marginBottom: 30,
-        }}
-      >
-        <h3 style={{ margin: 0, fontSize: 20 }}>
-          Total:{" "}
-          <span style={{ color: "#00bcd4" }}>${ticket.price.toFixed(2)}</span>
-        </h3>
-      </div> */}
 
       {/* Billing, Payment & Venue Info */}
       <table
@@ -272,7 +260,7 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
             <td style={{ width: "33%", padding: 12, verticalAlign: "top" }}>
               <strong>BILLING / SHIPPING INFORMATION</strong>
               <p style={{ margin: "5px 0", fontSize: 12 }}>
-                {ticket.buyerName || "John Doe"}
+                {safe(ticket.buyerName)}
                 <br />
                 123 Main Street
                 <br />
@@ -288,14 +276,13 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
                 <br />
                 Credit Card Type: Visa
                 <br />
-                Worldpay Transaction ID:{" "}
-                <span style={{ color: "#00bcd4" }}>4185939336</span>
+                Transaction ID: <span style={{ color: "#00bcd4" }}>N/A</span>
               </p>
             </td>
             <td style={{ width: "33%", padding: 12, verticalAlign: "top" }}>
               <strong>VENUE INFORMATION</strong>
               <p style={{ margin: "5px 0", fontSize: 12 }}>
-                {ticket.eventName || "Event Name"}
+                {safe(ticket.eventName)}
                 <br />
                 456 Event Street
                 <br />
@@ -307,25 +294,6 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
           </tr>
         </tbody>
       </table>
-
-      {/* Barcode Centered at Bottom */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
-          marginTop: 50,
-          marginBottom: 30,
-        }}
-      >
-        <img
-          src="https://barcodegenerator.seagullscientific.com/Content/Images/BarCodes/524d00b4-2f54-4eb3-bf54-0abf99f899a7.png"
-          alt="Barcode"
-          style={{ maxWidth: "300px", height: "auto" }}
-        />
-        <p style={{ marginTop: 5, fontSize: 14 }}>{formattedId}</p>
-      </div>
 
       {/* Footer */}
       <p

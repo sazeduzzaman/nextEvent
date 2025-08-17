@@ -32,7 +32,6 @@ const TicketCategoryTab = ({
   eventData,
 }: TicketCategoryTabProps) => {
 
-   console.log(ticketCategories, "ticketCategories")
   return (
     <div>
       <p className="mb-5 text-3xl">Select Ticket</p>

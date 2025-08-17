@@ -1,6 +1,5 @@
 "use client";
 import React, { useRef } from "react";
-import { BiExpandAlt } from "react-icons/bi";
 import PrintButton from "./PrintButton";
 import Ticket from "./Ticket";
 import InvoiceButton from "./InvoiceButton";
@@ -12,6 +11,7 @@ interface PurchasedActionProps {
     seat: string;
     price: number;
     purchaseDate: string;
+    start_date: string;
     status: "Active" | "Expired" | "Cancelled" | "Pending";
     eventName?: string;
     date?: string;
@@ -23,7 +23,7 @@ interface PurchasedActionProps {
 const PurchasedAction: React.FC<PurchasedActionProps> = ({ ticket }) => {
   const ticketPrintRef = useRef<HTMLDivElement>(null);
   const invoicePrintRef = useRef<HTMLDivElement>(null);
-
+  console.log(ticket, "ticket");
   return (
     <div className="flex items-center gap-2">
       {/* Hidden ticket content for printing */}

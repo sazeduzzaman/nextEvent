@@ -35,7 +35,6 @@ const OrderSummary = ({
   userInfo,
 }: OrderSummaryProps) => {
   const isUserLoggedIn = !!userInfo?.name;
- console.log(ticketCategories, "ticketCategories")
   return (
     <div className="bg-neutral-900 border border-yellow-500 rounded-lg shadow-xl p-8 max-w-md mx-auto transition duration-300">
       <h3 className="text-3xl font-extrabold mb-6 text-white text-start">

@@ -27,9 +27,6 @@ export async function contactData(data: ContactFormPayload) {
 
   const text = await res.text();
 
-  console.log("Response status:", res.status);
-  console.log("Response text:", text);
-
   let result;
   try {
     result = JSON.parse(text);

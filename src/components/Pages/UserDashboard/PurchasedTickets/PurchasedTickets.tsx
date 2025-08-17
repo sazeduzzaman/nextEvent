@@ -1,200 +1,126 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
-import toast from "react-hot-toast";
+import React, { useMemo, useState } from "react";
 import PurchasedAction from "./PurchasedAction/PurchasedAction";
+import { useBookings } from "@/hooks/useTickets";
 
-type Ticket = {
+interface Seat {
+  name: string;
+  code: string;
+  price: string;
+}
+
+interface EventInfo {
+  id: number;
+  name: string;
+  venue?: string;
+  start_date?: string;
+  start_time?: string;
+  end_date?: string;
+  end_time?: string;
+}
+
+interface FlatTicket {
   id: number;
   seat: string;
+  ticketId: string;
   price: number;
-  purchaseDate: string;
-  status: "Active" | "Expired" | "Cancelled" | "Pending";
-  eventName: string;
-};
+  purchaseDate: string; // Must be string, not null
+  status: "Active" | "Cancelled";
+  ticket_url?: string;
+  row?: string;
+  event: EventInfo;
+}
 
-const PurchasedTickets = () => {
-  const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [loading, setLoading] = useState(true);
+const PurchasedTickets: React.FC = () => {
+  const { bookings, loading } = useBookings();
   const [search, setSearch] = useState("");
-  const [pageSize, setPageSize] = useState(5);
-  const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    const fetchTicketsFromSessions = async () => {
-      const storedSessions: string[] =
-        JSON.parse(localStorage.getItem("stripeSessions") || "[]") || [];
+  // Flatten bookings into individual tickets
+  const flatTickets: FlatTicket[] = useMemo(() => {
+    if (!bookings) return [];
 
-      if (!storedSessions.length) {
-        setTickets([]);
-        setLoading(false);
-        return;
+    return bookings.flatMap((b) => {
+      if (b.seats && b.seats.length > 0) {
+        return b.seats.map((seat: Seat) => ({
+          id: b.id,
+          seat: seat.name,
+          ticketId: seat.code,
+          price: Number(seat.price),
+          purchaseDate: b.purchase_date || "", // Fallback if null
+          status: b.payment_status === "paid" ? "Active" : "Cancelled",
+          ticket_url: b.ticket_url,
+          row: seat.name.split(" ")[0], // simple row extraction
+          event: b.event,
+        }));
       }
 
-      const allTickets: Ticket[] = [];
+      // fallback single ticket if no seats
+      return [
+        {
+          id: b.id,
+          seat: "General",
+          ticketId: b.booking_id,
+          price: Number(b.total_amount),
+          purchaseDate: b.purchase_date || "", // Fallback if null
+          status: b.payment_status === "paid" ? "Active" : "Cancelled",
+          ticket_url: b.ticket_url,
+          row: "H",
+          event: b.event,
+        },
+      ];
+    });
+  }, [bookings]);
 
-      for (const sessionId of storedSessions) {
-        try {
-          setLoading(true);
-          const res = await fetch(
-            `https://admin.eventstailor.com/api/v1/payment/status?session_id=${sessionId}`
-          );
-          if (!res.ok) throw new Error("Failed to fetch booking");
-
-          const data = await res.json();
-
-          if (data.status === "pending") {
-            toast.success("Booking is pending, please wait!");
-            // Push a placeholder ticket for display
-            allTickets.push({
-              id: Number(sessionId.slice(-6)), // unique numeric ID for row
-              seat: "N/A",
-              price: 0,
-              purchaseDate: "N/A",
-              status: "Pending",
-              eventName: "N/A",
-            });
-          } else if (data.status === "confirmed") {
-            const mapped: Ticket[] =
-              data.booking?.seats?.map((seat: any) => ({
-                id: Number(seat.seat_id),
-                seat: seat.seat_name,
-                price: data.booking.total_amount / data.booking.seats.length,
-                purchaseDate: new Date(data.booking.event_datetime)
-                  .toISOString()
-                  .split("T")[0],
-                status:
-                  data.booking.payment_status === "paid"
-                    ? "Active"
-                    : "Cancelled",
-                eventName: data.booking.event || "Unnamed Event",
-              })) || [];
-            allTickets.push(...mapped);
-            toast.success("Booking confirmed!");
-          }
-        } catch (err: any) {
-          toast.error(err.message);
-        } finally {
-          setLoading(false);
-        }
-      }
-
-      setTickets(allTickets);
-    };
-
-    fetchTicketsFromSessions();
-  }, []);
-
-  // Filtering
-  const filteredData = useMemo(() => {
-    const s = search.toLowerCase();
-    return tickets.filter(
-      (t) =>
-        t.seat.toLowerCase().includes(s) ||
-        t.status.toLowerCase().includes(s) ||
-        t.purchaseDate.includes(search) ||
-        t.eventName.toLowerCase().includes(s)
-    );
-  }, [search, tickets]);
-
-  const totalPages = Math.ceil(filteredData.length / pageSize);
-
-  const currentData = useMemo(() => {
-    const start = (currentPage - 1) * pageSize;
-    return filteredData.slice(start, start + pageSize);
-  }, [filteredData, currentPage, pageSize]);
+  // Optional: search filter
+  const filteredTickets = flatTickets.filter(
+    (t) =>
+      t.seat.toLowerCase().includes(search.toLowerCase()) ||
+      t.status.toLowerCase().includes(search.toLowerCase()) ||
+      t.event.name?.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <div className="max-w-7xl mx-auto p-8 site-second-bg rounded-xl shadow-lg">
-      <h1 className="text-3xl font-bold site-txt mb-8">Purchased Tickets</h1>
+    <div className="p-4 rounded-xl shadow-lg">
+      <input
+        type="text"
+        placeholder="Search tickets..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="border p-2 mb-4 w-full"
+      />
 
-      {loading && <p>Loading...</p>}
-
-      <table className="w-full text-left border-collapse">
-        <thead className="bg-yellow-400 text-black uppercase text-sm font-semibold">
-          <tr>
-            <th className="px-6 py-4">SL</th>
-            <th className="px-6 py-4">Event</th>
-            <th className="px-6 py-4">Seat</th>
-            <th className="px-6 py-4">Price</th>
-            <th className="px-6 py-4">Purchase</th>
-            <th className="px-6 py-4">Status</th>
-            <th className="px-6 py-4 text-center">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentData.length === 0 ? (
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <table className="w-full text-left border-collapse">
+          <thead>
             <tr>
-              <td colSpan={7} className="text-center py-6 text-gray-500">
-                No tickets found
-              </td>
+              <th className="border px-2 py-1">#</th>
+              <th className="border px-2 py-1">Event</th>
+              <th className="border px-2 py-1">Seat</th>
+              <th className="border px-2 py-1">Price</th>
+              <th className="border px-2 py-1">Purchase Date</th>
+              <th className="border px-2 py-1">Status</th>
+              <th className="border px-2 py-1">Action</th>
             </tr>
-          ) : (
-            currentData.map((ticketsItems, i) => (
-              <tr key={ticketsItems.id}>
-                {ticketsItems.status === "Pending" ? (
-                  <td
-                    colSpan={7}
-                    className="text-center py-4 text-yellow-700 font-semibold"
-                  >
-                    The booking is pending
-                  </td>
-                ) : (
-                  <>
-                    <td className="px-6 py-4">
-                      {(currentPage - 1) * pageSize + i + 1}
-                    </td>
-                    <td className="px-6 py-4">{ticketsItems.eventName}</td>
-                    <td className="px-6 py-4">{ticketsItems.seat}</td>
-                    <td className="px-6 py-4">
-                      ${ticketsItems.price.toFixed(2)}
-                    </td>
-                    <td className="px-6 py-4">{ticketsItems.purchaseDate}</td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          ticketsItems.status === "Active"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-red-100 text-red-800"
-                        }`}
-                      >
-                        {ticketsItems.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <PurchasedAction ticket={ticketsItems} />
-                    </td>
-                  </>
-                )}
+          </thead>
+          <tbody>
+            {filteredTickets.map((t, i) => (
+              <tr key={t.ticketId}>
+                <td className="border px-2 py-1">{i + 1}</td>
+                <td className="border px-2 py-1">{t.event.name}</td>
+                <td className="border px-2 py-1">{t.seat}</td>
+                <td className="border px-2 py-1">${t.price.toFixed(2)}</td>
+                <td className="border px-2 py-1">{t.purchaseDate || "N/A"}</td>
+                <td className="border px-2 py-1">{t.status}</td>
+                <td className="border px-2 py-1">
+                  <PurchasedAction ticket={t} />
+                </td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
-
-      {/* Pagination */}
-      {filteredData.length > pageSize && (
-        <div className="flex flex-col sm:flex-row justify-between items-center mt-6 gap-3">
-          <p className="text-gray-700 font-semibold">
-            Page {currentPage} of {totalPages || 1}
-          </p>
-          <div className="space-x-2">
-            <button
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage(currentPage - 1)}
-              className="px-5 py-2 rounded bg-yellow-400 hover:bg-yellow-500 disabled:opacity-50 transition font-semibold text-black shadow"
-            >
-              Previous
-            </button>
-            <button
-              disabled={currentPage === totalPages || totalPages === 0}
-              onClick={() => setCurrentPage(currentPage + 1)}
-              className="px-5 py-2 rounded bg-yellow-400 hover:bg-yellow-500 disabled:opacity-50 transition font-semibold text-black shadow"
-            >
-              Next
-            </button>
-          </div>
-        </div>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );

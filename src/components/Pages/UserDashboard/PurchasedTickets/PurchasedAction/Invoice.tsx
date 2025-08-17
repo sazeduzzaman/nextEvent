@@ -52,8 +52,13 @@ interface InvoiceProps {
 const Invoice = ({ booking }: InvoiceProps) => {
   const formattedId = booking.invoice_number;
 
-  // Parse event seats if needed
-  const seats = booking.seats;
+  // Use seats array from booking
+  const seats: Seat[] = booking.seats;
+
+  // Helper for formatted price
+  const formatPrice = (price: string | number) =>
+    `$${parseFloat(price.toString()).toFixed(2)}`;
+
   return (
     <div
       style={{
@@ -105,9 +110,7 @@ const Invoice = ({ booking }: InvoiceProps) => {
           <h3 style={{ margin: "0 0 5px 0" }}>{booking.event.name}</h3>
           <p style={{ margin: 0, fontSize: 14 }}>
             Date: <strong>{booking.event.start_date}</strong> | Status:{" "}
-            <strong>
-              {booking.status === "confirmed" ? "Active" : "Pending"}
-            </strong>
+            <strong>{booking.status === "confirmed" ? "Active" : "Pending"}</strong>
           </p>
           <p style={{ margin: 0, fontSize: 14 }}>
             Link:{" "}
@@ -129,10 +132,7 @@ const Invoice = ({ booking }: InvoiceProps) => {
             Purchased: <strong>{booking.purchase_date}</strong>
           </p>
           <p style={{ margin: 0, fontSize: 14 }}>
-            Expires:{" "}
-            <strong>
-              {booking.event.end_date || booking.event.start_date}
-            </strong>
+            Expires: <strong>{booking.event.end_date || booking.event.start_date}</strong>
           </p>
         </div>
       </div>
@@ -165,117 +165,46 @@ const Invoice = ({ booking }: InvoiceProps) => {
         <tbody>
           {seats.map((seat, idx) => (
             <tr key={idx} style={{ background: "#f9f9f9" }}>
-              <td
-                style={{
-                  padding: 12,
-                  textAlign: "center",
-                  border: "1px solid #ccc",
-                }}
-              >
+              <td style={{ padding: 12, textAlign: "center", border: "1px solid #ccc" }}>
                 {booking.event.name}
               </td>
-              <td
-                style={{
-                  padding: 12,
-                  textAlign: "center",
-                  border: "1px solid #ccc",
-                }}
-              >
+              <td style={{ padding: 12, textAlign: "center", border: "1px solid #ccc" }}>
                 {seat.name}
               </td>
-              <td
-                style={{
-                  padding: 12,
-                  textAlign: "center",
-                  border: "1px solid #ccc",
-                }}
-              >
+              <td style={{ padding: 12, textAlign: "center", border: "1px solid #ccc" }}>
                 Row {idx + 1}
               </td>
-              <td
-                style={{
-                  padding: 12,
-                  textAlign: "center",
-                  border: "1px solid #ccc",
-                }}
-              >
+              <td style={{ padding: 12, textAlign: "center", border: "1px solid #ccc" }}>
                 {formattedId}
               </td>
-              {/* <td
-                style={{
-                  padding: 12,
-                  textAlign: "center",
-                  border: "1px solid #ccc",
-                }}
-              >
-                {booking.event.end_date || booking.event.start_date}
-              </td> */}
-              <td
-                style={{
-                  padding: 12,
-                  textAlign: "center",
-                  border: "1px solid #ccc",
-                }}
-              >
-                ${seat.price}
+              <td style={{ padding: 12, textAlign: "center", border: "1px solid #ccc" }}>
+                {formatPrice(seat.price)}
               </td>
             </tr>
           ))}
         </tbody>
         <tfoot>
           <tr>
-            <td
-              colSpan={4}
-              style={{
-                padding: 12,
-                textAlign: "right",
-                border: "1px solid #ccc",
-                fontWeight: 600,
-              }}
-            >
+            <td colSpan={4} style={{ padding: 12, textAlign: "right", border: "1px solid #ccc", fontWeight: 600 }}>
               Tax / VAT (10%)
             </td>
-            <td
-              style={{
-                padding: 12,
-                textAlign: "center",
-                border: "1px solid #ccc",
-              }}
-            >
-              ${(+booking.total_amount * 0.1).toFixed(2)}
+            <td style={{ padding: 12, textAlign: "center", border: "1px solid #ccc" }}>
+              {formatPrice(parseFloat(booking.total_amount) * 0.1)}
             </td>
           </tr>
           <tr>
-            <td
-              colSpan={4}
-              style={{
-                padding: 12,
-                textAlign: "right",
-                border: "1px solid #ccc",
-                fontWeight: 700,
-              }}
-            >
+            <td colSpan={4} style={{ padding: 12, textAlign: "right", border: "1px solid #ccc", fontWeight: 700 }}>
               Grand Total
             </td>
-            <td
-              style={{
-                padding: 12,
-                textAlign: "center",
-                border: "1px solid #ccc",
-                fontWeight: 700,
-                color: "#00bcd4",
-              }}
-            >
-              ${(parseFloat(booking.total_amount) * 1.1).toFixed(2)}
+            <td style={{ padding: 12, textAlign: "center", border: "1px solid #ccc", fontWeight: 700, color: "#00bcd4" }}>
+              {formatPrice(parseFloat(booking.total_amount) * 1.1)}
             </td>
           </tr>
         </tfoot>
       </table>
 
       {/* Billing, Payment & Venue Info */}
-      <table
-        style={{ width: "100%", borderCollapse: "collapse", marginBottom: 30 }}
-      >
+      <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: 30 }}>
         <tbody>
           <tr>
             <td style={{ width: "33%", padding: 12, verticalAlign: "top" }}>
@@ -294,9 +223,7 @@ const Invoice = ({ booking }: InvoiceProps) => {
                 {booking.payment_type} ({booking.card_type})
                 <br />
                 Transaction ID:{" "}
-                <span style={{ color: "#00bcd4" }}>
-                  {booking.payment_transaction_id}
-                </span>
+                <span style={{ color: "#00bcd4" }}>{booking.payment_transaction_id}</span>
               </p>
             </td>
             <td style={{ width: "33%", padding: 12, verticalAlign: "top" }}>
@@ -312,16 +239,7 @@ const Invoice = ({ booking }: InvoiceProps) => {
       </table>
 
       {/* Barcode */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
-          marginTop: 50,
-          marginBottom: 30,
-        }}
-      >
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", marginTop: 50, marginBottom: 30 }}>
         <img
           src="https://barcodegenerator.seagullscientific.com/Content/Images/BarCodes/524d00b4-2f54-4eb3-bf54-0abf99f899a7.png"
           alt="Barcode"
@@ -332,8 +250,7 @@ const Invoice = ({ booking }: InvoiceProps) => {
 
       {/* Footer */}
       <p style={{ textAlign: "center", fontSize: 13, color: "#888" }}>
-        Thank you for your purchase! Please present this invoice at the event
-        entrance.
+        Thank you for your purchase! Please present this invoice at the event entrance.
       </p>
     </div>
   );

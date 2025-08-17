@@ -2,62 +2,16 @@
 import React, { useRef } from "react";
 import PrintButton from "./PrintButton";
 import Invoice from "./Invoice";
-import { Booking as ApiBooking } from "@/hooks/useTickets"; // your API type
+import { Booking as ApiBooking } from "@/hooks/useTickets";
 
-// types.ts
-export interface Seat {
-  name: string;
-  code: string;
-  price: string; // string from API
-}
-
-export interface User {
-  id: number;
-  name: string;
-  email: string;
-}
-
-export interface Event {
-  id: number;
-  name: string;
-  start_date: string;
-  start_time: string;
-  venue: string;
-  end_date?: string;
-  end_time?: string;
-}
-
-export interface Booking {
-  id: number;
-  booking_id: string;
-  invoice_number: string;
-  event_seats: string; // JSON string
-  event_datetime: string;
-  status: string;
-  total_amount: string;
-  payment_status: string;
-  payment_type: string;
-  card_type: string;
-  purchase_date: string;
-  billing_name: string;
-  billing_email: string;
-  billing_address: string;
-  paid_at: string;
-  ticket_url: string;
-  payment_transaction_id: string;
-  seats: Seat[];
-  user: User;
-  event: Event;
-}
 interface PurchasedActionInvoiceProps {
-  booking: Booking;
+  booking: ApiBooking;
 }
+
 const PurchasedActionInvoice: React.FC<PurchasedActionInvoiceProps> = ({
   booking,
 }) => {
   const invoicePrintRef = useRef<HTMLDivElement>(null);
-
-  console.log(booking, "booking invoice");
 
   return (
     <div className="flex items-center gap-2">
@@ -71,11 +25,10 @@ const PurchasedActionInvoice: React.FC<PurchasedActionInvoiceProps> = ({
           width: "100%",
         }}
       >
-        {/* <Invoice booking={booking} /> */}
         <Invoice booking={booking} />
       </div>
 
-      {/* Action buttons */}
+      {/* Print button */}
       <PrintButton printRef={invoicePrintRef} ticketId={booking.id} />
     </div>
   );

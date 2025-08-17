@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useMemo, useState, useEffect } from "react";
 import {
   useBookings,
@@ -14,7 +13,7 @@ interface FlatInvoice {
   userName: string;
   userEmail: string;
   invoiceNumber: string;
-  seats: string; // joined seat names
+  seats: string;
   eventName: string;
   eventVenue?: string;
   eventDate: string;
@@ -22,7 +21,7 @@ interface FlatInvoice {
   paymentStatus: string;
   paymentType: string;
   purchaseDate?: string;
-  originalBooking: ApiBooking; // ✅ keep full booking reference
+  originalBooking: ApiBooking;
 }
 
 const PurchasedInvoices: React.FC = () => {
@@ -30,11 +29,9 @@ const PurchasedInvoices: React.FC = () => {
   const [pageSize, setPageSize] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // ✅ Flatten & normalize bookings into invoices but keep originalBooking
   const flatInvoices: FlatInvoice[] = useMemo(() => {
     if (!bookings) return [];
     return bookings.map((b: ApiBooking) => {
-      // normalize purchase date
       let formattedPurchaseDate: string | undefined;
       if (b.purchase_date) {
         const [day, month, year] = b.purchase_date.split(" ")[0].split("-");
@@ -59,17 +56,15 @@ const PurchasedInvoices: React.FC = () => {
         paymentStatus: b.payment_status,
         paymentType: b.payment_type,
         purchaseDate: formattedPurchaseDate,
-        originalBooking: b, // ✅ keep full booking here
+        originalBooking: b,
       };
     });
   }, [bookings]);
 
-  // Debugging
   useEffect(() => {
     console.log("FlatInvoices:", flatInvoices);
   }, [flatInvoices]);
 
-  // Pagination
   const totalPages = Math.ceil(flatInvoices.length / pageSize);
   const paginatedInvoices = flatInvoices.slice(
     (currentPage - 1) * pageSize,
@@ -87,7 +82,7 @@ const PurchasedInvoices: React.FC = () => {
   };
 
   return (
-    <div className="p-6 rounded-xl shadow-lg ">
+    <div className="p-6 rounded-xl shadow-lg">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <h1 className="text-3xl font-bold site-txt">Purchased Invoices</h1>
         <div className="flex gap-2 w-full md:w-auto">
@@ -118,18 +113,18 @@ const PurchasedInvoices: React.FC = () => {
             <table className="table table-zebra w-full">
               <thead>
                 <tr>
-                  <th style={{ width: "5%" }}>#</th>
-                  <th style={{ width: "10%" }}>Invoice #</th>
-                  <th style={{ width: "15%" }}>User</th>
-                  <th style={{ width: "15%" }}>Seats</th>
-                  <th style={{ width: "15%" }}>Event</th>
-                  <th style={{ width: "15%" }}>Venue</th>
-                  <th style={{ width: "10%" }}>Event Date</th>
-                  <th style={{ width: "5%" }}>Amount</th>
-                  <th style={{ width: "5%" }}>Payment</th>
-                  <th style={{ width: "5%" }}>Payment Type</th>
-                  <th style={{ width: "5%" }}>Purchase Date</th>
-                  <th style={{ width: "5%" }}>Print Invoice</th>
+                  <th>#</th>
+                  <th>Invoice #</th>
+                  <th>User</th>
+                  <th>Seats</th>
+                  <th>Event</th>
+                  <th>Venue</th>
+                  <th>Event Date</th>
+                  <th>Amount</th>
+                  <th>Payment</th>
+                  <th>Payment Type</th>
+                  <th>Purchase Date</th>
+                  <th>Print Invoice</th>
                 </tr>
               </thead>
               <tbody>
@@ -163,7 +158,6 @@ const PurchasedInvoices: React.FC = () => {
                         : "N/A"}
                     </td>
                     <td>
-                      {/* ✅ pass the full booking instead of trimmed fields */}
                       <PurchasedActionInvoice booking={inv.originalBooking} />
                     </td>
                   </tr>

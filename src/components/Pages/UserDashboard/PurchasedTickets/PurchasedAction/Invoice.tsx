@@ -191,7 +191,7 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
                 border: "1px solid #ccc",
               }}
             >
-              ${safe(ticket.price).toFixed?.(2) ?? "N/A"}
+              ${ticket.price != null ? (ticket.price * 0.1).toFixed(2) : "N/A"}
             </td>
           </tr>
         </tbody>

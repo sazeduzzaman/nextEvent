@@ -34,6 +34,7 @@ function getSeatNumber(seat: string) {
 }
 
 const Ticket: React.FC<TicketProps> = ({ ticket }) => {
+  console.log(ticket.event, "event");
   return (
     <div
       style={{
@@ -111,7 +112,15 @@ const Ticket: React.FC<TicketProps> = ({ ticket }) => {
                               Date
                               <br />
                               <b style={{ color: "#00bcd4", fontSize: 14 }}>
-                                {ticket.event?.start_date}
+                                {ticket.event?.start_date
+                                  ? new Date(
+                                      ticket.event.start_date
+                                    ).toLocaleDateString("en-US", {
+                                      month: "short",
+                                      day: "numeric",
+                                      year: "numeric",
+                                    })
+                                  : "N/A"}
                               </b>
                             </td>
                             <td>

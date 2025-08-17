@@ -76,7 +76,8 @@ const DashboardSidebar = () => {
           <ul className="space-y-3 px-10">
             {[
               { href: "/dashboard", label: "Dashboard" },
-              { href: "/dashboard/tickets", label: "Purchase Tickets" },
+              { href: "/dashboard/tickets", label: "Purchased Tickets" },
+              { href: "/dashboard/invoices", label: "Purchased Invoice" },
               { href: "/dashboard/profile", label: "Update Profile" },
             ].map(({ href, label }) => (
               <li key={href}>

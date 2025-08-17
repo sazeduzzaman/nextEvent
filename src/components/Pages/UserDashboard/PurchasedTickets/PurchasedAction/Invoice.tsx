@@ -26,7 +26,7 @@ const Invoice = ({ ticket }: PurchasedActionProps) => {
 
   // Helper for fallback
   const safe = (value: any) => value ?? "N/A";
-
+  console.log(ticket, "ticket invoice");
   return (
     <div
       style={{

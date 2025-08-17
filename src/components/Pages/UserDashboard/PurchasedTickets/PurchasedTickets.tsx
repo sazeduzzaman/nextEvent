@@ -24,8 +24,9 @@ interface FlatTicket {
   id: number;
   seat: string;
   ticketId: string;
+  start_date: string;
   price: number;
-  purchaseDate: string; // Must be string, not null
+  purchaseDate: string;
   status: "Active" | "Cancelled";
   ticket_url?: string;
   row?: string;
@@ -35,11 +36,12 @@ interface FlatTicket {
 const PurchasedTickets: React.FC = () => {
   const { bookings, loading } = useBookings();
   const [search, setSearch] = useState("");
+  const [pageSize, setPageSize] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Flatten bookings into individual tickets
   const flatTickets: FlatTicket[] = useMemo(() => {
     if (!bookings) return [];
-
     return bookings.flatMap((b) => {
       if (b.seats && b.seats.length > 0) {
         return b.seats.map((seat: Seat) => ({
@@ -47,32 +49,32 @@ const PurchasedTickets: React.FC = () => {
           seat: seat.name,
           ticketId: seat.code,
           price: Number(seat.price),
-          purchaseDate: b.purchase_date || "", // Fallback if null
+          purchaseDate: b.purchase_date || "",
           status: b.payment_status === "paid" ? "Active" : "Cancelled",
           ticket_url: b.ticket_url,
-          row: seat.name.split(" ")[0], // simple row extraction
+          row: seat.name.split(" ")[0],
+          start_date: b.event?.start_date || b.purchase_date || "",
           event: b.event,
         }));
       }
-
-      // fallback single ticket if no seats
       return [
         {
           id: b.id,
           seat: "General",
           ticketId: b.booking_id,
           price: Number(b.total_amount),
-          purchaseDate: b.purchase_date || "", // Fallback if null
+          purchaseDate: b.purchase_date || "",
           status: b.payment_status === "paid" ? "Active" : "Cancelled",
           ticket_url: b.ticket_url,
           row: "H",
+          start_date: b.event?.start_date || b.purchase_date || "",
           event: b.event,
         },
       ];
     });
   }, [bookings]);
 
-  // Optional: search filter
+  // Filter tickets
   const filteredTickets = flatTickets.filter(
     (t) =>
       t.seat.toLowerCase().includes(search.toLowerCase()) ||
@@ -80,47 +82,164 @@ const PurchasedTickets: React.FC = () => {
       t.event.name?.toLowerCase().includes(search.toLowerCase())
   );
 
+  // Pagination logic
+  const totalPages = Math.ceil(filteredTickets.length / pageSize);
+  const paginatedTickets = filteredTickets.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+  const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setPageSize(Number(e.target.value));
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (page: number) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
+  };
+
+  // Format date (e.g., Aug 12, 2025)
+  const formatDate = (dateStr: string) => {
+    if (!dateStr) return "N/A";
+    const date = new Date(dateStr);
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+  console.log(bookings, "bookings");
   return (
-    <div className="p-4 rounded-xl shadow-lg">
-      <input
-        type="text"
-        placeholder="Search tickets..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="border p-2 mb-4 w-full"
-      />
+    <div className="p-6 rounded-xl shadow-lg ">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+        <h1 className="text-3xl font-bold site-txt">Purchased Tickets</h1>
+        <div className="flex gap-2 w-full md:w-auto">
+          {/* DaisyUI input */}
+          <input
+            type="text"
+            placeholder="Search tickets..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="input input-bordered input-warning w-full md:w-64"
+          />
+
+          {/* DaisyUI select */}
+          <select
+            value={pageSize}
+            onChange={handlePageSizeChange}
+            className="select select-bordered select-warning"
+          >
+            {[5, 10, 15, 20].map((size) => (
+              <option key={size} value={size}>
+                Show {size}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
 
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr>
-              <th className="border px-2 py-1">#</th>
-              <th className="border px-2 py-1">Event</th>
-              <th className="border px-2 py-1">Seat</th>
-              <th className="border px-2 py-1">Price</th>
-              <th className="border px-2 py-1">Purchase Date</th>
-              <th className="border px-2 py-1">Status</th>
-              <th className="border px-2 py-1">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredTickets.map((t, i) => (
-              <tr key={t.ticketId}>
-                <td className="border px-2 py-1">{i + 1}</td>
-                <td className="border px-2 py-1">{t.event.name}</td>
-                <td className="border px-2 py-1">{t.seat}</td>
-                <td className="border px-2 py-1">${t.price.toFixed(2)}</td>
-                <td className="border px-2 py-1">{t.purchaseDate || "N/A"}</td>
-                <td className="border px-2 py-1">{t.status}</td>
-                <td className="border px-2 py-1">
-                  <PurchasedAction ticket={t} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse shadow-lg rounded-lg overflow-hidden">
+              <thead className="site-second-bg">
+                <tr>
+                  {[
+                    "Sl",
+                    "Event",
+                    "Seat",
+                    "Price",
+                    "Purchase Date",
+                    "Start Date",
+                    "Status",
+                    "Print Ticket",
+                  ].map((header) => (
+                    <th
+                      key={header}
+                      className="px-4 py-4 text-lg font-medium site-txt border-b"
+                    >
+                      {header}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {paginatedTickets.map((t, i) => (
+                  <tr
+                    key={t.ticketId}
+                    className="hover:bg-yellow-400 transition-colors "
+                  >
+                    <td className="px-4 py-2 text-sm border-b-1 border-yellow-400">
+                      {(currentPage - 1) * pageSize + i + 1}
+                    </td>
+                    <td className="px-4 py-2 text-sm border-b-1 border-yellow-400">
+                      {t.event.name}
+                    </td>
+                    <td className="px-4 py-2 text-sm border-b-1 border-yellow-400">
+                      {t.seat}
+                    </td>
+                    <td className="px-4 py-2 text-sm border-b-1 border-yellow-400">
+                      ${t.price.toFixed(2)}
+                    </td>
+                    <td className="px-4 py-2 text-sm border-b-1 border-yellow-400">
+                      {formatDate(t.purchaseDate)}
+                    </td>
+                    <td className="px-4 py-2 text-sm border-b-1 border-yellow-400">
+                      {formatDate(t.start_date)}
+                    </td>
+                    <td className="px-4 py-2 text-sm border-b-1 border-yellow-400">
+                      {t.status}
+                    </td>
+                    <td className="px-4 py-2 text-sm border-b-1 border-yellow-400">
+                      <PurchasedAction ticket={t} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination Controls */}
+          <div className="flex justify-between items-center mt-4">
+            <p className="text-sm text-gray-500">
+              Showing {(currentPage - 1) * pageSize + 1}-
+              {Math.min(currentPage * pageSize, filteredTickets.length)} of{" "}
+              {filteredTickets.length}
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-3 py-1 border rounded-md hover:bg-yellow-100 disabled:opacity-50 transition"
+              >
+                Prev
+              </button>
+              {Array.from({ length: totalPages }, (_, idx) => (
+                <button
+                  key={idx + 1}
+                  onClick={() => handlePageChange(idx + 1)}
+                  className={`px-3 py-1 border rounded-md ${
+                    currentPage === idx + 1
+                      ? "bg-yellow-400 site-txt"
+                      : "hover:bg-yellow-100"
+                  } transition`}
+                >
+                  {idx + 1}
+                </button>
+              ))}
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="px-3 py-1 border rounded-md hover:bg-yellow-100 disabled:opacity-50 transition"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

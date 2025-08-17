@@ -23,7 +23,7 @@ interface PurchasedActionProps {
 const PurchasedAction: React.FC<PurchasedActionProps> = ({ ticket }) => {
   const ticketPrintRef = useRef<HTMLDivElement>(null);
   const invoicePrintRef = useRef<HTMLDivElement>(null);
-  console.log(ticket, "ticket");
+  console.log(ticket, "ticket main");
   return (
     <div className="flex items-center gap-2">
       {/* Hidden ticket content for printing */}
@@ -31,13 +31,13 @@ const PurchasedAction: React.FC<PurchasedActionProps> = ({ ticket }) => {
         <Ticket ticket={ticket} />
       </div>
       {/* Hidden invoice content for printing */}
-      <div ref={invoicePrintRef}>
+      {/* <div ref={invoicePrintRef}>
         <Invoice ticket={ticket} />
-      </div>
+      </div> */}
 
       {/* Action buttons */}
       <PrintButton printRef={ticketPrintRef} ticketId={ticket.id} />
-      <InvoiceButton printRef={invoicePrintRef} ticketId={ticket.id} />
+      {/* <InvoiceButton printRef={invoicePrintRef} ticketId={ticket.id} /> */}
     </div>
   );
 };

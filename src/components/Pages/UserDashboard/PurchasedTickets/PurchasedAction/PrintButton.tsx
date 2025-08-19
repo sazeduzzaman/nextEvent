@@ -1,5 +1,5 @@
 "use client";
-import { TicketIcon } from "lucide-react";
+import { PrinterIcon } from "lucide-react";
 import React, { RefObject } from "react";
 import { useReactToPrint } from "react-to-print";
 
@@ -22,7 +22,7 @@ const PrintButton: React.FC<PrintButtonProps> = ({ printRef, ticketId }) => {
       title="Print Ticket"
       className="bg-yellow-400 cursor-pointer hover:bg-yellow-500 transition rounded px-4 py-1 me-2 font-semibold shadow-sm text-black"
     >
-      <TicketIcon />
+      <PrinterIcon />
     </button>
   );
 };

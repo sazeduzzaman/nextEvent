@@ -6,14 +6,15 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { Event } from "@/lib/api/AllEvents/AllEventsDataType";
 import SiteButtonOne from "@/components/Buttons/SiteButtonOne/SiteButtonOne";
-import { Dice6, Dice6Icon, LocationEditIcon } from "lucide-react";
+import { LocationEditIcon } from "lucide-react";
+// import HtmlRenderer from "@/components/HtmlRenderer/HtmlRenderer";
 
 type EventHeaderProps = {
   event: Event;
 };
 
 const EventsCard = ({ event }: EventHeaderProps) => {
-  const [imgSrc, setImgSrc] = useState(`/images/${event.image}`);
+  const [imgSrc, setImgSrc] = useState(`${event.image}`);
   const formattedDate = format(new Date(event.start_date), "dd MMMM yyyy");
 
   return (
@@ -42,7 +43,7 @@ const EventsCard = ({ event }: EventHeaderProps) => {
                 {event.event_type}
               </span>
             </div>
-            <h3 className="text-2xl site-txt h-18 font-bold text-white mb-2 line-clamp-2 flex items-center">
+            <h3 className="text-[20px] site-txt h-20 font-bold text-white mb-2 line-clamp-2 flex items-center">
               {event.name}
             </h3>
             {/* Date & Type */}
@@ -56,9 +57,14 @@ const EventsCard = ({ event }: EventHeaderProps) => {
               </div>
             </div>
 
-            <p className="text-sm text-gray-300 leading-relaxed line-clamp-3">
+            {/* <p className="text-sm text-gray-300 leading-relaxed line-clamp-3">
               {event.description.split(" ").slice(0, 12).join(" ") + ""}
-            </p>
+            </p> */}
+            {/* <HtmlRenderer
+              html={event.description}
+              slice={100}
+              className="text-white mb-4"
+            /> */}
           </div>
 
           <div className="pt-4 flex items-center justify-between">

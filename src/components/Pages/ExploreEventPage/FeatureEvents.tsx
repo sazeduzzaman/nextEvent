@@ -12,12 +12,13 @@ import { format } from "date-fns";
 
 import { formatTime } from "@/utils/dateFormatter";
 import Link from "next/link";
+import HtmlRenderer from "@/components/HtmlRenderer/HtmlRenderer";
 type Props = {
   allEvents: Event[];
 };
 
 const FeatureEvents = ({ allEvents }: Props) => {
-  const [imgSrc, setImgSrc] = useState(`/images/${allEvents[0].image}`);
+  const [imgSrc, setImgSrc] = useState(`${allEvents[0].image}`);
   const formattedDate = format(
     new Date(allEvents[0].start_date),
     "dd MMMM yyyy"
@@ -41,10 +42,10 @@ const FeatureEvents = ({ allEvents }: Props) => {
             .map((event) => (
               <SwiperSlide key={event.id}>
                 <div className="flex flex-col md:flex-row items-center text-gray-800 w-full max-w-3xl mx-auto bg-opacity-90 rounded-lg p-4">
-                  <figure className="w-full md:w-1/3">
+                  <figure className="">
                     <Image
-                      width={350}
-                      height={350}
+                      width={400}
+                      height={400}
                       src={imgSrc}
                       alt={event.name}
                       className="object-cover rounded-lg"
@@ -52,7 +53,7 @@ const FeatureEvents = ({ allEvents }: Props) => {
                     />
                   </figure>
                   <div className="p-6 w-full md:w-2/3">
-                    <h2 className="text-2xl md:text-4xl font-bold mb-2 site-txt">
+                    <h2 className="text-2xl md:text-[30px] font-bold mb-2 site-txt">
                       {event.name}
                     </h2>
                     <div className="text-sm site-txt mt-3 mb-4">
@@ -63,9 +64,13 @@ const FeatureEvents = ({ allEvents }: Props) => {
                         ⏰ {formatTime(event.start_time)} -{" "}
                         {formatTime(event.end_time)}
                       </p>
-                      <p className="pb-1">📍 {event.venue}</p>
+                      <p className="pb-1 w-75">📍 {event.venue}</p>
                     </div>
-                    <p className="text-white mb-4">{event.description}</p>
+                    <HtmlRenderer
+                      html={event.description}
+                      slice={200}
+                      className="text-white mb-4"
+                    />
                     <div className="pt-2">
                       <Link
                         href={`/events/details/${event.slug}`}

@@ -8,6 +8,8 @@ interface Seat {
   name: string;
   code: string;
   price: string;
+  row?: string;
+  column?: string;
 }
 
 interface EventInfo {
@@ -46,13 +48,13 @@ const PurchasedTickets: React.FC = () => {
       if (b.seats && b.seats.length > 0) {
         return b.seats.map((seat: Seat) => ({
           id: b.id,
-          seat: seat.name,
+          seat: seat.name, // P2
           ticketId: seat.code,
           price: Number(seat.price),
           purchaseDate: b.purchase_date || "",
           status: b.payment_status === "paid" ? "Active" : "Cancelled",
           ticket_url: b.ticket_url,
-          row: seat.name.split(" ")[0],
+          row: seat.row || "", // P
           start_date: b.event?.start_date || b.purchase_date || "",
           event: b.event,
         }));
@@ -100,22 +102,30 @@ const PurchasedTickets: React.FC = () => {
   };
 
   // Format date (e.g., Aug 12, 2025)
-  const formatDate = (dateStr: string) => {
-    if (!dateStr) return "N/A";
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
-  console.log(bookings, "bookings");
+// Format date from DD-MM-YYYY HH:MM:SS to "Aug 12, 2025"
+const formatDate = (dateStr: string) => {
+  if (!dateStr) return "N/A";
+
+  // Split date and time
+  const [datePart] = dateStr.split(" "); // "19-08-2025"
+  const [day, month, year] = datePart.split("-").map(Number);
+
+  if (!day || !month || !year) return dateStr;
+
+  const date = new Date(year, month - 1, day); // JS months are 0-indexed
+
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+};
+
   return (
-    <div className="p-6 rounded-xl shadow-lg ">
+    <div className="p-6 rounded-xl shadow-lg">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <h1 className="text-3xl font-bold site-txt">Purchased Tickets</h1>
         <div className="flex gap-2 w-full md:w-auto">
-          {/* DaisyUI input */}
           <input
             type="text"
             placeholder="Search tickets..."
@@ -123,8 +133,6 @@ const PurchasedTickets: React.FC = () => {
             onChange={(e) => setSearch(e.target.value)}
             className="input input-bordered input-warning w-full md:w-64"
           />
-
-          {/* DaisyUI select */}
           <select
             value={pageSize}
             onChange={handlePageSizeChange}
@@ -150,12 +158,13 @@ const PurchasedTickets: React.FC = () => {
                   {[
                     "Sl",
                     "Event",
+                    "Row",
                     "Seat",
                     "Price",
-                    "Purchase Date",
+                    "Purchased",
                     "Start Date",
                     "Status",
-                    "Print Ticket",
+                    "Ticket",
                   ].map((header) => (
                     <th
                       key={header}
@@ -170,7 +179,7 @@ const PurchasedTickets: React.FC = () => {
                 {paginatedTickets.map((t, i) => (
                   <tr
                     key={t.ticketId}
-                    className="hover:bg-yellow-400 transition-colors "
+                    className="hover:bg-yellow-400 transition-colors"
                   >
                     <td className="px-4 py-2 text-sm border-b-1 border-yellow-400">
                       {(currentPage - 1) * pageSize + i + 1}
@@ -179,15 +188,19 @@ const PurchasedTickets: React.FC = () => {
                       {t.event.name}
                     </td>
                     <td className="px-4 py-2 text-sm border-b-1 border-yellow-400">
+                      {t.row}
+                    </td>
+                    <td className="px-4 py-2 text-sm border-b-1 border-yellow-400">
                       {t.seat}
                     </td>
                     <td className="px-4 py-2 text-sm border-b-1 border-yellow-400">
                       ${t.price.toFixed(2)}
                     </td>
                     <td className="px-4 py-2 text-sm border-b-1 border-yellow-400">
-                      {formatDate(t.purchaseDate)}
+                     {formatDate(t.purchaseDate)}
                     </td>
                     <td className="px-4 py-2 text-sm border-b-1 border-yellow-400">
+                      {/* {t.start_date} */}
                       {formatDate(t.start_date)}
                     </td>
                     <td className="px-4 py-2 text-sm border-b-1 border-yellow-400">
@@ -202,7 +215,6 @@ const PurchasedTickets: React.FC = () => {
             </table>
           </div>
 
-          {/* Pagination Controls */}
           <div className="flex justify-between items-center mt-4">
             <p className="text-sm text-gray-500">
               Showing {(currentPage - 1) * pageSize + 1}-

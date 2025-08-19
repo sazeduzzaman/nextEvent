@@ -1,14 +1,76 @@
 "use client";
 import React from "react";
 import { Booking as ApiBooking } from "@/hooks/useTickets";
+import TicketQRCode from "./TicketQrCode";
 
 interface InvoiceProps {
   booking: ApiBooking;
 }
 
+// Utility to parse billing address JSON
+const renderBillingAddress = (billing_address: string | null) => {
+  if (!billing_address) return "N/A";
+
+  try {
+    const addr = JSON.parse(
+      billing_address.replace(/Stripe\\StripeObject JSON: /, "")
+    );
+
+    return (
+      <>
+        {addr.line1 && (
+          <>
+            {addr.line1} <br />
+          </>
+        )}
+        {addr.line2 && (
+          <>
+            {addr.line2} <br />
+          </>
+        )}
+        {addr.city && (
+          <>
+            {addr.city} <br />
+          </>
+        )}
+        {addr.state && (
+          <>
+            {addr.state} <br />
+          </>
+        )}
+        {addr.postal_code && (
+          <>
+            {addr.postal_code} <br />
+          </>
+        )}
+        {addr.country && <>{addr.country}</>}
+      </>
+    );
+  } catch {
+    return billing_address; // fallback if parsing fails
+  }
+};
+
 const Invoice: React.FC<InvoiceProps> = ({ booking }) => {
-  const formattedId = booking.invoice_number;
   const seats = booking.seats;
+  const formattedId = booking.invoice_number;
+
+  // Format purchase date
+  const formatDateTime = (dateStr?: string | null) => {
+    if (!dateStr) return "N/A";
+    const date = new Date(dateStr);
+    const formattedDate = date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+    const formattedTime = date.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+    return `${formattedDate}, ${formattedTime}`;
+  };
 
   return (
     <div
@@ -42,7 +104,7 @@ const Invoice: React.FC<InvoiceProps> = ({ booking }) => {
         </div>
         <div style={{ textAlign: "right" }}>
           <h2 style={{ margin: 0, color: "#00bcd4" }}>INVOICE</h2>
-          <p style={{ margin: 0, fontSize: 14 }}>Ticket ID: {formattedId}</p>
+          <p style={{ margin: 0, fontSize: 14 }}>Invoice ID: {formattedId}</p>
         </div>
       </div>
 
@@ -82,16 +144,7 @@ const Invoice: React.FC<InvoiceProps> = ({ booking }) => {
             Buyer: <strong>{booking.user.name}</strong>
           </p>
           <p style={{ margin: 0, fontSize: 14 }}>
-            Purchased:{" "}
-            <strong>
-              {booking.purchase_date
-                ? new Date(booking.purchase_date).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  })
-                : "N/A"}
-            </strong>
+            Purchased: <strong>{formatDateTime(booking.purchase_date)}</strong>
           </p>
           <p style={{ margin: 0, fontSize: 14 }}>
             Expires:{" "}
@@ -108,7 +161,7 @@ const Invoice: React.FC<InvoiceProps> = ({ booking }) => {
       >
         <thead>
           <tr style={{ background: "#e0f7fa", color: "#007c91" }}>
-            {["Items", "Seat", "Row", "Ticket", "Subtotal"].map((head) => (
+            {["Items", "Seat", "Row", "Booking ID", "Subtotal"].map((head) => (
               <th
                 key={head}
                 style={{
@@ -160,7 +213,7 @@ const Invoice: React.FC<InvoiceProps> = ({ booking }) => {
                   border: "1px solid #ccc",
                 }}
               >
-                {formattedId}
+                {booking.booking_id}
               </td>
               <td
                 style={{
@@ -233,11 +286,9 @@ const Invoice: React.FC<InvoiceProps> = ({ booking }) => {
             <td style={{ width: "33%", padding: 12, verticalAlign: "top" }}>
               <strong>BILLING / SHIPPING INFORMATION</strong>
               <p style={{ margin: "5px 0", fontSize: 12 }}>
-                {booking.billing_name}
-                <br />
-                {booking.billing_address.replace(/\\n/g, "\n")}
-                <br />
-                {booking.user.email}
+                {booking.billing_name} <br />
+                {booking.billing_email} <br />
+                {renderBillingAddress(booking.billing_address)}
               </p>
             </td>
             <td style={{ width: "33%", padding: 12, verticalAlign: "top" }}>
@@ -254,8 +305,7 @@ const Invoice: React.FC<InvoiceProps> = ({ booking }) => {
             <td style={{ width: "33%", padding: 12, verticalAlign: "top" }}>
               <strong>VENUE INFORMATION</strong>
               <p style={{ margin: "5px 0", fontSize: 12 }}>
-                {booking.event.name}
-                <br />
+                {booking.event.name} <br />
                 {booking.event.venue}
               </p>
             </td>
@@ -263,7 +313,7 @@ const Invoice: React.FC<InvoiceProps> = ({ booking }) => {
         </tbody>
       </table>
 
-      {/* Barcode */}
+      {/* QR Code */}
       <div
         style={{
           display: "flex",
@@ -274,16 +324,19 @@ const Invoice: React.FC<InvoiceProps> = ({ booking }) => {
           marginBottom: 30,
         }}
       >
-        <img
-          src="https://barcodegenerator.seagullscientific.com/Content/Images/BarCodes/524d00b4-2f54-4eb3-bf54-0abf99f899a7.png"
-          alt="Barcode"
-          style={{ maxWidth: "300px", height: "auto" }}
-        />
         <p style={{ marginTop: 5, fontSize: 14 }}>{formattedId}</p>
+        <TicketQRCode url={booking.ticket_url || "EV568"} />
       </div>
 
       {/* Footer */}
-      <p style={{ textAlign: "center", fontSize: 13, color: "#888" }}>
+      <p
+        style={{
+          textAlign: "center",
+          fontSize: 13,
+          color: "#888",
+          marginTop: 50,
+        }}
+      >
         Thank you for your purchase! Please present this invoice at the event
         entrance.
       </p>

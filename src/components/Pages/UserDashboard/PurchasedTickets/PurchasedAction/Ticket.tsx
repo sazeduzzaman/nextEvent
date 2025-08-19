@@ -27,14 +27,16 @@ export interface TicketProps {
 }
 
 // Helper to extract seat number
-function getSeatNumber(seat: string) {
-  const match = seat.match(/\d+$/);
-  if (!match) return seat;
-  return match[0].padStart(2, "0");
-}
+const formatTime12 = (timeStr: string) => {
+  if (!timeStr) return "N/A";
+  const [hours, minutes] = timeStr.split(":").map(Number);
+  const period = hours >= 12 ? "PM" : "AM";
+  const h12 = hours % 12 || 12; // Convert 0 -> 12
+  return `${h12}:${minutes.toString().padStart(2, "0")} ${period}`;
+};
 
 const Ticket: React.FC<TicketProps> = ({ ticket }) => {
-  console.log(ticket.event, "event");
+ 
   return (
     <div
       style={{
@@ -127,14 +129,15 @@ const Ticket: React.FC<TicketProps> = ({ ticket }) => {
                               Time
                               <br />
                               <b style={{ color: "#00bcd4", fontSize: 14 }}>
-                                {ticket.event?.start_time || "5:00 PM"}
+                                 {formatTime12(ticket.event?.start_time || "17:00:00")}
                               </b>
                             </td>
                             <td>
                               Seat
                               <br />
                               <b style={{ color: "#00bcd4", fontSize: 14 }}>
-                                {getSeatNumber(ticket.seat)}
+                                {/* {getSeatNumber(ticket.seat)} */}
+                                {ticket.seat || "A1"}
                               </b>
                             </td>
                             <td>
@@ -175,7 +178,7 @@ const Ticket: React.FC<TicketProps> = ({ ticket }) => {
                           paddingBottom: 5,
                         }}
                       >
-                        🎫 ENTRY PASS
+                        🎫 <br /> ENTRY PASS
                       </div>
                       <div style={{ padding: "5px 0" }}>
                         <TicketQRCode url={ticket.ticket_url || "EV568"} />

@@ -15,8 +15,8 @@ type EventHeaderProps = {
 
 const EventHeader = ({ eventData }: EventHeaderProps) => {
   const formattedDate = formatFullDateWithWeekday(eventData.start_date);
-  const [imgSrc, setImgSrc] = useState(`/images/${eventData.image}`);
-  const backgroundImageUrl = imgSrc || "/images/featureEvents.jpg";
+  const [imgSrc, setImgSrc] = useState(`${eventData.image}`);
+  const backgroundImageUrl = imgSrc || eventData?.image || "/images/featureEvents.jpg";
 
   return (
     <div
@@ -45,14 +45,14 @@ const EventHeader = ({ eventData }: EventHeaderProps) => {
                   alt={eventData.name}
                   className="object-cover rounded-lg"
                 />
-                <p className="text-sm md:text-base">{eventData.event_type}</p>
+                <p className="text-sm md:text-base">{eventData.event_type ?? "Events"}</p>
               </div>
-              <h2 className="text-3xl md:text-6xl font-bold mb-4 md:mb-6 leading-tight">
+              <h2 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6 leading-tight site-txt">
                 {eventData.name}
               </h2>
-              <div className="text-lg md:text-2xl space-y-4">
+              <div className="text-lg md:text-1xl space-y-4">
                 <p>📅 {formattedDate}</p>
-                <p>
+                <p className="w-2/3">
                   📍{" "}
                   <a
                     href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(

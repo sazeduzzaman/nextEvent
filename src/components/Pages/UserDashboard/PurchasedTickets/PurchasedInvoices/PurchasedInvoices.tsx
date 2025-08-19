@@ -13,6 +13,7 @@ interface FlatInvoice {
   userName: string;
   userEmail: string;
   invoiceNumber: string;
+  payment_transaction_id: string;
   seats: string;
   eventName: string;
   eventVenue?: string;
@@ -20,7 +21,7 @@ interface FlatInvoice {
   totalAmount: number;
   paymentStatus: string;
   paymentType: string;
-  purchaseDate?: string;
+  purchaseDate?: string | number | undefined;
   originalBooking: ApiBooking;
 }
 
@@ -32,8 +33,14 @@ const PurchasedInvoices: React.FC = () => {
   const flatInvoices: FlatInvoice[] = useMemo(() => {
     if (!bookings) return [];
     return bookings.map((b: ApiBooking) => {
-      let formattedPurchaseDate: string | undefined;
-      if (b.purchase_date) {
+      let formattedPurchaseDate: string | number | undefined =
+        b.purchase_date ?? undefined;
+
+      // Optional: convert DD-MM-YYYY HH:MM:SS to ISO if needed
+      if (
+        typeof b.purchase_date === "string" &&
+        b.purchase_date.includes("-")
+      ) {
         const [day, month, year] = b.purchase_date.split(" ")[0].split("-");
         formattedPurchaseDate = new Date(
           Number(year),
@@ -45,6 +52,7 @@ const PurchasedInvoices: React.FC = () => {
       return {
         id: b.id,
         bookingId: b.booking_id,
+        payment_transaction_id: b.payment_transaction_id,
         userName: b.user_name,
         userEmail: b.user_email,
         invoiceNumber: b.invoice_number,
@@ -81,6 +89,27 @@ const PurchasedInvoices: React.FC = () => {
     setCurrentPage(page);
   };
 
+  // Format both date & time in 12-hour format
+  const formatDateTimeISO = (date?: string | number | null) => {
+    if (!date) return "N/A";
+    const d = new Date(date);
+    return `${d.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    })}, ${d.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    })}`;
+  };
+
+  // Calculate total amount for current page
+  const pageTotal = paginatedInvoices.reduce(
+    (sum, inv) => sum + inv.totalAmount,
+    0
+  );
+
   return (
     <div className="p-6 rounded-xl shadow-lg">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
@@ -115,16 +144,15 @@ const PurchasedInvoices: React.FC = () => {
                 <tr>
                   <th>#</th>
                   <th>Invoice #</th>
-                  <th>User</th>
+                  <th>User & Event</th>
                   <th>Seats</th>
-                  <th>Event</th>
-                  <th>Venue</th>
-                  <th>Event Date</th>
+                  <th>Purchase Id</th>
+                  <th></th>
                   <th>Amount</th>
                   <th>Payment</th>
                   <th>Payment Type</th>
                   <th>Purchase Date</th>
-                  <th>Print Invoice</th>
+                  <th>Invoice</th>
                 </tr>
               </thead>
               <tbody>
@@ -137,26 +165,20 @@ const PurchasedInvoices: React.FC = () => {
                       <span className="text-gray-500 text-sm">
                         {inv.userEmail}
                       </span>
+                      <br />
+                      {inv.eventName}
                     </td>
                     <td>{inv.seats}</td>
-                    <td>{inv.eventName}</td>
-                    <td>{inv.eventVenue || "N/A"}</td>
-                    <td>{inv.eventDate}</td>
+                    <td>{inv.payment_transaction_id || "N/A"}</td>
+                    <td></td>
                     <td>${inv.totalAmount.toFixed(2)}</td>
-                    <td>{inv.paymentStatus}</td>
-                    <td>{inv.paymentType}</td>
                     <td>
-                      {inv.purchaseDate
-                        ? new Date(inv.purchaseDate).toLocaleDateString(
-                            "en-US",
-                            {
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
-                            }
-                          )
-                        : "N/A"}
+                      <span className="badge bg-yellow-400 text-black capitalize">
+                        {inv.paymentStatus}
+                      </span>
                     </td>
+                    <td>{inv.paymentType}</td>
+                    <td>{formatDateTimeISO(inv.purchaseDate)}</td>
                     <td>
                       <PurchasedActionInvoice booking={inv.originalBooking} />
                     </td>

@@ -29,6 +29,7 @@ export interface UserInfo {
 export interface Booking {
   id: number;
   user_id: number;
+  invoiceNumber: string;
   event_id: number;
   booking_id: string;
   user_name: string;

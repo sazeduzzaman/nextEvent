@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Event } from "@/lib/api/AllEvents/AllEventsDataType";
 import { formatTime } from "@/utils/dateFormatter";
+import HtmlRenderer from "@/components/HtmlRenderer/HtmlRenderer";
 
 interface EventProps {
   allEvents: Event[];
@@ -12,11 +13,15 @@ interface EventProps {
 
 const UpcommingEventsCard = ({ allEvents }: EventProps) => {
   const [imgSrc, setImgSrc] = useState(
-    allEvents && allEvents.length > 0 ? `/images/${allEvents[0].image}` : "/images/featureEvents.jpg"
+    allEvents && allEvents.length > 0
+      ? `${allEvents[0].image}`
+      : "/images/featureEvents.jpg"
   );
 
   if (!Array.isArray(allEvents) || allEvents.length === 0) {
-    return <p className="text-center text-white py-10">No upcoming events found.</p>;
+    return (
+      <p className="text-center text-white py-10">No upcoming events found.</p>
+    );
   }
 
   return (
@@ -53,14 +58,18 @@ const UpcommingEventsCard = ({ allEvents }: EventProps) => {
             </div>
 
             <div>
-              <h2 className="text-3xl sm:text-4xl font-bold site-txt mb-2">{event.name}</h2>
+              <h2 className="text-3xl sm:text-4xl font-bold site-txt mb-2">
+                {event.name}
+              </h2>
               <p className="text-lg sm:text-xl pt-2">
                 ⏰ {formatTime(event.start_time)} - {formatTime(event.end_time)}
               </p>
               <p className="text-lg sm:text-xl pt-1">📍 {event.venue}</p>
-              <p className="pt-5 text-base sm:text-lg text-justify line-clamp-3">
-                {event.description.split(" ").slice(0, 25).join(" ")}...
-              </p>
+              <HtmlRenderer
+                html={event.description}
+                slice={200}
+                className="pt-5 text-base sm:text-lg text-justify line-clamp-3"
+              />
             </div>
 
             <div className="flex mt-6">

@@ -4,6 +4,7 @@ import Image from "next/image";
 import SiteButtonOne from "@/components/Buttons/SiteButtonOne/SiteButtonOne";
 import Link from "next/link";
 import { Event } from "@/lib/api/AllEvents/AllEventsDataType";
+import HtmlRenderer from "@/components/HtmlRenderer/HtmlRenderer";
 
 interface EventProps {
   allEvents: Event[];
@@ -18,19 +19,23 @@ const FeatureEventsCards = ({ allEvents }: EventProps) => {
   const handleImgError = (index: number) => {
     setImgErrorIndices((prev) => new Set(prev).add(index));
   };
+const eventsToShow = [];
 
+for (let i = 0; i < 4; i++) {
+  eventsToShow.push(allEvents[i % allEvents.length]);
+}
   return (
     <div>
       {/* Show only desktop */}
       <div className="w-full h-[400px] sm:h-[500px] flex gap-4 overflow-hidden px-4 sm:px-0 event-show-desktop">
-        {allEvents.slice(0, 4).map((event, i) => {
+        {eventsToShow.map((event, i) => {
           const imgSrc = imgErrorIndices.has(i)
             ? "/images/featureEvents.jpg"
-            : `/images/${event.image}`;
+            : `${event.image}`;
 
           return (
             <div
-              key={event.id}
+              key={`${event.id}-${i}`}
               className="group relative flex-1 overflow-hidden rounded-2xl transition-all duration-500 ease-in-out 
                 hover:flex-[2] sm:hover:flex-[2] flex-shrink-0"
               style={{ minWidth: 0 }} // important for flex children text truncation
@@ -56,10 +61,14 @@ const FeatureEventsCards = ({ allEvents }: EventProps) => {
                     </h2>
                   </div>
                   <div className="opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition duration-500 ease-in-out max-w-[18rem] sm:max-w-[22rem]">
-                    <p className="text-sm sm:text-base mb-4 line-clamp-3">
-                      {event.description}
-                    </p>
-                    <SiteButtonOne text="Explore Event" />
+                    <HtmlRenderer
+                      html={event.description}
+                      slice={200}
+                      className="mb-5 text-base sm:text-lg text-justify line-clamp-3"
+                    />
+                    <div className="mt-5">
+                      <SiteButtonOne text="Explore Event" />
+                    </div>
                   </div>
                 </div>
               </Link>
@@ -73,7 +82,7 @@ const FeatureEventsCards = ({ allEvents }: EventProps) => {
         {allEvents.slice(0, 4).map((event, i) => {
           const imgSrc = imgErrorIndices.has(i)
             ? "/images/featureEvents.jpg"
-            : `/images/${event.image}`;
+            : `${event.image}`;
 
           return (
             <div
@@ -104,9 +113,11 @@ const FeatureEventsCards = ({ allEvents }: EventProps) => {
 
                   {/* Hover content */}
                   <div className="opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition duration-500 ease-in-out">
-                    <p className="text-sm sm:text-base mb-4 line-clamp-3">
-                      {event.description}
-                    </p>
+                    <HtmlRenderer
+                      html={event.description}
+                      slice={200}
+                      className="text-sm sm:text-base mb-4 line-clamp-3"
+                    />
                     <SiteButtonOne text="Explore Event" />
                   </div>
                 </div>

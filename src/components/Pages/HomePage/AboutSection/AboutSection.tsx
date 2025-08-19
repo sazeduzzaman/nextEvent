@@ -1,8 +1,8 @@
 import SiteButtonTwo from "@/components/Buttons/SiteButtonTwo/SiteButtonTwo";
 import Link from "next/link";
 import React from "react";
-import { IoCalendarOutline } from "react-icons/io5";
-import { RiUserLocationLine } from "react-icons/ri";
+// import { IoCalendarOutline } from "react-icons/io5";
+// import { RiUserLocationLine } from "react-icons/ri";
 import AboutImages from "./AboutImages";
 
 const AboutSection = () => {
@@ -50,11 +50,11 @@ const AboutSection = () => {
               </Link>
             </div>
 
-            <div className="mt-10">
+            {/* <div className="mt-10">
               <hr className="mx-auto lg:mx-0 border-t-[0.5px] border-gray-700" />
-            </div>
+            </div> */}
 
-            <div className="mt-10 flex flex-col sm:flex-row justify-between gap-8 sm:gap-10 text-center">
+            {/* <div className="mt-10 flex flex-col sm:flex-row justify-between gap-8 sm:gap-10 text-center">
               <div className="flex items-center justify-center sm:justify-start gap-4">
                 <IoCalendarOutline className="text-6xl site-txt ring rounded-full p-3 bg-neutral-800" />
                 <div className="text-left">
@@ -78,7 +78,7 @@ const AboutSection = () => {
                   <p className="site-txt">4 Days</p>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

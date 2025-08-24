@@ -22,7 +22,7 @@ const EventsWithSidebar = () => {
         <aside
           className="
             col-span-12 md:col-span-3
-            md:sticky md:top-20 md:h-[calc(100vh-80px)] md:overflow-auto
+            md:sticky md:top-20 md:h-[calc(50vh-10px)] md:overflow-auto
             bg-neutral-900 rounded-lg p-6 shadow-lg
           "
         >

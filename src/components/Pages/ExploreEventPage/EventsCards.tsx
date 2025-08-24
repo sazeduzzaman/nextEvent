@@ -16,7 +16,6 @@ type EventHeaderProps = {
 const EventsCard = ({ event }: EventHeaderProps) => {
   const [imgSrc, setImgSrc] = useState(`${event.image}`);
   const formattedDate = format(new Date(event.start_date), "dd MMMM yyyy");
-
   return (
     <Link href={`/events/details/${event.slug}`} key={event.id}>
       <div className="bg-[#101113] rounded-lg shadow-md group overflow-hidden animate-fade-in">
@@ -40,7 +39,7 @@ const EventsCard = ({ event }: EventHeaderProps) => {
                 {formattedDate}
               </span>
               <span className="text-xs badge text-yellow-400">
-                {event.event_type}
+                {event.event_type ?? "N/A"}
               </span>
             </div>
             <h3 className="text-[20px] site-txt h-20 font-bold text-white mb-2 line-clamp-2 flex items-center">

@@ -40,7 +40,7 @@ const AllEvents = ({ filters }: AllEventsProps) => {
 
   return (
     <div className="container mx-auto mb-20">
-      <div className="flex flex-wrap justify-between items-center gap-4 mb-5">
+      <div className="flex  justify-between items-center gap-4 mb-5">
         <h2 className="text-3xl font-bold site-txt">All Events</h2>
 
         <div className="text-white flex flex-wrap items-center gap-2">

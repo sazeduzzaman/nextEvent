@@ -18,14 +18,16 @@ const UserMenu = () => {
 
   // Format initials
   const userInitials = userName
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((word, _, arr) =>
-      arr.length === 1 ? word.slice(0, 2) : word.charAt(0)
-    )
-    .join("")
-    .toUpperCase();
+    ? userName
+        .split(" ")
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((word, _, arr) =>
+          arr.length === 1 ? word.slice(0, 2) : word.charAt(0)
+        )
+        .join("")
+        .toUpperCase()
+    : "NA"; // fallback initials
 
   return (
     <>

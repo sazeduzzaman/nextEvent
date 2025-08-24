@@ -1,59 +1,56 @@
 "use client";
-
 import React, { useState } from "react";
-import TicketCategoryTab from "./TicketCategoryTab";
-import OrderSummary from "./OrderSummary";
-import { Event } from "@/lib/api/AllEvents/AllEventsDataType";
+import SingleEventsTicketTabs from "./SingleEventsTicketTabs";
+import SingleEventsOrderSummary from "./SingleEventsOrderSummary";
+import { Event, Seat } from "@/lib/api/AllEvents/AllEventsDataType";
 
 type TicketCategory = {
-  id: string;
+  id: number;
   name: string;
   price: number;
-  available: number;
+  seats: Seat[];
 };
 
-type TicketsCategoryProps = {
+type Props = {
   ticketCategories: TicketCategory[];
-  selectedTickets: Record<string, string[]>;
-  handleSeatToggle: (categoryId: string, seatId: string) => void;
+  selectedTickets: Record<number, Seat[]>;
+  handleSeatToggle: (categoryId: number, seat: Seat) => void;
   totalTickets: number;
   totalPrice: number;
-  eventData: Event; // 👈 Correct type for eventData
+  eventData: Event;
   proceedToPurchase: () => void;
 };
 
-const TicketsCategory = ({
+const TicketsCategory: React.FC<Props> = ({
   ticketCategories,
   selectedTickets,
   handleSeatToggle,
   totalTickets,
   totalPrice,
   proceedToPurchase,
-  eventData, // ✅ FIXED: no more slug here
-}: TicketsCategoryProps) => {
-  const [activeTab, setActiveTab] = useState(ticketCategories[0]?.id || "");
+  eventData,
+}) => {
+  const [activeTab, setActiveTab] = useState(ticketCategories[0]?.id || 0);
 
   return (
     <div className="container mx-auto p-6 text-white rounded-lg shadow-lg mt-10">
       <div className="grid grid-cols-12 gap-10">
         <div className="col-span-9">
-          <TicketCategoryTab
-            eventData={eventData}
+          <SingleEventsTicketTabs
             ticketCategories={ticketCategories}
-            selectedTickets={selectedTickets}
-            handleSeatToggle={handleSeatToggle}
             activeTab={activeTab}
             setActiveTab={setActiveTab}
+            selectedTickets={selectedTickets}
+            handleSeatToggle={handleSeatToggle}
           />
         </div>
-
         <div className="col-span-3">
-          <OrderSummary
-            eventData={eventData} // 👈 Passing full event object
+          <SingleEventsOrderSummary
             ticketCategories={ticketCategories}
             selectedTickets={selectedTickets}
             totalTickets={totalTickets}
             totalPrice={totalPrice}
+            eventData={eventData}
             proceedToPurchase={proceedToPurchase}
           />
         </div>

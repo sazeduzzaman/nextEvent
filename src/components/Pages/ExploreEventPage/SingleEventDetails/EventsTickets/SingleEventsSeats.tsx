@@ -7,6 +7,12 @@ import SingleEventsTicketTabs from "./SingleEventsTicketTabs";
 import { Event } from "@/lib/api/AllEvents/AllEventsDataType";
 import { useTicketSelection } from "@/utils/useTicketSelection";
 import Image from "next/image";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+);
 
 interface TicketSelectionPageProps {
   eventData: Event;
@@ -56,19 +62,20 @@ const TicketSelectionPage = ({ eventData }: TicketSelectionPageProps) => {
 
         {/* Sidebar - order summary */}
         <div className="col-span-12 md:col-span-3 mt-8 md:mt-0">
-          <SingleEventsOrderSummary
-            selectedTickets={selectedTickets}
-            ticketCategories={ticketCategories}
-            totalTickets={totalTickets}
-            totalPrice={totalPrice}
-            eventData={eventData}
-            proceedToPurchase={proceedToPurchase}
-          />
+          <Elements stripe={stripePromise}>
+            <SingleEventsOrderSummary
+              selectedTickets={selectedTickets}
+              ticketCategories={ticketCategories}
+              totalTickets={totalTickets}
+              totalPrice={totalPrice}
+              eventData={eventData}
+              proceedToPurchase={proceedToPurchase}
+            />
+          </Elements>
         </div>
       </div>
     </div>
   );
 };
-
 
 export default TicketSelectionPage;
